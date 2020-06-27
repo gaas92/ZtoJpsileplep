@@ -842,7 +842,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                 patMu1.addUserFloat("dRIso"    ,getIso( *muon1 ) );
                 patMu1.addUserFloat("dIP3DSig", tkPVdist1.second.significance());
                 //patMu1.addUserFloat("dR")
-          std::cout << "test dRisoEA ~ " << ElectronRelIso( *lept1) << std::endl;
+                std::cout << "test dRisoEA ~ " << ElectronRelIso( *lept1) << std::endl;
           
            		patMu1.addUserFloat("dIP3D",tkPVdist1.second.value());
            		patMu1.addUserFloat("dIP3DErr",tkPVdist1.second.error());
@@ -1250,10 +1250,10 @@ void jpsiElecKmcFitter::fillDescriptions(edm::ConfigurationDescriptions& descrip
   descriptions.addDefault(desc);
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-float jpsiElecKmcFitter::ElectronRelIso(const reco::Candidate *cand)
+float jpsiElecKmcFitter::ElectronRelIso(const pat::Electron& el)
 {
     float relIsoWithEA = 0;
-    pat::Electron el = *((pat::Electron*)cand);
+    //pat::Electron el = *((pat::Electron*)cand);
     // https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedElectronIdentificationRun2#Spring15_selection_25ns
     // https://indico.cern.ch/event/370507/contribution/1/attachments/1140657/1633761/Rami_eleCB_ID_25ns.pdf
     // Effective areas from https://indico.cern.ch/event/369239/contribution/4/attachments/1134761/1623262/talk_effective_areas_25ns.pdf
