@@ -28,7 +28,7 @@ process.TFileService = cms.Service("TFileService",
 )
 
 #from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
-from EgammaUser.EgammaPostRecoTools import setupEgammaPostRecoSeq
+from EgammaUser.EgammaPostRecoTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
 setupEgammaPostRecoSeq(process,
 runEnergyCorrections=False, #corrections by default are fine so no need to re-run
 era='2018-Prompt')
