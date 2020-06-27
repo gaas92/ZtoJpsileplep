@@ -1270,7 +1270,7 @@ float jpsiElecKmcFitter::ElectronRelIso(const reco::Candidate *cand)
     while(etaBin < nEtaBins-1 && abs(etaSC) > etaBinLimits[etaBin+1])  ++etaBin;
 
     float area = effectiveAreaValues[etaBin];
-    relIsoWithEA = (float)( pfIso.sumChargedHadronPt + max(0.0, pfIso.sumNeutralHadronEt + pfIso.sumPhotonEt - (*rhoH) * area ) )/el.pt();
+    relIsoWithEA = (float)( pfIso.sumChargedHadronPt + std::max(0.0, pfIso.sumNeutralHadronEt + pfIso.sumPhotonEt - (*rhoH) * area ) )/el.pt();
 
     return relIsoWithEA;
 }
