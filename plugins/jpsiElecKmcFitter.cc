@@ -97,6 +97,7 @@ class jpsiElecKmcFitter : public edm::stream::EDProducer<>{
       Float_t getEtaInSeed(const pat::Electron&);
     
       float ElectronRelIso(const reco::Candidate *cand, float rho);
+      float MuonRelIso(const reco::Candidate *cand, float rho);
     
       bool IsTheSame(const pat::GenericParticle& tk, const pat::Muon& mu);
       bool IsTheSame2(const reco::TrackRef& tk, const pat::Muon& mu);
@@ -1248,6 +1249,21 @@ float jpsiElecKmcFitter::ElectronRelIso(const reco::Candidate *cand, float rho) 
   while(etaBin < nEtaBins-1 && abs(etaSC) > etaBinLimits[etaBin+1]) ++etaBin;
   float area = effectiveAreaValues[etaBin];
   relIsoWithEA = (float)(pfIso.sumChargedHadronPt+std::max(float(0.0), pfIso.sumNeutralHadronEt+pfIso.sumPhotonEt-rho*area))/el.pt();
+  return relIsoWithEA;
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+float jpsiElecKmcFitter::MuonRelIso(const reco::Candidate *cand, float rho) {
+  pat::Muon mu = *((pat::Muon*)cand);
+  float relIsoWithEA = 0.001;
+  const int nEtaBins = 5;
+  const float etaBinLimits[nEtaBins+1] = {0.0, 0.8, 1.3, 2.0, 2.2, 2.5};
+  const float effectiveAreaValues[nEtaBins] = {0.0913, 0.0765, 0.0546, 0.0728, 0.1177};
+  reco::MuonPFIsolation pfIso = mu.pfIsolationR03();
+  // Find eta bin first. If eta>2.5, the last eta bin is used.
+  int etaBin = 0;
+  while(etaBin < nEtaBins-1 && abs(mu.eta()) > etaBinLimits[etaBin+1]) ++etaBin;
+  float area = effectiveAreaValues[etaBin];
+  relIsoWithEA = (float)(pfIso.sumChargedHadronPt+std::max(float(0.0),pfIso.sumNeutralHadronEt+pfIso.sumPhotonEt-rho*area))/mu.pt();
   return relIsoWithEA;
 }
 //define this as a plug-in
