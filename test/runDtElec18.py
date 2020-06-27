@@ -1,4 +1,6 @@
 import FWCore.ParameterSet.Config as cms
+from RecoJets.JetProducers.fixedGridRhoProducerFastjet_cfi import fixedGridRhoFastjetAll
+
 process = cms.Process("Rootupler")
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
