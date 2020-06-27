@@ -96,7 +96,7 @@ class jpsiElecKmcFitter : public edm::stream::EDProducer<>{
       Float_t getIsoVar(const pat::Electron&);       
       Float_t getEtaInSeed(const pat::Electron&);
     
-      float jpsiElecKmcFitter::ElectronRelIso;
+      float ElectronRelIso(const reco::Candidate *cand, float rho);
     
       bool IsTheSame(const pat::GenericParticle& tk, const pat::Muon& mu);
       bool IsTheSame2(const reco::TrackRef& tk, const pat::Muon& mu);
