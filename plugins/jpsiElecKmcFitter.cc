@@ -96,8 +96,7 @@ class jpsiElecKmcFitter : public edm::stream::EDProducer<>{
       Float_t getIsoVar(const pat::Electron&);       
       Float_t getEtaInSeed(const pat::Electron&);
     
-      float ElectronRelIso(const reco::Candidate *cand, float rho);
-      float MuonRelIso(const reco::Candidate *cand, float rho);
+      float ElectronRelIso(const reco::Candidate *cand);
     
       bool IsTheSame(const pat::GenericParticle& tk, const pat::Muon& mu);
       bool IsTheSame2(const reco::TrackRef& tk, const pat::Muon& mu);
@@ -122,7 +121,9 @@ class jpsiElecKmcFitter : public edm::stream::EDProducer<>{
         edm::EDGetTokenT<reco::GenParticleCollection> genCands_;
         edm::EDGetTokenT<pat::PackedGenParticleCollection > packedGenToken_;
     
-        edm::EDGetTokenT<double> fixedGridRhoFastjetAll_;
+        //edm::EDGetTokenT<double> fixedGridRhoFastjetAll_;
+        edm::Handle<double> rhoH;
+        edm::EDGetTokenT<double> rhoHToken;
 
 };
 
@@ -135,8 +136,9 @@ jpsiElecKmcFitter::jpsiElecKmcFitter(const edm::ParameterSet& iConfig){
     genCands_ = consumes<reco::GenParticleCollection>(iConfig.getParameter < edm::InputTag > ("GenParticles"));
     packedGenToken_ = consumes<pat::PackedGenParticleCollection>((edm::InputTag)"packedGenParticles");
     
-    fixedGridRhoFastjetAll_ = consumes<double> (iConfig.getParameter <edm::InputTag>("fixedGridRhoFastjetAll"));
-    
+    //fixedGridRhoFastjetAll_ = consumes<double> (iConfig.getParameter <edm::InputTag>("fixedGridRhoFastjetAll"));
+    rhoHToken = consumes<double>(iConfig.getUntrackedParameter("fixedGridRhoFastjetAll",edm::InputTag("fixedGridRhoFastjetAll")));
+
    	produces<pat::CompositeCandidateCollection>("ZCandidates"); 
  
 }
@@ -189,14 +191,19 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   edm::ESHandle<TransientTrackBuilder> theTTBuilder;
   iSetup.get<TransientTrackRecord>().get("TransientTrackBuilder",theTTBuilder);
  
-    //MC
-    edm::Handle<reco::GenParticleCollection> pruned;
-    iEvent.getByToken(genCands_, pruned);
-    // Packed particles are all the status 1, so usable to remake jets
-    // The navigation from status 1 to pruned is possible (the other direction should be made by hand)
-    edm::Handle<pat::PackedGenParticleCollection> packed;
-    iEvent.getByToken(packedGenToken_,packed);
-    
+  //MC
+  edm::Handle<reco::GenParticleCollection> pruned;
+  iEvent.getByToken(genCands_, pruned);
+  // Packed particles are all the status 1, so usable to remake jets
+  // The navigation from status 1 to pruned is possible (the other direction should be made by hand)
+  edm::Handle<pat::PackedGenParticleCollection> packed;
+  iEvent.getByToken(packedGenToken_,packed);
+  
+  // Rho values
+  //edm::Handle<double> fixedGridRhoFastjetAllH;
+  //iEvent.getByToken(fixedGridRhoFastjetAll_, fixedGridRhoFastjetAllH);
+  iEvent.getByToken(rhoHToken, rhoH);
+
   //////////////////////////////////
   //// Select  the best PV      ////
   //////////////////////////////////
@@ -1242,35 +1249,31 @@ void jpsiElecKmcFitter::fillDescriptions(edm::ConfigurationDescriptions& descrip
   descriptions.addDefault(desc);
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-float jpsiElecKmcFitter::ElectronRelIso(const reco::Candidate *cand, float rho) {
-  pat::Electron el = *((pat::Electron*)cand);
-  float relIsoWithEA = 0;
-  const int nEtaBins = 5;
-  const float etaBinLimits[nEtaBins+1] = {0.0, 0.8, 1.3, 2.0, 2.2, 2.5};
-  const float effectiveAreaValues[nEtaBins] = {0.1013, 0.0988, 0.0572, 0.0842, 0.1530};
-  reco::GsfElectron::PflowIsolationVariables pfIso = el.pfIsolationVariables();
-  float etaSC = el.superCluster()->eta();
-  // Find eta bin first. If eta>2.5, the last eta bin is used.
-  int etaBin = 0;
-  while(etaBin < nEtaBins-1 && abs(etaSC) > etaBinLimits[etaBin+1]) ++etaBin;
-  float area = effectiveAreaValues[etaBin];
-  relIsoWithEA = (float)(pfIso.sumChargedHadronPt+std::max(float(0.0), pfIso.sumNeutralHadronEt+pfIso.sumPhotonEt-rho*area))/el.pt();
-  return relIsoWithEA;
+float jpsiElecKmcFitter::ElectronRelIso(const reco::Candidate *cand)
+{
+    float relIsoWithEA = 0;
+    pat::Electron el = *((pat::Electron*)cand);
+    // https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedElectronIdentificationRun2#Spring15_selection_25ns
+    // https://indico.cern.ch/event/370507/contribution/1/attachments/1140657/1633761/Rami_eleCB_ID_25ns.pdf
+    // Effective areas from https://indico.cern.ch/event/369239/contribution/4/attachments/1134761/1623262/talk_effective_areas_25ns.pdf
+    // UPDATED VERSION : https://indico.cern.ch/event/732971/contributions/3022843/attachments/1658685/2656462/eleIdTuning.pdf
+    const int nEtaBins = 7;
+    const float etaBinLimits[nEtaBins+1] = {0.0, 1.0, 1.479, 2.0, 2.2, 2.3, 2.4, 2.5};
+    //const float effectiveAreaValues[nEtaBins] = {0.1752 , 0.1862, 0.1411, 0.1534 , 0.1903, 0.2243, 0.2687}; //old
+    const float effectiveAreaValues[nEtaBins] = {0.1440 , 0.1562, 0.1032, 0.0859 , 0.1116, 0.1321, 0.1654};  //updated
+
+    reco::GsfElectron::PflowIsolationVariables pfIso = el.pfIsolationVariables();
+    float etaSC = el.superCluster()->eta();
+
+    // Find eta bin first. If eta>2.5, the last eta bin is used.
+    int etaBin = 0;
+    while(etaBin < nEtaBins-1 && abs(etaSC) > etaBinLimits[etaBin+1])  ++etaBin;
+
+    float area = effectiveAreaValues[etaBin];
+    relIsoWithEA = (float)( pfIso.sumChargedHadronPt + max(0.0, pfIso.sumNeutralHadronEt + pfIso.sumPhotonEt - (*rhoH) * area ) )/el.pt();
+
+    return relIsoWithEA;
 }
-//////////////////////////////////////////////////////////////////////////////////////////
-float jpsiElecKmcFitter::MuonRelIso(const reco::Candidate *cand, float rho) {
-  pat::Muon mu = *((pat::Muon*)cand);
-  float relIsoWithEA = 0.001;
-  const int nEtaBins = 5;
-  const float etaBinLimits[nEtaBins+1] = {0.0, 0.8, 1.3, 2.0, 2.2, 2.5};
-  const float effectiveAreaValues[nEtaBins] = {0.0913, 0.0765, 0.0546, 0.0728, 0.1177};
-  reco::MuonPFIsolation pfIso = mu.pfIsolationR03();
-  // Find eta bin first. If eta>2.5, the last eta bin is used.
-  int etaBin = 0;
-  while(etaBin < nEtaBins-1 && abs(mu.eta()) > etaBinLimits[etaBin+1]) ++etaBin;
-  float area = effectiveAreaValues[etaBin];
-  relIsoWithEA = (float)(pfIso.sumChargedHadronPt+std::max(float(0.0),pfIso.sumNeutralHadronEt+pfIso.sumPhotonEt-rho*area))/mu.pt();
-  return relIsoWithEA;
-}
+
 //define this as a plug-in
 DEFINE_FWK_MODULE(jpsiElecKmcFitter);
