@@ -96,6 +96,8 @@ class jpsiElecKmcFitter : public edm::stream::EDProducer<>{
       Float_t getIsoVar(const pat::Electron&);       
       Float_t getEtaInSeed(const pat::Electron&);
     
+      float jpsiElecKmcFitter::ElectronRelIso;
+    
       bool IsTheSame(const pat::GenericParticle& tk, const pat::Muon& mu);
       bool IsTheSame2(const reco::TrackRef& tk, const pat::Muon& mu);
       bool    isAncestor(const reco::Candidate*, const reco::Candidate*);
@@ -1233,8 +1235,7 @@ void jpsiElecKmcFitter::fillDescriptions(edm::ConfigurationDescriptions& descrip
   descriptions.addDefault(desc);
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-float jpsiElecKmcFitter::ElectronRelIso(const reco::Candidate *cand, float rho)
-{
+float jpsiElecKmcFitter::ElectronRelIso(const reco::Candidate *cand, float rho) {
   pat::Electron el = *((pat::Electron*)cand);
   float relIsoWithEA = 0;
   const int nEtaBins = 5;
