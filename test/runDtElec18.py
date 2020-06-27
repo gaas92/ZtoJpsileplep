@@ -58,9 +58,9 @@ process.Zfitter    = cms.EDProducer("jpsiElecKmcFitter",
                           dilepton = cms.InputTag("dileptonFilter","dilepton"),
                           primaryVertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
                           GenParticles   = cms.InputTag("prunedGenParticles"),
-                          packedGenParticles = cms.InputTag("packedGenParticles"),
+                          packedGenParticles = cms.InputTag("packedGenParticles")
                           
-                          fixedGridRhoFastjetAll = cms.InputTag("fixedGridRhoFastjetAll") 
+#                          fixedGridRhoFastjetAll = cms.InputTag("fixedGridRhoFastjetAll")
 )
 
 #### Z tupler
