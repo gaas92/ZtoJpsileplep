@@ -842,7 +842,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                 patMu1.addUserFloat("dRIso"    ,getIso( *muon1 ) );
                 patMu1.addUserFloat("dIP3DSig", tkPVdist1.second.significance());
                 //patMu1.addUserFloat("dR")
-                std::cout << "test dRisoEA ~ " << ElectronRelIso( *lept1) << std::endl;
+                std::cout << "test dRisoEA ~ " << ElectronRelIso( *lept1 ) << std::endl;
           
            		patMu1.addUserFloat("dIP3D",tkPVdist1.second.value());
            		patMu1.addUserFloat("dIP3DErr",tkPVdist1.second.error());
