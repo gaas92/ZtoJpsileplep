@@ -1225,14 +1225,29 @@ int jpsiElecKmcFitter::convertBinaryToDecimal(unsigned long long n)
     return decimalNumber;
 }
 
-void
-jpsiElecKmcFitter::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
+void jpsiElecKmcFitter::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
   //The following says we do not know what parameters are allowed so do no validation
   // Please change this to state exactly what you do use, even if it is no parameters
   edm::ParameterSetDescription desc;
   desc.setUnknown();
   descriptions.addDefault(desc);
 }
-
+//////////////////////////////////////////////////////////////////////////////////////////
+float jpsiElecKmcFitter::ElectronRelIso(const reco::Candidate *cand, float rho)
+{
+  pat::Electron el = *((pat::Electron*)cand);
+  float relIsoWithEA = 0;
+  const int nEtaBins = 5;
+  const float etaBinLimits[nEtaBins+1] = {0.0, 0.8, 1.3, 2.0, 2.2, 2.5};
+  const float effectiveAreaValues[nEtaBins] = {0.1013, 0.0988, 0.0572, 0.0842, 0.1530};
+  reco::GsfElectron::PflowIsolationVariables pfIso = el.pfIsolationVariables();
+  float etaSC = el.superCluster()->eta();
+  // Find eta bin first. If eta>2.5, the last eta bin is used.
+  int etaBin = 0;
+  while(etaBin < nEtaBins-1 && abs(etaSC) > etaBinLimits[etaBin+1]) ++etaBin;
+  float area = effectiveAreaValues[etaBin];
+  relIsoWithEA = (float)(pfIso.sumChargedHadronPt+max(float(0.0),pfIso.sumNeutralHadronEt+pfIso.sumPhotonEt-rho*area))/el.pt();
+  return relIsoWithEA;
+}
 //define this as a plug-in
 DEFINE_FWK_MODULE(jpsiElecKmcFitter);
