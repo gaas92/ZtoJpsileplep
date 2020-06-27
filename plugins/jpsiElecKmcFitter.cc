@@ -118,9 +118,12 @@ class jpsiElecKmcFitter : public edm::stream::EDProducer<>{
         edm::EDGetTokenT<pat::CompositeCandidateCollection> dimuon_Label;
         edm::EDGetTokenT<pat::CompositeCandidateCollection> dielec_Label;
         edm::EDGetTokenT<reco::VertexCollection> primaryVertices_Label;
-
+    
         edm::EDGetTokenT<reco::GenParticleCollection> genCands_;
         edm::EDGetTokenT<pat::PackedGenParticleCollection > packedGenToken_;
+    
+        edm::EDGetTokenT<double> fixedGridRhoFastjetAll_;
+
 };
 
 
@@ -131,6 +134,8 @@ jpsiElecKmcFitter::jpsiElecKmcFitter(const edm::ParameterSet& iConfig){
     
     genCands_ = consumes<reco::GenParticleCollection>(iConfig.getParameter < edm::InputTag > ("GenParticles"));
     packedGenToken_ = consumes<pat::PackedGenParticleCollection>((edm::InputTag)"packedGenParticles");
+    
+    fixedGridRhoFastjetAll_ = consumes<double> (iConfig.getParameter <edm::InputTag>("fixedGridRhoFastjetAll"));
     
    	produces<pat::CompositeCandidateCollection>("ZCandidates"); 
  
