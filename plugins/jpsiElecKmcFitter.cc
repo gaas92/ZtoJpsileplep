@@ -841,8 +841,6 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                 //new
                 patMu1.addUserFloat("dRIso"    ,getIso( *muon1 ) );
                 patMu1.addUserFloat("dIP3DSig", tkPVdist1.second.significance());
-                //patMu1.addUserFloat("dR")
-                std::cout << "test dRisoEA ~ " << ElectronRelIso( *lept1 ) << std::endl;
           
            		patMu1.addUserFloat("dIP3D",tkPVdist1.second.value());
            		patMu1.addUserFloat("dIP3DErr",tkPVdist1.second.error());
@@ -902,6 +900,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                 patMu2.addUserFloat("dIP3D",tkPVdist2.second.value());
                 patMu2.addUserFloat("dIP3DErr",tkPVdist2.second.error());
 		
+          
                 //patMu2.addUserFloat("JpM2Qid_", JpM2Qid);
 
                 patMu2.addUserFloat("muon2Mu8DiEle12_", muon2Mu8DiEle12);
@@ -988,6 +987,15 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
           
                 patL1.addUserFloat("dIP3D"	,tkPVdistel1.second.value());
                 patL1.addUserFloat("dIP3DErr"	,tkPVdistel1.second.error());
+                
+                patL1.addUserFloat("trackMomentumAtVtx"   , (float)sqrt(lept1->trackMomentumAtVtx().mag2()));
+                patL1.addUserFloat("ecalEnergy"           , (float)lept1->ecalEnergy());
+                patL1.addUserFloat("full5x5_sigmaIetaIeta", (float)lept1->full5x5_sigmaIetaIeta());
+                patL1.addUserFloat("dEtaIn"               , (float)lept1->deltaEtaSuperClusterTrackAtVtx());
+                patL1.addUserFloat("dPhiIn"               , (float)lept1->deltaPhiSuperClusterTrackAtVtx());
+                patL1.addUserFloat("HoE"                  , (float)lept1->hadronicOverEm());
+                patL1.addUserFloat("ooEmooP"              , (float)fabs(1/lept1->ecalEnergy() - 1/sqrt(lept1->trackMomentumAtVtx().mag2())));
+                patL1.addUserFloat("passConversionVeto"   , (float)lept1->passConversionVeto());
 
                 patL1.addUserFloat("dPhiInSeed" , lept1->deltaPhiSuperClusterTrackAtVtx());
                 patL1.addUserFloat("dEtaInSeed" , getEtaInSeed( *lept1 )) ;
@@ -1067,7 +1075,16 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                 patL2.addUserFloat("dIP3DSig",tkPVdistel2.second.significance());
                 patL2.addUserFloat("dIP3D"	,tkPVdistel2.second.value());
                 patL2.addUserFloat("dIP3DErr"	,tkPVdistel2.second.error());
-
+          
+                patL2.addUserFloat("trackMomentumAtVtx"   , (float)sqrt(lept2->trackMomentumAtVtx().mag2()));
+                patL2.addUserFloat("ecalEnergy"           , (float)lept2->ecalEnergy());
+                patL2.addUserFloat("full5x5_sigmaIetaIeta", (float)lept2->full5x5_sigmaIetaIeta());
+                patL2.addUserFloat("dEtaIn"               , (float)lept2->deltaEtaSuperClusterTrackAtVtx());
+                patL2.addUserFloat("dPhiIn"               , (float)lept2->deltaPhiSuperClusterTrackAtVtx());
+                patL2.addUserFloat("HoE"                  , (float)lept2->hadronicOverEm());
+                patL2.addUserFloat("ooEmooP"              , (float)fabs(1/lept2->ecalEnergy() - 1/sqrt(lept2->trackMomentumAtVtx().mag2())));
+                patL2.addUserFloat("passConversionVeto"   , (float)lept2->passConversionVeto());
+          
                 patL2.addUserFloat("dPhiInSeed" , lept2->deltaPhiSuperClusterTrackAtVtx());
                 patL2.addUserFloat("dEtaInSeed" , getEtaInSeed( *lept2 )) ;
                 patL2.addUserFloat("SigmaIEtaIEta" ,lept2->full5x5_sigmaIetaIeta());
