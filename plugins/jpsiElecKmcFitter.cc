@@ -762,8 +762,10 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                 l2.SetPtEtaPhiM(lept2->pt(), lept2->eta(),lept2->phi(),lept2->mass());
                 TLorentzVector theZ = m1+m2+l1+l2;
                 // Get the Z boson
-                std::cout << "Z Fit diff: " << ZM_fit - gen_z_p4.M() << std::endl;
-                std::cout << "Z msrd diff: "<< theZ.M() - gen_z_p4.M() << std::endl;
+                //std::cout << "Z Fit diff: " << ZM_fit - gen_z_p4.M() << std::endl;
+                //std::cout << "Z msrd diff: "<< theZ.M() - gen_z_p4.M() << std::endl;
+                if (theZ.M() < 60.0) continue;
+                if (theZ.M() > 150.0) continue;
 				reco::CompositeCandidate recoZ(0, math::XYZTLorentzVector(ZPx_fit, ZPy_fit, ZPz_fit,
                                               sqrt(ZM_fit*ZM_fit + ZPx_fit*ZPx_fit + ZPy_fit*ZPy_fit +
                                               ZPz_fit*ZPz_fit)), math::XYZPoint(ZVtxX_fit,
@@ -988,6 +990,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                 patL1.addUserFloat("dIP3D"	,tkPVdistel1.second.value());
                 patL1.addUserFloat("dIP3DErr"	,tkPVdistel1.second.error());
                 
+                patL1.addUserFloat("dRIsoEA", ElectronRelIso(*lept1));
                 patL1.addUserFloat("trackMomentumAtVtx"   , (float)sqrt(lept1->trackMomentumAtVtx().mag2()));
                 patL1.addUserFloat("ecalEnergy"           , (float)lept1->ecalEnergy());
                 patL1.addUserFloat("full5x5_sigmaIetaIeta", (float)lept1->full5x5_sigmaIetaIeta());
@@ -1076,6 +1079,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                 patL2.addUserFloat("dIP3D"	,tkPVdistel2.second.value());
                 patL2.addUserFloat("dIP3DErr"	,tkPVdistel2.second.error());
           
+                patL2.addUserFloat("dRIsoEA", ElectronRelIso(*lept2));
                 patL2.addUserFloat("trackMomentumAtVtx"   , (float)sqrt(lept2->trackMomentumAtVtx().mag2()));
                 patL2.addUserFloat("ecalEnergy"           , (float)lept2->ecalEnergy());
                 patL2.addUserFloat("full5x5_sigmaIetaIeta", (float)lept2->full5x5_sigmaIetaIeta());

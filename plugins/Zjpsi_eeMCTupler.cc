@@ -292,7 +292,17 @@ class Zjpsi_eeMCTupler:public edm::EDAnalyzer {
 
         // Electron Q_ID
         int ZLe1Qid;
-
+    
+        float ZLe1dRIsoEA;
+        float ZLe1trackMomentumAtVtx;
+        float ZLe1ecalEnergy;
+        float ZLe1full5x5_sigmaIetaIeta;
+        float ZLe1dEtaIn;
+        float ZLe1dPhiIn;
+        float ZLe1HoE;
+        float ZLe1ooEmooP;
+        float ZLe1passConversionVeto;
+    
         int ZLe1_TrackerLWM;
         int ZLe1_PixelLWM;
         int ZLe1_ValPixHit;
@@ -312,7 +322,17 @@ class Zjpsi_eeMCTupler:public edm::EDAnalyzer {
         
         // Electron Q_ID
         int ZLe2Qid;
- 
+    
+        float ZLe2dRIsoEA;
+        float ZLe2trackMomentumAtVtx;
+        float ZLe2ecalEnergy;
+        float ZLe2full5x5_sigmaIetaIeta;
+        float ZLe2dEtaIn;
+        float ZLe2dPhiIn;
+        float ZLe2HoE;
+        float ZLe2ooEmooP;
+        float ZLe2passConversionVeto;
+    
         float ZLe2dPhiInSeed;
         float ZLe2dEtaInSeed;
         float ZLe2SigmaIEtaIEta;
@@ -486,7 +506,17 @@ Zjpsi_eeMCTupler::Zjpsi_eeMCTupler(const edm::ParameterSet & iConfig):
     Z_tree->Branch("JpM2_ValPixHit",          &JpM2_ValPixHit,   "JpM2_ValPixHit/i");
 
     Z_tree->Branch("ZLe1Qid",         &ZLe1Qid,  "ZLe1Qid/i");
-
+    
+    Z_tree->Branch("ZLe1dRIsoEA",               &ZLe1dRIsoEA,              "ZLe1dRIsoEA/i");
+    Z_tree->Branch("ZLe1trackMomentumAtVtx",    &ZLe1trackMomentumAtVtx,   "ZLe1trackMomentumAtVtx/i");
+    Z_tree->Branch("ZLe1ecalEnergy",            &ZLe1ecalEnergy,           "ZLe1ecalEnergy/i");
+    Z_tree->Branch("ZLe1full5x5_sigmaIetaIeta", &ZLe1full5x5_sigmaIetaIeta,"ZLe1full5x5_sigmaIetaIeta/i");
+    Z_tree->Branch("ZLe1dEtaIn",                &ZLe1dEtaIn,               "ZLe1dEtaIn/i");
+    Z_tree->Branch("ZLe1dPhiIn",                &ZLe1dPhiIn,               "ZLe1dPhiIn/i");
+    Z_tree->Branch("ZLe1HoE",                   &ZLe1HoE,                  "ZLe1HoE/i");
+    Z_tree->Branch("ZLe1ooEmooP",               &ZLe1ooEmooP,              "ZLe1ooEmooP/i");
+    Z_tree->Branch("ZLe1passConversionVeto",    &ZLe1passConversionVeto,   "ZLe1passConversionVeto/i");
+                   
     Z_tree->Branch("ZLe1_TrackerLWM",         &ZLe1_TrackerLWM,  "ZLe1_TrackerLWM/i");
     Z_tree->Branch("ZLe1_PixelLWM",           &ZLe1_PixelLWM,    "ZLe1_PixelLWM/i");
     Z_tree->Branch("ZLe1_ValPixHit",          &ZLe1_ValPixHit,   "ZLe1_ValPixHit/i");
@@ -497,6 +527,16 @@ Zjpsi_eeMCTupler::Zjpsi_eeMCTupler(const edm::ParameterSet & iConfig):
 
     Z_tree->Branch("ZLe2Qid",         &ZLe2Qid,  "ZLe2Qid/i");
 
+    Z_tree->Branch("ZLe2dRIsoEA",               &ZLe2dRIsoEA,              "ZLe2dRIsoEA/i");
+    Z_tree->Branch("ZLe2trackMomentumAtVtx",    &ZLe2trackMomentumAtVtx,   "ZLe2trackMomentumAtVtx/i");
+    Z_tree->Branch("ZLe2ecalEnergy",            &ZLe2ecalEnergy,           "ZLe2ecalEnergy/i");
+    Z_tree->Branch("ZLe2full5x5_sigmaIetaIeta", &ZLe2full5x5_sigmaIetaIeta,"ZLe2full5x5_sigmaIetaIeta/i");
+    Z_tree->Branch("ZLe2dEtaIn",                &ZLe2dEtaIn,               "ZLe2dEtaIn/i");
+    Z_tree->Branch("ZLe2dPhiIn",                &ZLe2dPhiIn,               "ZLe2dPhiIn/i");
+    Z_tree->Branch("ZLe2HoE",                   &ZLe2HoE,                  "ZLe2HoE/i");
+    Z_tree->Branch("ZLe2ooEmooP",               &ZLe2ooEmooP,              "ZLe2ooEmooP/i");
+    Z_tree->Branch("ZLe2passConversionVeto",    &ZLe2passConversionVeto,   "ZLe2passConversionVeto/i");
+    
     //Z_tree->Branch("ZLe2Ele25wpT",         &ZLe2Ele25wpT,  "ZLe2Ele25wpT/i");
     //Z_tree->Branch("ZLe2Ele23_12",         &ZLe2Ele23_12,  "ZLe2Ele23_12/i");
     //Z_tree->Branch("ZLe2Mu8DiEle12",         &ZLe2Mu8DiEle12,  "ZLe2Mu8DiEle12/i");
@@ -945,13 +985,34 @@ verE
        ZLe1HoverE        =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("HoverE");
        ZLe1ElecMissHits  =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("ElecMissHits");
 
+       ZLe1dRIsoEA               =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("dRIsoEA");
+       ZLe1trackMomentumAtVtx    =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("trackMomentumAtVtx");
+       ZLe1ecalEnergy            =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("ecalEnergy");
+       ZLe1full5x5_sigmaIetaIeta =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("full5x5_sigmaIetaIeta");
+       ZLe1dEtaIn                =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("dEtaIn");
+       ZLe1dPhiIn                =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("dPhiIn");
+       ZLe1HoE                   =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("HoE");
+       ZLe1ooEmooP               =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("ooEmooP");
+       ZLe1passConversionVeto    =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("passConversionVeto");
+          
+          
        ZLe2dPhiInSeed    =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("dPhiInSeed");
        ZLe2dEtaInSeed    =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("dEtaInSeed");
        ZLe2SigmaIEtaIEta =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("SigmaIEtaIEta");
        ZLe2SigmaIPhiIPhi =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("SigmaIPhiIPhi");
        ZLe2HoverE        =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("HoverE");
        ZLe2ElecMissHits  =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("ElecMissHits");
-  	
+
+       ZLe2dRIsoEA               =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("dRIsoEA");
+       ZLe2trackMomentumAtVtx    =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("trackMomentumAtVtx");
+       ZLe2ecalEnergy            =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("ecalEnergy");
+       ZLe2full5x5_sigmaIetaIeta =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("full5x5_sigmaIetaIeta");
+       ZLe2dEtaIn                =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("dEtaIn");
+       ZLe2dPhiIn                =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("dPhiIn");
+       ZLe2HoE                   =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("HoE");
+       ZLe2ooEmooP               =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("ooEmooP");
+       ZLe2passConversionVeto    =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("passConversionVeto");
+          
        ZLe1CorrEt    =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("corrEt_");
        ZLe1CorrFact  =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("corrfactor_");
        ZLe2CorrEt    =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("corrEt_");
