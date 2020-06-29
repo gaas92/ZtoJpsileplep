@@ -240,7 +240,15 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                 temp_lep_2.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
                 temp_mu_1.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
                 temp_mu_2.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
-                std::cout << "size ~ " << packed->size() << std::endl;
+                int fromZ = 0;
+                for(size_t k=0; k<packed->size(); k++){
+                    const reco::Candidate * stable_dau = &(*packed)[k];
+                    int stable_id = (*packed)[k].pdgId();
+                    if (stable_dau != nullptr && isAncestor(mom,stable_dau)) {
+                        fromZ++;
+                    }
+                }
+                std::cout << "how many daughters from Z ~  " << fromZ << std::endl;
                 for(size_t k=0; k<packed->size(); k++){ //loop over stable particle collection
                     const reco::Candidate * stable_dau = &(*packed)[k];
                     int stable_id = (*packed)[k].pdgId();
@@ -248,13 +256,13 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                         if(stable_id == 11 && temp_lep_1.M() == 0){ // if muon- && not previiulsy assigned
                             temp_lep_1.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                         }
-                        if(stable_id == -11 && temp_lep_2.M() == 0){ // if muon+ && not previusly assigned
+                        else if(stable_id == -11 && temp_lep_2.M() == 0){ // if muon+ && not previusly assigned
                             temp_lep_2.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                         }
-                        if(stable_id == 11 && temp_mu_1.M() == 0){ // if muon- && not previusly assigned
+                        else if(stable_id == 11 && temp_mu_1.M() == 0){ // if muon- && not previusly assigned
                             temp_mu_1.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                         }
-                        if(stable_id == -11 && temp_mu_2.M() == 0){ // if muon+ && not previusly assigned
+                        else if(stable_id == -11 && temp_mu_2.M() == 0){ // if muon+ && not previusly assigned
                             temp_mu_2.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                         }
                     }// end if stable particle cames from Z
