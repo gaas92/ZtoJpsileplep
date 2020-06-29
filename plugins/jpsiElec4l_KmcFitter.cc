@@ -266,7 +266,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
                       }
                   }// end if stable particle cames from Z
               }//end loop of stable particles
-              if (temp_lep_1.M() != 0 && temp_lep_2 !=0 && temp_mu_1.M() != 0 && temp_mu_2.M() !=0){ //if 4 leptons has been found
+              if (temp_lep_1.M() != 0 && temp_lep_2.M() !=0 && temp_mu_1.M() != 0 && temp_mu_2.M() !=0){ //if 4 leptons has been found
                   gen_lepton1_p4 = temp_lep_1;
                   gen_lepton2_p4 = temp_lep_2;
                   gen_muon1_p4 = temp_mu_1;
