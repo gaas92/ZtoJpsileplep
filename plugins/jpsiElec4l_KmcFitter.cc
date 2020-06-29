@@ -255,7 +255,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
            gen_z_vtx.SetXYZ(dau->vx(),dau->vy(),dau->vz());
            n_Z_dau = dau->numberOfDaughters();
            std::cout << " Z daugh: " << dau->numberOfDaughters() << std::endl;
-           if (n_Z_dau!=4) continue; // looking for 4 leptons
+           //if (n_Z_dau!=4) continue; // looking for 4 leptons
            for (size_t k=0; k<dau->numberOfDaughters(); k++) {
              const reco::Candidate *gdau = dau->daughter(k);
              std::cout << "MC Z daughter pdgID: " << gdau->pdgId() << "mass: " << gdau->mass() << std::endl;
