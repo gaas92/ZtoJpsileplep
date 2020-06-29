@@ -263,7 +263,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
              foundit++;
              //gen_jpsi_vtx.SetXYZ(gdau->vx(),gdau->vy(),gdau->vz());
              //gen_jpsi_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
-             //int nm = 0;
+             int nm = 0;
              for (size_t k=0; k<packed->size(); k++) {
                  //const reco::Candidate * dauInPrunedColl = (*packed)[k].mother(0);
                  const reco::Candidate * dauInPrunedColl = &(*packed)[k];
