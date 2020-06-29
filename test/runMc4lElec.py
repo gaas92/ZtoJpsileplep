@@ -24,7 +24,8 @@ process.TFileService = cms.Service("TFileService",
         fileName = cms.string('Z4l_ee_MC18.root'),
 )
 
-from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
+#from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
+from EgammaUser.EgammaPostRecoTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
 setupEgammaPostRecoSeq(process,
 runEnergyCorrections=False, #corrections by default are fine so no need to re-run
 era='2018-Prompt')
