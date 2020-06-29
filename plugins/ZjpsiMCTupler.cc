@@ -681,7 +681,7 @@ ZjpsiMCTupler::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
          }//end for csize
        }//end if Zcand.isValid and Zcand not empty
     //}// end if not only gen
-   std::cout << "Pass to psi tupler " << std::endl;
+   //std::cout << "Pass to psi tupler " << std::endl;
 
 }//end analyze  
 
