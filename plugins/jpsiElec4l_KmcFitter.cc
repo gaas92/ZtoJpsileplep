@@ -253,6 +253,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
            gen_z_p4.SetPtEtaPhiM(dau->pt(),dau->eta(),dau->phi(),dau->mass());
            std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
            std::cout << " Z mass : " << dau->mass() << std::endl;
+           int nm = 0;
            gen_z_vtx.SetXYZ(dau->vx(),dau->vy(),dau->vz());
            //n_Z_dau = dau->numberOfDaughters();
            std::cout << " Z daugh: " << dau->numberOfDaughters() << std::endl;
@@ -264,7 +265,6 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
              foundit++;
              //gen_jpsi_vtx.SetXYZ(gdau->vx(),gdau->vy(),gdau->vz());
              //gen_jpsi_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
-             int nm = 0;
              for (size_t k=0; k<packed->size(); k++) {
                  //const reco::Candidate * dauInPrunedColl = (*packed)[k].mother(0);
                  const reco::Candidate * dauInPrunedColl = &(*packed)[k];
