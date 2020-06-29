@@ -261,10 +261,10 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                 if (temp_lep_1.M() != 0 && temp_lep_2.M() !=0 && temp_mu_1.M() != 0 && temp_mu_2.M() !=0){ //if 4 leptons has been found
                     gen_z_p4.SetPtEtaPhiM(mom->pt(),mom->eta(),mom->phi(),mom->mass());
                     if(!std::isnan(gen_z_p4.M())){
-                       gen_lepton1_p4 = temp_lep_1 ? temp_lep_1.Pt() > temp_mu_1.Pt() : temp_mu_1;
-                       gen_lepton2_p4 = temp_lep_2 ? temp_lep_2.Pt() > temp_mu_2.Pt() : temp_mu_2;
-                       gen_muon1_p4 = temp_mu_1 ? temp_mu_1.Pt() < temp_lep_1.Pt() : temp_lep_1;
-                       gen_muon2_p4 = temp_mu_2 ? temp_mu_2.Pt() < temp_lep_2.Pt() : temp_lep_2;
+                       gen_lepton1_p4 = temp_lep_1.Pt() > temp_mu_1.Pt() ? temp_lep_1 : temp_mu_1;
+                       gen_lepton2_p4 = temp_lep_2.Pt() > temp_mu_2.Pt() ? temp_lep_2 : temp_mu_2;
+                       gen_muon1_p4 = temp_mu_1.Pt() < temp_lep_1.Pt() ? temp_mu_1 : temp_lep_1;
+                       gen_muon2_p4 = temp_mu_2.Pt() < temp_lep_2.Pt() ? temp_mu_2 : temp_lep_2;
                        gen_jpsi_p4 = temp_mu_1 + temp_mu_2;
                        gen_z_vtx.SetXYZ(mom->vx(),mom->vy(),mom->vz());
                        TLorentzVector zz = temp_lep_1 + temp_lep_2 + temp_mu_1 + temp_mu_2;
