@@ -238,6 +238,50 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
   int n_Z_dau = 0;
   int Event_Cand = 1;
    //std::cout << "test" << std::endl;
+  //NEW MC ALV
+  if (pruned.isValid() ){ // if mc collection exists
+      for(size_t i=0; i<pruned->size(); i++){ // loop over generated events
+          const reco::Candidate *mom = &(*pruned)[i];
+          if(abs(mom->pdgId()) == 23){ // if generated is Z boson
+              TLorentzVector temp_lep_1, temp_lep_2, temp_mu_1, temp_mu_2; //define tempotals
+              temp_lep_1.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+              temp_lep_2.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+              temp_mu_1.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+              temp_mu_2.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+              for(size_t k=0; k<packed->size(); k++){ //loop over stable particle collection
+                  const reco::Candidate * stable_dau = &(*packed)[k];
+                  int stable_id = (*packed)[k].pdgId();
+                  if (stable_dau != nullptr && isAncestor(mom,stable_dau)) { // if stable comes from Z
+                      if(stable_id == 11 && temp_lep_1.M() == 0){ // if electron && not previiulsy assigned
+                          temp_lep_1.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                      }
+                      if(stable_id == -11 && temp_lep_2.M() == 0){ // if positron && not previusly assigned
+                          temp_lep_2.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                      }
+                      if(stable_id == 13 && temp_mu_1.M() == 0){ // if muon- && not previusly assigned
+                          temp_mu_1.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                      }
+                      if(stable_id == -13 && temp_mu_2.M() == 0){ // if muon+ && not previusly assigned
+                          temp_mu_2.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                      }
+                  }// end if stable particle cames from Z
+              }//end loop of stable particles
+              if (temp_lep_1.M() != 0 && temp_lep_2 !=0 && temp_mu_1.M() != 0 && temp_mu_2.M() !=0){ //if 4 leptons has been found
+                  gen_lepton1_p4 = temp_lep_1;
+                  gen_lepton2_p4 = temp_lep_2;
+                  gen_muon1_p4 = temp_mu_1;
+                  gen_muon2_p4 = temp_mu_2;
+                  gen_jpsi_p4 = temp_mu_1 + temp_mu_2;
+                  gen_z_p4.SetPtEtaPhiM(mom->pt(),mom->eta(),mom->phi(),mom->mass());
+                  gen_z_vtx.SetXYZ(mom->vx(),mom->vy(),mom->vz());
+                  TLorentzVector zz = temp_lep_1 + temp_lep_2 + temp_mu_1 + temp_mu_2;
+                  std::cout << "Found Z to 4l (2 mu + 2 el), Z cand mass ~ " << gen_z_p4.M() << std::endl;
+                  std::cout << "4 lep gen mass ~ " << zz.M() << std::endl;
+              }
+          }// end if Z
+      }// end loop of generated events
+  }//end pruned
+  /*
    if ( pruned.isValid() ) {
      int foundit = 0;
      //std::cout << "MC ok " << std::endl;
@@ -306,7 +350,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
      }//end for
 
   } //end pruned
-    
+  */
   //NEW for muons and psi pairs
   int nonia = dimuons->size();
   int nmuons = dileptons->size()*2;
