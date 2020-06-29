@@ -240,7 +240,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
    //std::cout << "test" << std::endl;
    if ( pruned.isValid() ) {
      int foundit = 0;
-     //std::cout << "MC ok " << std::endl;
+     std::cout << "MC ok " << std::endl;
 
      for (size_t i=0; i<pruned->size(); i++) {
         foundit = 0;
@@ -254,40 +254,40 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
            //std::cout << " Z mass : " << dau->mass() << std::endl;
            gen_z_vtx.SetXYZ(dau->vx(),dau->vy(),dau->vz());
            n_Z_dau = dau->numberOfDaughters();
-           if (n_Z_dau!=3) continue;
-           //std::cout << " Z daugh: " << dau->numberOfDaughters() << std::endl;
+           if (n_Z_dau!=4) continue; // looking for 4 leptons
+           std::cout << " Z daugh: " << dau->numberOfDaughters() << std::endl;
            for (size_t k=0; k<dau->numberOfDaughters(); k++) {
              const reco::Candidate *gdau = dau->daughter(k);
-             //std::cout << "MC Z daughter pdgID: " << gdau->pdgId() << "mass: " << gdau->mass() << std::endl;
-             if (gdau->pdgId()==443 ) { //&& gdau->status()==2) {   //found jpsi
-               foundit++;
-               gen_jpsi_vtx.SetXYZ(gdau->vx(),gdau->vy(),gdau->vz());
-               gen_jpsi_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
-               int nm = 0;
-               for (size_t k=0; k<packed->size(); k++) {
-                  //const reco::Candidate * dauInPrunedColl = (*packed)[k].mother(0);
-                  const reco::Candidate * dauInPrunedColl = &(*packed)[k];
-                  int stable_id = (*packed)[k].pdgId();
-                  if (dauInPrunedColl != nullptr && isAncestor(gdau,dauInPrunedColl)) {
+             std::cout << "MC Z daughter pdgID: " << gdau->pdgId() << "mass: " << gdau->mass() << std::endl;
+             //if (gdau->pdgId()==443 ) { && gdau->status()==2) {   //found jpsi not useful
+             foundit++;
+             //gen_jpsi_vtx.SetXYZ(gdau->vx(),gdau->vy(),gdau->vz());
+             //gen_jpsi_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
+             //int nm = 0;
+             for (size_t k=0; k<packed->size(); k++) {
+                 //const reco::Candidate * dauInPrunedColl = (*packed)[k].mother(0);
+                 const reco::Candidate * dauInPrunedColl = &(*packed)[k];
+                 int stable_id = (*packed)[k].pdgId();
+                 if (dauInPrunedColl != nullptr && isAncestor(dau,dauInPrunedColl)) {
                      //if (ndau<1) std::cout << (*packed)[k].pdgId() << " ";
                      //std::cout<<" psi = "<< gdau->pdgId()<< " daughter ID " << stable_id << std::endl;
                      if(stable_id == 13) { //found muon-
                          gen_muon1_p4.SetPtEtaPhiM(dauInPrunedColl->pt(),dauInPrunedColl->eta(),dauInPrunedColl->phi(),dauInPrunedColl->mass());
                          nm++;
-                         //std::cout<< "works m- "<< dauInPrunedColl->mass() <<std::endl;
+                         std::cout<< "works m- "<< dauInPrunedColl->mass() <<std::endl;
                      }
-                      if(stable_id == -13){ //found muon+
-                        gen_muon2_p4.SetPtEtaPhiM(dauInPrunedColl->pt(),dauInPrunedColl->eta(),dauInPrunedColl->phi(),dauInPrunedColl->mass());
-                        nm++;
-                        //std::cout<< "works m+ "<< dauInPrunedColl->mass() << std::endl;
+                     if(stable_id == -13){ //found muon+
+                         gen_muon2_p4.SetPtEtaPhiM(dauInPrunedColl->pt(),dauInPrunedColl->eta(),dauInPrunedColl->phi(),dauInPrunedColl->mass());
+                         nm++;
+                         std::cout<< "works m+ "<< dauInPrunedColl->mass() << std::endl;
                      }
-                  }
-               }
+                 }
+             }
                  
-             }//end found psi
+             //end found psi
              if (gdau->pdgId()==11 ) {// pdgid for electron=11
                 foundit++;
-            gen_lepton1_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
+                gen_lepton1_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
                  
             }
              if (gdau->pdgId()==-11 ) {// pdgid for muon+=13
