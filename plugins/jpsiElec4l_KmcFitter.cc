@@ -251,6 +251,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
            foundit++;
            //const reco::Candidate * Zboson = dau;
            gen_z_p4.SetPtEtaPhiM(dau->pt(),dau->eta(),dau->phi(),dau->mass());
+           std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
            std::cout << " Z mass : " << dau->mass() << std::endl;
            gen_z_vtx.SetXYZ(dau->vx(),dau->vy(),dau->vz());
            //n_Z_dau = dau->numberOfDaughters();
@@ -283,18 +284,20 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
                      }
                  }
              }
-                 
              //end found psi
              if (gdau->pdgId()==11 ) {// pdgid for electron=11
                 foundit++;
                 gen_lepton1_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
-                 
+                std::cout << "Found electron " << std::endl;
             }
              if (gdau->pdgId()==-11 ) {// pdgid for muon+=13
                 foundit++;
                 gen_lepton2_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
+                std::cout << "Found positron " << std::endl;
             }
            }// end number of daughters
+            TLorentzVector zz = gen_muon1_p4 + gen_muon2_p4 + gen_lepton1_p4 + gen_lepton2_p4;
+            if (nm > 1 && foundit > 4) std::cout << "Generated Z 4l Mass is: " << zz.M() << std::endl;
         } //endif found Z
      }//end for
 
