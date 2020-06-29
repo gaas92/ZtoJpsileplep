@@ -240,6 +240,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                 temp_lep_2.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
                 temp_mu_1.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
                 temp_mu_2.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                std::cout << "size ~ " << packed->size() << std::endl;
                 for(size_t k=0; k<packed->size(); k++){ //loop over stable particle collection
                     const reco::Candidate * stable_dau = &(*packed)[k];
                     int stable_id = (*packed)[k].pdgId();
