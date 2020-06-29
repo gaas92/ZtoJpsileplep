@@ -268,16 +268,18 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
                   }// end if stable particle cames from Z
               }//end loop of stable particles
               if (temp_lep_1.M() != 0 && temp_lep_2.M() !=0 && temp_mu_1.M() != 0 && temp_mu_2.M() !=0){ //if 4 leptons has been found
-                  gen_lepton1_p4 = temp_lep_1;
-                  gen_lepton2_p4 = temp_lep_2;
-                  gen_muon1_p4 = temp_mu_1;
-                  gen_muon2_p4 = temp_mu_2;
-                  gen_jpsi_p4 = temp_mu_1 + temp_mu_2;
                   gen_z_p4.SetPtEtaPhiM(mom->pt(),mom->eta(),mom->phi(),mom->mass());
-                  gen_z_vtx.SetXYZ(mom->vx(),mom->vy(),mom->vz());
-                  TLorentzVector zz = temp_lep_1 + temp_lep_2 + temp_mu_1 + temp_mu_2;
-                  std::cout << "Found Z to 4l (2 mu + 2 el), Z cand mass ~ " << gen_z_p4.M() << std::endl;
-                  std::cout << "4 lep gen mass ~ " << zz.M() << std::endl;
+                  if(!std::isnan(gen_z_p4.M())){
+                     gen_lepton1_p4 = temp_lep_1;
+                     gen_lepton2_p4 = temp_lep_2;
+                     gen_muon1_p4 = temp_mu_1;
+                     gen_muon2_p4 = temp_mu_2;
+                     gen_jpsi_p4 = temp_mu_1 + temp_mu_2;
+                     gen_z_vtx.SetXYZ(mom->vx(),mom->vy(),mom->vz());
+                     TLorentzVector zz = temp_lep_1 + temp_lep_2 + temp_mu_1 + temp_mu_2;
+                     std::cout << "Found Z to 4l (2 mu + 2 el), Z cand mass ~ " << gen_z_p4.M() << std::endl;
+                     std::cout << "4 lep gen mass ~ " << zz.M() << std::endl;
+                  }
               }
           }// end if Z
       }// end loop of generated events
