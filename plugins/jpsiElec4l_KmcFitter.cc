@@ -251,16 +251,16 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
            foundit++;
            //const reco::Candidate * Zboson = dau;
            gen_z_p4.SetPtEtaPhiM(dau->pt(),dau->eta(),dau->phi(),dau->mass());
-           std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
-           std::cout << " Z mass : " << dau->mass() << std::endl;
+           //std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+           //std::cout << " Z mass : " << dau->mass() << std::endl;
            int nm = 0;
            gen_z_vtx.SetXYZ(dau->vx(),dau->vy(),dau->vz());
            //n_Z_dau = dau->numberOfDaughters();
-           std::cout << " Z daugh: " << dau->numberOfDaughters() << std::endl;
+           //std::cout << " Z daugh: " << dau->numberOfDaughters() << std::endl;
            //if (n_Z_dau!=4) continue; // looking for 4 leptons
            for (size_t k=0; k<dau->numberOfDaughters(); k++) {
              const reco::Candidate *gdau = dau->daughter(k);
-             std::cout << "MC Z daughter pdgID: " << gdau->pdgId() << "mass: " << gdau->mass() << std::endl;
+             //std::cout << "MC Z daughter pdgID: " << gdau->pdgId() << "mass: " << gdau->mass() << std::endl;
              //if (gdau->pdgId()==443 ) { && gdau->status()==2) {   //found jpsi not useful
              foundit++;
              //gen_jpsi_vtx.SetXYZ(gdau->vx(),gdau->vy(),gdau->vz());
@@ -275,12 +275,12 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
                      if(stable_id == 13) { //found muon-
                          gen_muon1_p4.SetPtEtaPhiM(dauInPrunedColl->pt(),dauInPrunedColl->eta(),dauInPrunedColl->phi(),dauInPrunedColl->mass());
                          nm++;
-                         std::cout<< "works m- "<< dauInPrunedColl->mass() <<std::endl;
+                         //std::cout<< "works m- "<< dauInPrunedColl->mass() <<std::endl;
                      }
                      if(stable_id == -13){ //found muon+
                          gen_muon2_p4.SetPtEtaPhiM(dauInPrunedColl->pt(),dauInPrunedColl->eta(),dauInPrunedColl->phi(),dauInPrunedColl->mass());
                          nm++;
-                         std::cout<< "works m+ "<< dauInPrunedColl->mass() << std::endl;
+                         //std::cout<< "works m+ "<< dauInPrunedColl->mass() << std::endl;
                      }
                  }
              }
@@ -288,16 +288,20 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
              if (gdau->pdgId()==11 ) {// pdgid for electron=11
                 foundit++;
                 gen_lepton1_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
-                std::cout << "Found electron " << std::endl;
+                //std::cout << "Found electron " << std::endl;
             }
              if (gdau->pdgId()==-11 ) {// pdgid for muon+=13
                 foundit++;
                 gen_lepton2_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
-                std::cout << "Found positron " << std::endl;
+                //std::cout << "Found positron " << std::endl;
             }
            }// end number of daughters
             TLorentzVector zz = gen_muon1_p4 + gen_muon2_p4 + gen_lepton1_p4 + gen_lepton2_p4;
-            if (nm > 1 && foundit > 4) std::cout << "Generated Z 4l Mass is: " << zz.M() << std::endl;
+            if (gen_lepton1_p4.M() !=0 && gen_lepton2_p4.M() !=0 && gen_muon1_p4.M() !=0 && gen_muon2_p4.M() !=0){
+                std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+                std::cout << " Z mass : " << dau->mass() << std::endl;
+                std::cout << "Generated Z 4l Mass is: " << zz.M() << std::endl;
+            }
         } //endif found Z
      }//end for
 
