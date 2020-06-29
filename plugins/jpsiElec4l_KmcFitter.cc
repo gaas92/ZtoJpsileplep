@@ -242,6 +242,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
   if (pruned.isValid() ){ // if mc collection exists
       for(size_t i=0; i<pruned->size(); i++){ // loop over generated events
           const reco::Candidate *mom = &(*pruned)[i];
+          if (std::isnan(mom->mass())) continue;
           if(abs(mom->pdgId()) == 23){ // if generated is Z boson
               TLorentzVector temp_lep_1, temp_lep_2, temp_mu_1, temp_mu_2; //define tempotals
               temp_lep_1.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
