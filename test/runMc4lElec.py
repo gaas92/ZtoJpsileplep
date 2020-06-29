@@ -15,7 +15,8 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc')
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-        '/store/mc/RunIIAutumn18MiniAOD/ZZTo4L_TuneCP5_DoubleScattering_13TeV-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15-v5/00000/56984832-8D15-3A4D-8C03-F145A5DD2627.root' ### 2018MC
+        #'/store/mc/RunIIAutumn18MiniAOD/ZZTo4L_TuneCP5_DoubleScattering_13TeV-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15-v5/00000/56984832-8D15-3A4D-8C03-F145A5DD2627.root' ### 2018MC
+        '/store/mc/RunIIAutumn18MiniAOD/ZZTo4L_TuneCP5_DoubleScattering_13TeV-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15-v5/00000/6072A673-CF57-DB43-8744-6D0D46E0D670.root'
    )
 )
 
