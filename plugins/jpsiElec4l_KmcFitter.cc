@@ -240,7 +240,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
    //std::cout << "test" << std::endl;
    if ( pruned.isValid() ) {
      int foundit = 0;
-     std::cout << "MC ok " << std::endl;
+     //std::cout << "MC ok " << std::endl;
 
      for (size_t i=0; i<pruned->size(); i++) {
         foundit = 0;
@@ -251,11 +251,11 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
            foundit++;
            //const reco::Candidate * Zboson = dau;
            gen_z_p4.SetPtEtaPhiM(dau->pt(),dau->eta(),dau->phi(),dau->mass());
-           //std::cout << " Z mass : " << dau->mass() << std::endl;
+           std::cout << " Z mass : " << dau->mass() << std::endl;
            gen_z_vtx.SetXYZ(dau->vx(),dau->vy(),dau->vz());
            n_Z_dau = dau->numberOfDaughters();
-           if (n_Z_dau!=4) continue; // looking for 4 leptons
            std::cout << " Z daugh: " << dau->numberOfDaughters() << std::endl;
+           if (n_Z_dau!=4) continue; // looking for 4 leptons
            for (size_t k=0; k<dau->numberOfDaughters(); k++) {
              const reco::Candidate *gdau = dau->daughter(k);
              std::cout << "MC Z daughter pdgID: " << gdau->pdgId() << "mass: " << gdau->mass() << std::endl;
