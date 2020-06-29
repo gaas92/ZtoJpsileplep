@@ -299,7 +299,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
             TLorentzVector zz = gen_muon1_p4 + gen_muon2_p4 + gen_lepton1_p4 + gen_lepton2_p4;
             if (gen_lepton1_p4.M() !=0 && gen_lepton2_p4.M() !=0 && gen_muon1_p4.M() !=0 && gen_muon2_p4.M() !=0){
                 std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
-                std::cout << " Z mass : " << dau->mass() << std::endl;
+                std::cout << " Z mass : " << mom->mass() << std::endl;
                 std::cout << "Generated Z 4l Mass is: " << zz.M() << std::endl;
             }
         } //endif found Z
