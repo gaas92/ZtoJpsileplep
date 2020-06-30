@@ -603,7 +603,7 @@ void Zjpsi_eeMCTupler::CheckHLTTriggers(const std::vector<std::string>& TrigList
 
     int ntrigs=TrigList.size();
     if (ntrigs==0)
-        std::cout << "No trigger name given in TriggerResults of the input " << endl;
+        //std::cout << "No trigger name given in TriggerResults of the input " << endl;
     
     for (int itrig=0; itrig< ntrigs; itrig++) {
         //TString trigName = triggerNames_.triggerName(itrig);
@@ -714,7 +714,7 @@ void Zjpsi_eeMCTupler::analyze(const edm::Event & iEvent, const edm::EventSetup 
   }
   catch ( ... ) 
     {
-      std::cout << "Couldn't get handle on HLT Trigger!" << std::endl;
+      //std::cout << "Couldn't get handle on HLT Trigger!" << std::endl;
     }
     
     //HLTConfigProvider hltrigConfig_;
@@ -736,7 +736,7 @@ void Zjpsi_eeMCTupler::analyze(const edm::Event & iEvent, const edm::EventSetup 
 
   //std::cout << "is Empty ? " << ZCands->empty() << std::endl;
   if (ZCands.isValid() && !ZCands->empty()) {
-      std::cout << "ZCands is not empty: " << std::endl;
+      //std::cout << "ZCands is not empty: " << std::endl;
       unsigned int csize = ZCands->size();
       //if (bestCandidateOnly_) csize = 1;
 
@@ -1047,7 +1047,7 @@ UInt_t Zjpsi_eeMCTupler::isTriggerMatchedbyFilter(const pat::CompositeCandidate 
      const pat::TriggerObjectStandAloneCollection mu2HLTMatches = muon2->triggerObjectMatchesByFilter(HLTLastFilters[iTr]);
      if (!mu1HLTMatches.empty() && !mu2HLTMatches.empty()){
          matched += (1<<iTr);
-         std::cout << "IT WORKS !!!" << std::endl;
+         //std::cout << "IT WORKS !!!" << std::endl;
      } 
   }
   return matched;

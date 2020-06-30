@@ -277,8 +277,8 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
                      gen_jpsi_p4 = temp_mu_1 + temp_mu_2;
                      gen_z_vtx.SetXYZ(mom->vx(),mom->vy(),mom->vz());
                      TLorentzVector zz = temp_lep_1 + temp_lep_2 + temp_mu_1 + temp_mu_2;
-                     std::cout << "Found Z to 4l (2 mu + 2 el), Z cand mass ~ " << gen_z_p4.M() << std::endl;
-                     std::cout << "4 lep gen mass ~ " << zz.M() << std::endl;
+                     //std::cout << "Found Z to 4l (2 mu + 2 el), Z cand mass ~ " << gen_z_p4.M() << std::endl;
+                     //std::cout << "4 lep gen mass ~ " << zz.M() << std::endl;
                   }
               }
           }// end if Z
@@ -729,10 +729,10 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
             try{
                 LLTTks.push_back(theTTBuilder->build(&dilepTk[0]));
                 LLTTks.push_back(theTTBuilder->build(&dilepTk[1]));
-                std::cout << "ok" << std::endl;
+                //std::cout << "ok" << std::endl;
             }
             catch (...){
-                std::cout<<"Bad electron, i.e. no track" << std::endl;
+                //std::cout<<"Bad electron, i.e. no track" << std::endl;
                 continue;
             }
             std::pair<bool,Measurement1D> tkPVdistel1 = IPTools::absoluteImpactParameter3D(LLTTks.at(0),*PV);
@@ -862,7 +862,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
                 float mu1Pz_fit;
           
             	if (!child){
-                    std::cout << "Mu1" << std::endl;
+                    //std::cout << "Mu1" << std::endl;
                     mu1M_fit  = 0;
                     mu1Q_fit  = 0;
                     mu1Px_fit = 0;
@@ -923,7 +923,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
                 float mu2Pz_fit;
           
 		        if (!child){
-                    std::cout << "Mu2" << std::endl;
+                    //std::cout << "Mu2" << std::endl;
                     mu2M_fit  = 0;
                     mu2Q_fit  = 0;
                     mu2Px_fit = 0;
@@ -1216,7 +1216,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
                 Event_Cand++;
                 
 				ZCandColl->push_back(patZ);
-                std::cout<< "something has been pushed"	<< std::endl;
+                //std::cout<< "something has been pushed"	<< std::endl;
 			
 			//} Z candidate is valid
 

@@ -79,8 +79,9 @@ def main():
         config.Data.inputDataset = None
 	config.Data.inputDBS = 'global'
    #     config.Data.splitting = 'Automatic'
-        config.Data.splitting = 'LumiBased'
-        config.Data.unitsPerJob = 30
+   #     config.Data.splitting = 'LumiBased'
+        config.Data.splitting = 'FileBased'
+        config.Data.unitsPerJob = 1
    #     config.Data.totalUnits = 30
 	#config.Data.lumiMask = '' #has nosence in Mc
 	config.Data.publication = True
