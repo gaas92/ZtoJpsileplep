@@ -276,8 +276,8 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                        gen_jpsi_p4 = temp_mu_1 + temp_mu_2;
                        gen_z_vtx.SetXYZ(mom->vx(),mom->vy(),mom->vz());
                        TLorentzVector zz = temp_lep_1 + temp_lep_2 + temp_mu_1 + temp_mu_2;
-                       std::cout << "Found Z to 4l (2 mu + 2 mu), Z cand mass ~ " << gen_z_p4.M() << std::endl;
-                       std::cout << "4 lep gen mass ~ " << zz.M() << std::endl;
+                       //std::cout << "Found Z to 4l (2 mu + 2 mu), Z cand mass ~ " << gen_z_p4.M() << std::endl;
+                       //std::cout << "4 lep gen mass ~ " << zz.M() << std::endl;
                     }
                 }
             }// end if Z
@@ -543,12 +543,12 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                  //int pass1 = 0;
                  //int pass2 = 0;
                  if (lept1 == muon1 || lept1==muon2 || lept2 == muon1 || lept2 == muon2  ) {
-                     std::cout << "blocks repeating by same muon, it works!" << std::endl;
+                     //std::cout << "blocks repeating by same muon, it works!" << std::endl;
                      continue;
                  }
 
                  if (lept1->innerTrack()==muon1->innerTrack() || lept1->innerTrack()==muon2->innerTrack() || lept2->innerTrack()==muon1->innerTrack() || lept2->innerTrack()==muon2->innerTrack() ) {
-                     std:: cout << "blocks repeating by same track, it works !" << std::endl;
+                     //std:: cout << "blocks repeating by same track, it works !" << std::endl;
                      continue;
                      
                  }
@@ -909,7 +909,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
         float mu1Pz_fit;
                  
 		if (!child){
-            std::cout << "M1" << std::endl;
+            //std::cout << "M1" << std::endl;
             mu1M_fit  = 0;
             mu1Q_fit  = 0;
             mu1Px_fit = 0;
@@ -974,7 +974,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
         float mu2Pz_fit;
 
         if (!child){
-            std::cout << "Mu2" << std::endl;
+            //std::cout << "Mu2" << std::endl;
             mu2M_fit  = 0;
             mu2Q_fit  = 0;
             mu2Px_fit = 0;
@@ -1177,11 +1177,11 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
         patZ.addDaughter(pat_mcL1, "mcL1");
         patZ.addDaughter(pat_mcL2, "mcL2");
         patZ.addUserInt("Event_Cand_", Event_Cand);
-        std::cout<< "Z Cand Event: "<< Event_Cand << std::endl;
+        //std::cout<< "Z Cand Event: "<< Event_Cand << std::endl;
         Event_Cand++;
 
         ZCandColl->push_back(patZ);
-        std::cout << "Zcand OK" <<std::endl;
+        //std::cout << "Zcand OK" <<std::endl;
 /*test
         ZCandColl->push_back(patZ);
         breaker +=1;

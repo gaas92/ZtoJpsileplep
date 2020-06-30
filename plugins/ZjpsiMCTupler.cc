@@ -443,7 +443,7 @@ ZjpsiMCTupler::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    }
    catch ( ... )
     {
-      std::cout << "Couldn't get handle on HLT Trigger!" << std::endl;
+      //std::cout << "Couldn't get handle on HLT Trigger!" << std::endl;
     }
 
     std::vector<std::string> TrigTable; TrigTable.clear();
@@ -722,7 +722,7 @@ void ZjpsiMCTupler::CheckHLTTriggers(const std::vector<std::string>& TrigList){
 
     int ntrigs=TrigList.size();
     if (ntrigs==0)
-        std::cout << "No trigger name given in TriggerResults of the input " << endl;
+        //std::cout << "No trigger name given in TriggerResults of the input " << endl;
 
     for (int itrig=0; itrig< ntrigs; itrig++) {
          //TString trigName = triggerNames_.triggerName(itrig);
