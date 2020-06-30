@@ -677,7 +677,7 @@ ZjpsiMCTupler::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
            Event_Cand = z_Cand.userInt("Event_Cand_");
            Event_Cand++;
            Z_tree->Fill();
-           std::cout << "Z-Fill" << std::endl;
+           //std::cout << "Z-Fill" << std::endl;
          }//end for csize
        }//end if Zcand.isValid and Zcand not empty
     //}// end if not only gen
