@@ -805,11 +805,13 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                 ////////////////////////////////////////////////////////////////////////////////
 		// Get the Z boson
         /// check if convinatory mesing with us
-        std::cout << "lept 1 Pt: " << lept1->pt() << ", eta-phi: "<< lept1->eta() << " - " << lept1->phi()  <<std::endl;
-        std::cout << "lept 2 Pt: " << lept2->pt() << ", eta-phi: "<< lept2->eta() << " - " << lept2->phi()  <<std::endl;
-        std::cout << "muon 1 Pt: " << muon1->pt() << ", eta-phi: "<< muon1->eta() << " - " << muon1->phi()  <<std::endl;
-        std::cout << "muon 2 Pt: " << muon2->pt() << ", eta-phi: "<< muon2->eta() << " - " << muon2->phi()  <<std::endl;
-        std::cout << "Z mass from fit --> " << ZM_fit <<" Event Cand: "<< Event_Cand <<std::endl;
+        //std::cout << "lept 1 Pt: " << lept1->pt() << ", eta-phi: "<< lept1->eta() << " - " << lept1->phi()  <<std::endl;
+        //std::cout << "lept 2 Pt: " << lept2->pt() << ", eta-phi: "<< lept2->eta() << " - " << lept2->phi()  <<std::endl;
+        //std::cout << "muon 1 Pt: " << muon1->pt() << ", eta-phi: "<< muon1->eta() << " - " << muon1->phi()  <<std::endl;
+        //std::cout << "muon 2 Pt: " << muon2->pt() << ", eta-phi: "<< muon2->eta() << " - " << muon2->phi()  <<std::endl;
+        //std::cout << "Z mass from fit --> " << ZM_fit <<" Event Cand: "<< Event_Cand <<std::endl;
+        if (ZM_fit < 60.0) continue;
+        if (ZM_fit > 150.0) continue;
 		reco::CompositeCandidate recoZ(0, math::XYZTLorentzVector(ZPx_fit, ZPy_fit, ZPz_fit,
 			      sqrt(ZM_fit*ZM_fit + ZPx_fit*ZPx_fit + ZPy_fit*ZPy_fit +
 			      ZPz_fit*ZPz_fit)), math::XYZPoint(ZVtxX_fit,
