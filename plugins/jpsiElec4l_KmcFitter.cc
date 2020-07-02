@@ -1045,7 +1045,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
                 patL1.addUserFloat("dIP3DErr"	,tkPVdistel1.second.error());
                 
                 patL1.addUserFloat("dRIsoEA", ElectronRelIso(*lept1));
-                std::cout << " dRisoEA l1 ~" << ElectronRelIso(*lept1) << std::endl;
+                //std::cout << " dRisoEA l1 ~" << ElectronRelIso(*lept1) << std::endl;
                 patL1.addUserFloat("trackMomentumAtVtx"   , (float)sqrt(lept1->trackMomentumAtVtx().mag2()));
                 patL1.addUserFloat("ecalEnergy"           , (float)lept1->ecalEnergy());
                 patL1.addUserFloat("full5x5_sigmaIetaIeta", (float)lept1->full5x5_sigmaIetaIeta());

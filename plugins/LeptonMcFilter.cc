@@ -151,6 +151,9 @@ LeptonMcFilter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
         if (abs(tkPVdist1.second.significance())>4.) continue;
         for (View<pat::Muon>::const_iterator muon2 = muons->begin() ;muon2 !=  muons->end(); ++muon2 ) {
                 if((muon1->charge() * muon2->charge()) != -1) continue;
+                if(muon1==muon1) continue; //v7 add
+                if(!(track_1->quality(reco::TrackBase::highPurity))) continue; //v7
+                if(!(track_1->quality(reco::TrackBase::highPurity))) continue; //v7
                 reco::TrackRef track_2 = muon2->track();
                 if (track_2.isNull()) continue;
                 reco::TransientTrack tt2 = theTTBuilder->build(*muon2->track());
