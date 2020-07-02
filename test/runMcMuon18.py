@@ -41,7 +41,8 @@ process.onia2MuMuPAT.primaryVertexTag=cms.InputTag('offlineSlimmedPrimaryVertice
 process.onia2MuMuPAT.beamSpotTag=cms.InputTag('offlineBeamSpot')
 process.onia2MuMuPAT.higherPuritySelection=cms.string("isGlobalMuon")
 process.onia2MuMuPAT.lowerPuritySelection=cms.string("isGlobalMuon")
-process.onia2MuMuPAT.dimuonSelection=cms.string("2.55 < mass && mass < 3.65") ## linea 149
+#process.onia2MuMuPAT.dimuonSelection=cms.string("2.55 < mass && mass < 3.65") ## linea 149
+process.onia2MuMuPAT.dimuonSelection=cms.string("2.0 < mass && mass < 15.0") ## linea 149
 process.onia2MuMuPAT.addMCTruth = cms.bool(False)
 
 
