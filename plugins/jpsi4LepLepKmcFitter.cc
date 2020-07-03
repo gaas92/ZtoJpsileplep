@@ -407,7 +407,6 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
            }
        }//6
        else continue;
-         std::cout << "muon ok 410" << std::endl;
        reco::TrackRef glbTrack_l1 = lept1->track();
        reco::TrackRef glbTrack_l2 = lept2->track();
        reco::TrackRef glbTrack_m1 = muon1->track();
@@ -418,7 +417,8 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
        if (!(glbTrack_l2->quality(reco::TrackBase::highPurity))) continue;
        if (!(glbTrack_m1->quality(reco::TrackBase::highPurity))) continue;
        if (!(glbTrack_m2->quality(reco::TrackBase::highPurity))) continue;
-       
+       std::cout << "muon ok 420" << std::endl;
+
          
        int ZLe1Qid = 0;
        int ZLe2Qid = 0;
