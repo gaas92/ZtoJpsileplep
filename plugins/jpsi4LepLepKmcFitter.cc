@@ -836,8 +836,8 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 		psi.addDaughter(patM2,"muon2");
 		psi.setP4(patM1.p4()+patM2.p4());
                 //check how to acces this variables
-        psi.addUserFloat("vProb", dimuon->userFloat("vProb"));
-        psi.addUserFloat("vChi2", dimuon->userFloat("vNChi2"));
+        psi.addUserFloat("vProb", 0);
+        psi.addUserFloat("vChi2", 0);
 		//save measured values on a different daughter
 		pat::CompositeCandidate msrd_psi;
 		msrd_psi.addDaughter(pat_msrdM1,"msrd_muon1");
