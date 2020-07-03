@@ -620,14 +620,15 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
            continue;
        }
        KinematicParticleVertexFitter ZVertexFitter;
+       RefCountedKinematicTree ZTree;
        try{
-          RefCountedKinematicTree ZTree = ZVertexFitter.fit(ZDaughters);
+          ZTree = ZVertexFitter.fit(ZDaughters);
        }
        catch(...){
-          continue
+           continue;
        }
          
-       if (ZTree->isEmpty())continue;
+       if (ZTree->isEmpty()) continue;
        ZTree->movePointerToTheTop();
          
        RefCountedKinematicParticle fitZ = ZTree->currentParticle();
