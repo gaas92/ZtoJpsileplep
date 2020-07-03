@@ -763,10 +763,10 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
        patM1.addUserFloat("Dz",mdz1);
        //new
        patM1.addUserFloat("dRIso"    ,getIso( *muon1 ) );
-       patM1.addUserFloat("dIP3DSig", tkPVdist1.second.significance());
+       patM1.addUserFloat("dIP3DSig", tkPVdistem1.second.significance());
         
-       patM1.addUserFloat("dIP3D",tkPVdist1.second.value());
-       patM1.addUserFloat("dIP3DErr",tkPVdist1.second.error());
+       patM1.addUserFloat("dIP3D",tkPVdistem1.second.value());
+       patM1.addUserFloat("dIP3DErr",tkPVdistem1.second.error());
 
        int psiM1_TrackerLWM = muon1->muonBestTrack()->hitPattern().trackerLayersWithMeasurement();
        int psiM1_PixelLWM   = muon1->muonBestTrack()->hitPattern().pixelLayersWithMeasurement();
@@ -820,11 +820,11 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
        patM2.addUserFloat("Dz",mdz2);
        //New
        patM2.addUserFloat("dRIso"    ,getIso( *muon2 ) );
-       patM2.addUserFloat("dIP3DSig", tkPVdist2.second.significance());
+       patM2.addUserFloat("dIP3DSig", tkPVdistem2.second.significance());
                  
-        patM2.addUserFloat("dIP3d", tkPVdist2.second.significance());
-		patM2.addUserFloat("dIP3D",tkPVdist2.second.value());
-		patM2.addUserFloat("dIP3DErr",tkPVdist2.second.error());
+        patM2.addUserFloat("dIP3d", tkPVdistem2.second.significance());
+		patM2.addUserFloat("dIP3D", tkPVdistem2.second.value());
+		patM2.addUserFloat("dIP3DErr", tkPVdistem2.second.error());
         patM2.addUserInt("ZMu2Qid_", ZMu2Qid);
 		patM2.addUserFloat("psiM2_TrackerLWM_", psiM2_TrackerLWM);
 		patM2.addUserFloat("psiM2_PixelLWM_",  psiM2_PixelLWM);
