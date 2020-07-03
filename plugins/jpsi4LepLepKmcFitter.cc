@@ -616,7 +616,9 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
           ZDaughters.push_back(pFactory.particle(lep1TT,  muMass, chi, ndf, muSigma));
           ZDaughters.push_back(pFactory.particle(lep2TT,  muMass, chi, ndf, muSigma));
        }
-         
+       catch (...){
+           continue;
+       }
        KinematicParticleVertexFitter ZVertexFitter;
        try{
           RefCountedKinematicTree ZTree = ZVertexFitter.fit(ZDaughters);
