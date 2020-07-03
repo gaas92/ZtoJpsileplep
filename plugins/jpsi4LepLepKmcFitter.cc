@@ -316,7 +316,6 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
        int ch_m4 = iMuon4->charge();
 
        if ((ch_m1+ch_m2+ch_m3+ch_m4) != 0 ) continue;
-       std::cout << "muon ok 319" << std::endl;
 
        const pat::Muon* lept1 = 0;
        const pat::Muon* lept2 = 0;
@@ -408,6 +407,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
            }
        }//6
        else continue;
+         std::cout << "muon ok 410" << std::endl;
        reco::TrackRef glbTrack_l1 = lept1->track();
        reco::TrackRef glbTrack_l2 = lept2->track();
        reco::TrackRef glbTrack_m1 = muon1->track();
