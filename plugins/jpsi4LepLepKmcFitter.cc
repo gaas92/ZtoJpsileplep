@@ -93,9 +93,10 @@ class jpsi4LepLepKmcFitter : public edm::stream::EDProducer<> {
 
       // ----------member data ---------------------------
       //edm::EDGetTokenT<edm::View<pat::PackedCandidate>> trackCollection_label; //miniAPD
-      edm::EDGetTokenT<pat::CompositeCandidateCollection> dimuon_Label;
+      //edm::EDGetTokenT<pat::CompositeCandidateCollection> dimuon_Label;
       edm::EDGetTokenT<reco::VertexCollection> primaryVertices_Label;
-      edm::EDGetTokenT<pat::CompositeCandidateCollection> dilepton_Label;
+      //edm::EDGetTokenT<pat::CompositeCandidateCollection> dilepton_Label;
+      edm::EDGetTokenT<edm::View<pat::Muon>> muonToken_;
 
       //edm::EDGetTokenT<reco::BeamSpot> BSLabel_;
       edm::EDGetTokenT<reco::GenParticleCollection> genCands_;
