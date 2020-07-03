@@ -301,7 +301,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
     for(View<pat::Muon>::const_iterator iMuon2 = iMuon1+1; iMuon2 != muons->end(); ++iMuon2){
      for(View<pat::Muon>::const_iterator iMuon3 = iMuon2+1; iMuon3 != muons->end(); ++iMuon3){
      for(View<pat::Muon>::const_iterator iMuon4 = iMuon3+1; iMuon4 != muons->end(); ++iMuon4){
-       
+         std::cout << "muon ok " << std::endl;
        if(iMuon1 == iMuon2) continue;
        if(iMuon1 == iMuon3) continue;
        if(iMuon1 == iMuon4) continue;
