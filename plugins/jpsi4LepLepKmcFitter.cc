@@ -118,9 +118,10 @@ class jpsi4LepLepKmcFitter : public edm::stream::EDProducer<> {
 jpsi4LepLepKmcFitter::jpsi4LepLepKmcFitter(const edm::ParameterSet& iConfig)
 {
    //trackCollection_label = consumes<edm::View<pat::PackedCandidate>>(iConfig.getParameter<edm::InputTag>("Tracks")); //miniAOD
-    dimuon_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter< edm::InputTag>("dimuon"));
+    //dimuon_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter< edm::InputTag>("dimuon"));
     primaryVertices_Label = consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("primaryVertices"));
-   dilepton_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter<edm::InputTag>("dilepton"));
+    //dilepton_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter<edm::InputTag>("dilepton"));
+    muonToken_ = consumes<edm::View<pat::Muon>>(iConfig.getParameter<edm::InputTag>("muons"));
 
    //BSLabel_ = consumes<reco::BeamSpot>(iConfig.getParameter<edm::InputTag>("beamSpotLabel"));
    genCands_ = consumes<reco::GenParticleCollection>(iConfig.getParameter < edm::InputTag > ("GenParticles"));
@@ -169,15 +170,18 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
    edm::ESHandle<TransientTrackBuilder> theTTB;
    iSetup.get<TransientTrackRecord>().get("TransientTrackBuilder",theTTB); 
 
-   edm::Handle<pat::CompositeCandidateCollection> dileptons;
-   iEvent.getByToken(dilepton_Label,dileptons); //dilepton
+   //edm::Handle<pat::CompositeCandidateCollection> dileptons;
+   //iEvent.getByToken(dilepton_Label,dileptons); //dilepton
     
-   edm::Handle<pat::CompositeCandidateCollection> dimuons;
-   iEvent.getByToken(dimuon_Label,dimuons); //dimuon
+   //edm::Handle<pat::CompositeCandidateCollection> dimuons;
+   //iEvent.getByToken(dimuon_Label,dimuons); //dimuon
 
    //edm::Handle< View<pat::PackedCandidate> > thePATTrackHandle;  //miniAOD
    //iEvent.getByToken(trackCollection_label,thePATTrackHandle);  //Tracks
 
+   edm::Handle< View<pat::Muon> > muons;
+   iEvent.getByToken(muonToken_,muons);
+    
    edm::Handle<reco::VertexCollection> vertices;
    iEvent.getByToken(primaryVertices_Label, vertices);    //primaryVertices
    /*is beam SpotLabel necessary ?? */
@@ -283,513 +287,360 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
             }// end if Z
         }// end loop of generated events
     }//end pruned
-    /*
-     //std::cout << "test" << std::endl;
-     if ( pruned.isValid() ) {
-       int foundit = 0;
-       //std::cout << "MC ok " << std::endl;
 
-       for (size_t i=0; i<pruned->size(); i++) {
-          foundit = 0;
-          const reco::Candidate *dau = &(*pruned)[i];
-          ///ndau = dau->numberOfDaughters();
-
-          if ( (abs(dau->pdgId()) == 23) ) { //&& (dau->status() == 2) ) { //found Z
-             foundit++;
-             //const reco::Candidate * Zboson = dau;
-             gen_z_p4.SetPtEtaPhiM(dau->pt(),dau->eta(),dau->phi(),dau->mass());
-             gen_z_vtx.SetXYZ(dau->vx(),dau->vy(),dau->vz());
-             n_Z_dau = dau->numberOfDaughters();
-             if (n_Z_dau!=3) continue;
-             //std::cout << " Z daugh: " << dau->numberOfDaughters() << std::endl;
-             for (size_t k=0; k<dau->numberOfDaughters(); k++) {
-               const reco::Candidate *gdau = dau->daughter(k);
-               //std::cout << "MC Z daughter pdgID: " << gdau->pdgId() << std::endl;
-               if (gdau->pdgId()==443 ) { //&& gdau->status()==2) {   //found jpsi
-                 foundit++;
-                 gen_jpsi_vtx.SetXYZ(gdau->vx(),gdau->vy(),gdau->vz());
-                 gen_jpsi_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
-                 int nm = 0;
-                 for (size_t k=0; k<packed->size(); k++) {
-                    //const reco::Candidate * dauInPrunedColl = (*packed)[k].mother(0);
-                    const reco::Candidate * dauInPrunedColl = &(*packed)[k];
-                    int stable_id = (*packed)[k].pdgId();
-                    if (dauInPrunedColl != nullptr && isAncestor(gdau,dauInPrunedColl)) {
-                       //if (ndau<1) std::cout << (*packed)[k].pdgId() << " ";
-                       //std::cout<<" phi = "<< gdau->pdgId()<< " daughter ID " << stable_id << std::endl;
-                       if(stable_id == 13) { //found muon-
-                               gen_muon1_p4.SetPtEtaPhiM(dauInPrunedColl->pt(),dauInPrunedColl->eta(),dauInPrunedColl->phi(),dauInPrunedColl->mass());
-                               nm++;
-                              // std::cout<< "works K+ "<< dauInPrunedColl->mass() <<std::endl;
-                       }
-                        if(stable_id == -13){ //found muon+
-                            gen_muon2_p4.SetPtEtaPhiM(dauInPrunedColl->pt(),dauInPrunedColl->eta(),dauInPrunedColl->phi(),dauInPrunedColl->mass());
-                               nm++;
-                              // std::cout<< "works K- "<< dauInPrunedColl->mass() << std::endl;
-                       }
-                    }
-                 }
-                   
-               }//end found pai
-               if (gdau->pdgId()==13 ) {// pdgid for muon=13
-                  foundit++;
-              gen_lepton1_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
-              }
-               if (gdau->pdgId()==-13 ) {// pdgid for muon+=13
-                  foundit++;
-                  gen_lepton2_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
-              }
-             }// end number of daughters
-          } //endif found Z
-       }//end for
-
-    } //end pruned
-    */
     //NEW for muons and psi pairs
-    int nonia = dimuons->size();
-    int nmuons = dileptons->size()*2;
+    int nonia = 0 ;//dimuons->size();
+    int nmuons = muons->size();//dileptons->size()*2;
     int nPV    = vertices->size();
     
    //double chiVtxSqdProb = ChiSquaredProbability((double)(PV.chi2()),(double)(PV.ndof())); 
    //int breaker = 0;
    // We Cycle over dileptons for the Kfit
-   for (pat::CompositeCandidateCollection::const_iterator dilepton = dileptons->begin(); dilepton != dileptons->end() /*test && breaker < 10*/; ++dilepton){  
-       const pat::Muon* lept1 = dynamic_cast<const pat::Muon*>(dilepton->daughter("lepton1"));
-       const pat::Muon* lept2 = dynamic_cast<const pat::Muon*>(dilepton->daughter("lepton2"));
-       //check if the muons came from PV
-       //int pass1 = 0;
-       //int pass2 = 0;
-       // std::cout << "Reading muons" <<std::endl;
-       //Check if track came from PV NOT WORKING FOR MUONS
-       /*
-       int l1_pass = 0;
-       int l2_pass = 0;
+    for(View<pat::Muon>::const_iterator iMuon1 = muons->begin(); iMuon1 != muons->end(); ++iMuon1){
+    for(View<pat::Muon>::const_iterator iMuon2 = iMuon1+1; iMuon2 != muons->end(); ++iMuon2){
+     for(View<pat::Muon>::const_iterator iMuon3 = iMuon2+1; iMuon3 != muons->end(); ++iMuon3){
+     for(View<pat::Muon>::const_iterator iMuon4 = iMuon3+1; iMuon4 != muons->end(); ++iMuon4){
        
-       reco::VertexRef pvRef1 = lept1->vertexRef();
-       reco::VertexRef pvRef2 = lept2->vertexRef();
-       int key1 = (int) pvRef1.key();
-       int key2 = (int) pvRef2.key();
-       if (key1 == vertexRef_i ) l1_pass++;
-       if (key2 == vertexRef_i ) l2_pass++;
-       */
-       /*
-       for ( std::vector<reco::TrackBaseRef >::const_iterator tempTrack = bestPtVtx.tracks_begin();
-          tempTrack != bestPtVtx.tracks_end(); ++tempTrack) {
-          reco::TrackRef trackRef = tempTrack->castTo<reco::TrackRef>();
-          if(lept1->track().key() == trackRef.key() ){
-             pass1++; 
-          }
-          if(lept2->track().key() == trackRef.key() ){
-            pass2++;
-          }   
-       }*/
-       //std::cout << "pass: "<< pass << std::endl;
-       //if (pass < 1) continue; //if at least one muon comes from PV, originaly 2 of them
-       //std::cout<< "PASS"<< std::endl;  
-       ///////////////////////////////////////
-       //////////// MY MUON ID ///////////////
-       ///////////////////////////////////////
+       if(iMuon1 == iMuon2) continue;
+       if(iMuon1 == iMuon3) continue;
+       if(iMuon1 == iMuon4) continue;
+
+       if(iMuon2 == iMuon3) continue;
+       if(iMuon2 == iMuon4) continue;
+         
+       if(iMuon3 == iMuon4) continue;
+       
+       int ch_m1 = iMuon1->charge();
+       int ch_m2 = iMuon2->charge();
+       int ch_m3 = iMuon3->charge();
+       int ch_m4 = iMuon4->charge();
+
+       if ((ch_m1+ch_m2+ch_m3+ch_m4) != 0 ) continue;
+       
+       const pat::Muon* lept1 = 0;
+       const pat::Muon* lept2 = 0;
+       const pat::Muon* muon1 = 0;
+       const pat::Muon* muon2 = 0;
+           
+       if (ch_m1 == -1 && ch_m2 == -1 && ch_m3 == 1 && ch_m4 == 1){
+           if ((iMuon1->pt() + iMuon3->pt()) > (iMuon2->pt() +iMuon4->pt())){
+               lept1 = &(*iMuon1);
+               lept2 = &(*iMuon3);
+               muon1 = &(*iMuon2);
+               muon2 = &(*iMuon4);
+           }
+           else {
+               lept1 = &(*iMuon2);
+               lept2 = &(*iMuon4);
+               muon1 = &(*iMuon1);
+               muon2 = &(*iMuon3);
+           }
+       }//1
+       else if (ch_m1 == -1 && ch_m2 == 1 && ch_m3 == -1 && ch_m4 == 1){
+           if ((iMuon1->pt() + iMuon2->pt()) > (iMuon3->pt() +iMuon4->pt())){
+               lept1 = &(*iMuon1);
+               lept2 = &(*iMuon2);
+               muon1 = &(*iMuon3);
+               muon2 = &(*iMuon4);
+           }
+           else {
+               lept1 = &(*iMuon3);
+               lept2 = &(*iMuon4);
+               muon1 = &(*iMuon1);
+               muon2 = &(*iMuon2);
+           }
+       }//2
+       else if (ch_m1 == -1 && ch_m2 == 1 && ch_m3 == 1 && ch_m4 == -1){
+           if ((iMuon1->pt() + iMuon2->pt()) > (iMuon3->pt() +iMuon4->pt())){
+               lept1 = &(*iMuon1);
+               lept2 = &(*iMuon2);
+               muon1 = &(*iMuon4);
+               muon2 = &(*iMuon3);
+           }
+           else {
+               lept1 = &(*iMuon4);
+               lept2 = &(*iMuon3);
+               muon1 = &(*iMuon1);
+               muon2 = &(*iMuon2);
+           }
+       }//3
+       else if (ch_m1 == 1 && ch_m2 == -1 && ch_m3 == -1 && ch_m4 == 1){
+           if ((iMuon1->pt() + iMuon2->pt()) > (iMuon3->pt() +iMuon4->pt())){
+               lept1 = &(*iMuon2);
+               lept2 = &(*iMuon1);
+               muon1 = &(*iMuon3);
+               muon2 = &(*iMuon4);
+           }
+           else {
+               lept1 = &(*iMuon3);
+               lept2 = &(*iMuon4);
+               muon1 = &(*iMuon2);
+               muon2 = &(*iMuon1);
+           }
+       }//4
+       else if (ch_m1 == 1 && ch_m2 == -1 && ch_m3 == 1 && ch_m4 == -1){
+           if ((iMuon1->pt() + iMuon2->pt()) > (iMuon3->pt() +iMuon4->pt())){
+               lept1 = &(*iMuon2);
+               lept2 = &(*iMuon1);
+               muon1 = &(*iMuon4);
+               muon2 = &(*iMuon3);
+           }
+           else {
+               lept1 = &(*iMuon4);
+               lept2 = &(*iMuon3);
+               muon1 = &(*iMuon1);
+               muon2 = &(*iMuon2);
+           }
+       }//5
+       else if (ch_m1 == 1 && ch_m2 == 1 && ch_m3 == -1 && ch_m4 == -1){
+           if ((iMuon1->pt() + iMuon3->pt()) > (iMuon2->pt() +iMuon4->pt())){
+               lept1 = &(*iMuon3);
+               lept2 = &(*iMuon1);
+               muon1 = &(*iMuon4);
+               muon2 = &(*iMuon2);
+           }
+           else {
+               lept1 = &(*iMuon4);
+               lept2 = &(*iMuon2);
+               muon1 = &(*iMuon3);
+               muon2 = &(*iMuon1);
+           }
+       }//6
+       else continue;
+       reco::TrackRef glbTrack_l1 = lept1->track();
+       reco::TrackRef glbTrack_l2 = lept2->track();
+       reco::TrackRef glbTrack_m1 = muon1->track();
+       reco::TrackRef glbTrack_m2 = muon2->track();
+       if (glbTrack_l1.isNull() || glbTrack_l2.isNull() || glbTrack_m1.isNull() || glbTrack_m2.isNull()) continue;
+       
+       if (!(glbTrack_l1->quality(reco::TrackRef::highPurity))) continue;
+       if (!(glbTrack_l2->quality(reco::TrackRef::highPurity))) continue;
+       if (!(glbTrack_m1->quality(reco::TrackRef::highPurity))) continue;
+       if (!(glbTrack_m2->quality(reco::TrackRef::highPurity))) continue;
+       
+         
        int ZLe1Qid = 0;
        int ZLe2Qid = 0;
        // Lepton 1 (from Z)
-	if ( lept1->isGlobalMuon()){
+	   if ( lept1->isGlobalMuon()){
 	     ZLe1Qid = 1;
 	     //std::cout << "1L is Global" << std::endl;
 	}
-	if ( lept1->isLooseMuon()){
+	   if ( lept1->isLooseMuon()){
 	   ZLe1Qid += 10;
 	  // std::cout << "1L is Loose " << std::endl;
 	}
-	if ( lept1->isMediumMuon()){
+	   if ( lept1->isMediumMuon()){
 	   ZLe1Qid += 100;
 	 //  std::cout << "1L is Medium " << std::endl;
 	}
-	if ( lept1->isTightMuon(*PV)){
+	   if ( lept1->isTightMuon(*PV)){
 	   ZLe1Qid += 1000;
 	 //  std::cout << "1L is Tight " << std::endl;
 	}
-	if ( lept1->isSoftMuon(*PV)){
+	   if ( lept1->isSoftMuon(*PV)){
 	   ZLe1Qid += 10000;
 	 //  std::cout << "1L is Soft " << std::endl;
 	}
-	if ( lept1->isHighPtMuon(*PV)){
+	   if ( lept1->isHighPtMuon(*PV)){
 	   ZLe1Qid += 100000;
 	 //  std::cout << "1L is HighPt " << std::endl;
 	}
-	if ( lept1->isPFMuon()){
+	   if ( lept1->isPFMuon()){
 	   ZLe1Qid += 1000000;
 	 //    std::cout << "1L is ParticleFlow " << std::endl;
 	}
-	if ( lept1->isTrackerMuon()){
+	   if ( lept1->isTrackerMuon()){
 	   ZLe1Qid += 10000000;
 	 //  std::cout << "1L is HighPt " << std::endl;
 	}
-	// Lepton 2 (from Z)
-	if ( lept2->isGlobalMuon()){
+	   // Lepton 2 (from Z)
+	   if ( lept2->isGlobalMuon()){
 	   ZLe2Qid = 1;
 	   // std::cout << "2L is Global " << std::endl;
 	}
-	if ( lept2->isLooseMuon()){
+	   if ( lept2->isLooseMuon()){
 	   ZLe2Qid += 10;
 	   //std::cout << "2L is Loose " << std::endl;
 	}
-	if ( lept2->isMediumMuon()){
+	   if ( lept2->isMediumMuon()){
 	   ZLe2Qid += 100;
 	   //std::cout << "2L is Medium " << std::endl;
 	}
-	if ( lept2->isTightMuon(*PV)){
+	   if ( lept2->isTightMuon(*PV)){
 	   ZLe2Qid += 1000;
 	   //std::cout << "2L is Tight " << std::endl;
 	}
-	if ( lept2->isSoftMuon(*PV)){
+	   if ( lept2->isSoftMuon(*PV)){
 	   ZLe2Qid += 10000;
 	   //std::cout << "2L is Soft " << std::endl;
 	}
-	if ( lept2->isHighPtMuon(*PV)){
+	   if ( lept2->isHighPtMuon(*PV)){
 	   ZLe2Qid += 100000;
 	   //std::cout << "2L is HighPt " << std::endl;
 	}
-	if ( lept2->isPFMuon()){
+	   if ( lept2->isPFMuon()){
 	   ZLe2Qid += 1000000;
 	   //std::cout << "2L is Global " << std::endl;
 	}
-	if ( lept2->isTrackerMuon()){
+	   if ( lept2->isTrackerMuon()){
 	   ZLe2Qid += 10000000;
 	 //  std::cout << "1L is HighPt " << std::endl;
 	}
+   
+	   int ZLe1_TrackerLWM = lept1->innerTrack()->hitPattern().trackerLayersWithMeasurement();
+	   int ZLe1_PixelLWM   = lept1->innerTrack()->hitPattern().pixelLayersWithMeasurement();
+	   int ZLe1_ValPixHit  = lept1->innerTrack()->hitPattern().numberOfValidPixelHits();
+   
+	   int ZLe2_TrackerLWM = lept2->innerTrack()->hitPattern().trackerLayersWithMeasurement();
+	   int ZLe2_PixelLWM   = lept2->innerTrack()->hitPattern().pixelLayersWithMeasurement();
+	   int ZLe2_ValPixHit  = lept2->innerTrack()->hitPattern().numberOfValidPixelHits();
+       
+  	   float ldxy1 = lept1->muonBestTrack()->dxy(PV->position());
+	   float ldz1  = lept1->muonBestTrack()->dz(PV->position());
+   
+	   float ldxy2 = lept2->muonBestTrack()->dxy(PV->position());
+	   float ldz2  = lept2->muonBestTrack()->dz(PV->position());
 
-	int ZLe1_TrackerLWM = lept1->innerTrack()->hitPattern().trackerLayersWithMeasurement();
-	int ZLe1_PixelLWM   = lept1->innerTrack()->hitPattern().pixelLayersWithMeasurement();
-	int ZLe1_ValPixHit  = lept1->innerTrack()->hitPattern().numberOfValidPixelHits();
+       // Check if pair of leptons (muons) is coming from our Primary Vertex
+       /////////////////////////////////////////////////////
+       //    T r a n s i e n t   T r a c k s  b u i l d e r //
+       //////////////////////////////////////////////////////
+       reco::TransientTrack lep1TT((*theTTB).build(glbTrack_l1));
+       reco::TransientTrack lep2TT((*theTTB).build(glbTrack_l2));
+       reco::TransientTrack muon1TT((*theTTB).build(glbTrack_m1));
+       reco::TransientTrack muon2TT((*theTTB).build(glbTrack_m2));
 
-	int ZLe2_TrackerLWM = lept2->innerTrack()->hitPattern().trackerLayersWithMeasurement();
-	int ZLe2_PixelLWM   = lept2->innerTrack()->hitPattern().pixelLayersWithMeasurement();
-	int ZLe2_ValPixHit  = lept2->innerTrack()->hitPattern().numberOfValidPixelHits();
-    
-  	float ldxy1 = lept1->muonBestTrack()->dxy(PV->position());
-	float ldz1 = lept1->muonBestTrack()->dz(PV->position());
+       std::pair<bool,Measurement1D> tkPVdistel1 = IPTools::absoluteImpactParameter3D(lep1TT,*PV);
+       std::pair<bool,Measurement1D> tkPVdistel2 = IPTools::absoluteImpactParameter3D(lep2TT,*PV);
+       std::pair<bool,Measurement1D> tkPVdistem1 = IPTools::absoluteImpactParameter3D(muon1TT,*PV);
+       std::pair<bool,Measurement1D> tkPVdistem2 = IPTools::absoluteImpactParameter3D(muon2TT,*PV);
+         
+       if(!tkPVdistel1.first || !tkPVdistel2.first || !tkPVdistem1.first || tkPVdistem2.first) continue;
 
-	float ldxy2 = lept2->muonBestTrack()->dxy(PV->position());
-	float ldz2 = lept2->muonBestTrack()->dz(PV->position());
-    /*
-  	float ldxy1 = lept1->muonBestTrack()->dxy(bestPtVtx.position());
-	float ldz1 = lept1->muonBestTrack()->dz(bestPtVtx.position());
+       //Isolation
+       double dR1 = -1, dR2 = -1, dR3 = -1, dR4 = -1, dR5 = -1, dR6 = -1;
+       dR1 = deltaR(*(lept1->innerTrack()), *(muon1->innerTrack()));
+       dR2 = deltaR(*(lept1->innerTrack()), *(muon2->innerTrack()));
+       dR3 = deltaR(*(lept2->innerTrack()), *(muon1->innerTrack()));
+       dR4 = deltaR(*(lept2->innerTrack()), *(muon2->innerTrack()));
+       dR5 = deltaR(*(lept1->innerTrack()), *(lept2->innerTrack()));
+       dR6 = deltaR(*(muon1->innerTrack()), *(muon2->innerTrack()));
+       if ( dR1<0.01 || dR2<0.01 || dR3<0.01 ||dR4<0.01 ) continue;
 
-	float ldxy2 = lept2->muonBestTrack()->dxy(bestPtVtx.position());
-	float ldz2 = lept2->muonBestTrack()->dz(bestPtVtx.position());
-     */
-        /* check if necessary signs or not
-        reco::TrackRef glbTrackP;       
-        reco::TrackRef glbTrackM;
-        //we ensure oposite charges in LeptonFilter 
-        if (lept1->charge() == 1) {glbTrackP = lept1->track(); glbTrackM = lept2->track();}
-        else {glbTrackP = lept2->track(); glbTrackM = lept1->track();} 
-        */
-        reco::TrackRef glbTrack1 = lept1->track();
-        reco::TrackRef glbTrack2 = lept2->track();
-        if( glbTrack1.isNull() || glbTrack2.isNull() ) {
-           //std::cout << "continue due to no track ref" << endl;
-           continue;
-        }
-        //std::cout << "pass glbMuonTracks" <<std::endl;
-        int trackPurity1; int trackPurity2;
-        if(glbTrack1->quality(reco::TrackBase::loose))      {trackPurity1  = 1;}
-        if(glbTrack1->quality(reco::TrackBase::tight))      {trackPurity1 += 10;}
-        if(glbTrack1->quality(reco::TrackBase::highPurity)) {trackPurity1 += 100;}
 
-        if(glbTrack2->quality(reco::TrackBase::loose))      {trackPurity2  = 1;}
-        if(glbTrack2->quality(reco::TrackBase::tight))      {trackPurity2 += 10;}
-        if(glbTrack2->quality(reco::TrackBase::highPurity)) {trackPurity2 += 100;}
-	
-        // Check if pair of leptons (muons) is coming from our Primary Vertex
-        std::vector<reco::TransientTrack> LLTTks;
-	LLTTks.push_back(theTTB->build(lept1->innerTrack()));
-	LLTTks.push_back(theTTB->build(lept2->innerTrack()));
-	std::pair<bool,Measurement1D> tkPVdistel1 = IPTools::absoluteImpactParameter3D(LLTTks.at(0),*PV);
-	std::pair<bool,Measurement1D> tkPVdistel2 = IPTools::absoluteImpactParameter3D(LLTTks.at(1),*PV);
-	if (!tkPVdistel1.first|| !tkPVdistel2.first ) continue;
+       //////////// MY MUON ID ///////////////
+       ///////////////////////////////////////
+       int ZMu1Qid = 0;
+       int ZMu2Qid = 0;
+       // Muon 1 (from Jpsi)
+       if ( muon1->isGlobalMuon()){
+           ZMu1Qid = 1;
+           //std::cout << "1L is Global" << std::endl;
+       }
+       if ( muon1->isLooseMuon()){
+           ZMu1Qid += 10;
+           // std::cout << "1L is Loose " << std::endl;
+       }
+       if ( muon1->isMediumMuon()){
+           ZMu1Qid += 100;
+           //std::cout << "1L is Medium " << std::endl;
+       }
+       if ( muon1->isTightMuon(*PV)){
+           ZMu1Qid += 1000;
+           //std::cout << "1L is Tight " << std::endl;
+       }
+       if ( muon1->isSoftMuon(*PV)){
+           ZMu1Qid += 10000;
+           //std::cout << "1L is Soft " << std::endl;
+       }
+       if ( muon1->isHighPtMuon(*PV)){
+           ZMu1Qid += 100000;
+           //std::cout << "1L is HighPt " << std::endl;
+       }
+       if ( muon1->isPFMuon()){
+           ZMu1Qid += 1000000;
+           //std::cout << "1L is ParticleFlow " << std::endl;
+       }
+       if ( muon1->isTrackerMuon()){
+           ZMu1Qid += 10000000;
+           //std::cout << "1L is HighPt " << std::endl;
+       }
+       // Muon 2 (from Jpsi)
+       if ( muon2->isGlobalMuon()){
+           ZMu2Qid = 1;
+           // std::cout << "2L is Global " << std::endl;
+       }
+       if ( muon2->isLooseMuon()){
+           ZMu2Qid += 10;
+           //std::cout << "2L is Loose " << std::endl;
+       }
+       if ( muon2->isMediumMuon()){
+           ZMu2Qid += 100;
+           //std::cout << "2L is Medium " << std::endl;
+       }
+       if ( muon2->isTightMuon(*PV)){
+           ZMu2Qid += 1000;
+           //std::cout << "2L is Tight " << std::endl;
+       }
+       if ( muon2->isSoftMuon(*PV)){
+           ZMu2Qid += 10000;
+           //std::cout << "2L is Soft " << std::endl;
+       }
+       if ( muon2->isHighPtMuon(*PV)){
+           ZMu2Qid += 100000;
+           //std::cout << "2L is HighPt " << std::endl;
+       }
+       if ( muon2->isPFMuon()){
+           ZMu2Qid += 1000000;
+           //std::cout << "2L is Global " << std::endl;
+       }
+       if ( muon2->isTrackerMuon()){
+           ZMu2Qid += 10000000;
+          //  std::cout << "1L is HighPt " << std::endl;
+       }
 
-        //Now we look for jpsi candidates
-//        for(View<pat::PackedCandidate>::const_iterator iTrack1 = thePATTrackHandle->begin();
-//        iTrack1 != thePATTrackHandle->end() /*test && breaker < 10*/; ++iTrack1 ){ //miniAOD
-//          for(std::vector<TrackBaseRef >::const_iterator iTrack_1 = PV.tracks_begin();
-          //for(std::vector<reco::TrackBaseRef >::const_iterator iTrack_1 = bestPtVtx.tracks_begin();
-          //iTrack_1 != bestPtVtx.tracks_end(); ++iTrack_1){ //Cycle on Tracks from primaryVertex only
-          //reco::TrackRef iTrack1 = iTrack_1->castTo<reco::TrackRef>();
-          //if(iTrack1->charge()==0) continue;
-          //if(fabs(iTrack1->pdgId())!=211) continue;
-          //if(iTrack1->pt()<0.95) continue;
-          //if(!(iTrack1->trackHighPurity())) continue; //Cuts taked from jhovannys reconstruction(optional)
-          //if(!(iTrack1->highPurity)) continue; //TrackRef
-//          for(View<pat::PackedCandidate>::const_iterator iTrack2 = iTrack1+1;
-//          iTrack2 != thePATTrackHandle->end() /*test && breaker<10*/; ++iTrack2 ){ //miniAOD
-            //for(std::vector<reco::TrackBaseRef >::const_iterator iTrack_2 = bestPtVtx.tracks_begin();
-             //iTrack_2 != bestPtVtx.tracks_end(); ++iTrack_2) {
-             //reco::TrackRef iTrack2 = iTrack_2->castTo<reco::TrackRef>();
-             //if(iTrack1==iTrack2) continue;
-             //if(iTrack2->charge()==0) continue;
-             //if(fabs(iTrack2->pdgId())!=211) continue; can't work with TrackRef
-             //if(iTrack2->pt()<0.95) continue;
-             //if(!(iTrack2->trackHighPurity())) continue;//miniAOD
-             //if(!(iTrack2->highPurity)) continue;
-             //if(iTrack1->charge() == iTrack2->charge()) continue;
-             // ***************************
-             // Kaon Kaon invariant mass (before kinematic vertex fit)
-             // ***************************
-             for (pat::CompositeCandidateCollection::const_iterator dimuon = dimuons->begin(); dimuon != dimuons->end() /*test && breaker < 10*/; ++dimuon){
-                 const pat::Muon* muon1 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon1"));
-                 const pat::Muon* muon2 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon2"));
-                 //check if the muons came from PV
-                 //int pass1 = 0;
-                 //int pass2 = 0;
-                 if (lept1 == muon1 || lept1==muon2 || lept2 == muon1 || lept2 == muon2  ) {
-                     //std::cout << "blocks repeating by same muon, it works!" << std::endl;
-                     continue;
-                 }
-
-                 if (lept1->innerTrack()==muon1->innerTrack() || lept1->innerTrack()==muon2->innerTrack() || lept2->innerTrack()==muon1->innerTrack() || lept2->innerTrack()==muon2->innerTrack() ) {
-                     //std:: cout << "blocks repeating by same track, it works !" << std::endl;
-                     continue;
-                     
-                 }
-                 //Isolation
-                 double dR1 = -1, dR2 = -1, dR3 = -1, dR4 = -1, dR5 = -1, dR6 = -1;
-                 //double dR1, dR2, dR3, dR4, dR5, dR6;
-                 //try {
-                 /*
-                             double dR1 = deltaR(*(lept1->innerTrack()), *(iTrack1->bestTrack()));
-                             double dR2 = deltaR(*(lept1->innerTrack()), *(iTrack2->bestTrack()));
-                             double dR3 = deltaR(*(lept2->innerTrack()), *(iTrack1->bestTrack()));
-                             double dR4 = deltaR(*(lept2->innerTrack()), *(iTrack2->bestTrack()));
-                             double dR5 = deltaR(*(lept1->innerTrack()), *(lept2->innerTrack()));
-                             double dR6 = deltaR(*(iTrack1->bestTrack()), *(iTrack2->bestTrack()));
-                 */
-                 dR1 = deltaR(*(lept1->innerTrack()), *(muon1->innerTrack()));
-                 dR2 = deltaR(*(lept1->innerTrack()), *(muon2->innerTrack()));
-                 dR3 = deltaR(*(lept2->innerTrack()), *(muon1->innerTrack()));
-                 dR4 = deltaR(*(lept2->innerTrack()), *(muon2->innerTrack()));
-                 dR5 = deltaR(*(lept1->innerTrack()), *(lept2->innerTrack()));
-                 dR6 = deltaR(*(muon1->innerTrack()), *(muon2->innerTrack()));
-                 if ( dR1<0.01 || dR2<0.01 || dR3<0.01 ||dR4<0.01 ) continue;
-                 // std::cout << "Reading muons" <<std::endl;
-                 //working only on AOD ?
-                 /*for ( std::vector<reco::TrackBaseRef >::const_iterator tempTrack = bestPtVtx.tracks_begin();
-                    tempTrack != bestPtVtx.tracks_end(); ++tempTrack) {
-                    reco::TrackRef trackRef = tempTrack->castTo<reco::TrackRef>();
-                    if(muon1->track().key() == trackRef.key() ){
-                       pass1++;
-                    }
-                    if(muon2->track().key() == trackRef.key() ){
-                      pass2++;
-                    }
-                 }*/
-             
-
-             //////////// MY MUON ID ///////////////
-             ///////////////////////////////////////
-             int ZMu1Qid = 0;
-             int ZMu2Qid = 0;
-             // Muon 1 (from Jpsi)
-             if ( muon1->isGlobalMuon()){
-                 ZMu1Qid = 1;
-                 //std::cout << "1L is Global" << std::endl;
-             }
-             if ( muon1->isLooseMuon()){
-             ZMu1Qid += 10;
-             // std::cout << "1L is Loose " << std::endl;
-             }
-             if ( muon1->isMediumMuon()){
-             ZMu1Qid += 100;
-             //  std::cout << "1L is Medium " << std::endl;
-             }
-             if ( muon1->isTightMuon(*PV)){
-             ZMu1Qid += 1000;
-             //  std::cout << "1L is Tight " << std::endl;
-             }
-             if ( muon1->isSoftMuon(*PV)){
-             ZMu1Qid += 10000;
-             //  std::cout << "1L is Soft " << std::endl;
-             }
-             if ( muon1->isHighPtMuon(*PV)){
-             ZMu1Qid += 100000;
-             //  std::cout << "1L is HighPt " << std::endl;
-             }
-             if ( muon1->isPFMuon()){
-             ZMu1Qid += 1000000;
-             //    std::cout << "1L is ParticleFlow " << std::endl;
-             }
-             if ( muon1->isTrackerMuon()){
-             ZMu1Qid += 10000000;
-             //  std::cout << "1L is HighPt " << std::endl;
-             }
-             // Muon 2 (from Jpsi)
-             if ( muon2->isGlobalMuon()){
-             ZMu2Qid = 1;
-             // std::cout << "2L is Global " << std::endl;
-             }
-             if ( muon2->isLooseMuon()){
-             ZMu2Qid += 10;
-             //std::cout << "2L is Loose " << std::endl;
-             }
-             if ( muon2->isMediumMuon()){
-             ZMu2Qid += 100;
-             //std::cout << "2L is Medium " << std::endl;
-             }
-             if ( muon2->isTightMuon(*PV)){
-             ZMu2Qid += 1000;
-             //std::cout << "2L is Tight " << std::endl;
-             }
-             if ( muon2->isSoftMuon(*PV)){
-             ZMu2Qid += 10000;
-             //std::cout << "2L is Soft " << std::endl;
-             }
-             if ( muon2->isHighPtMuon(*PV)){
-             ZMu2Qid += 100000;
-             //std::cout << "2L is HighPt " << std::endl;
-             }
-             if ( muon2->isPFMuon()){
-             ZMu2Qid += 1000000;
-             //std::cout << "2L is Global " << std::endl;
-             }
-             if ( muon2->isTrackerMuon()){
-             ZMu2Qid += 10000000;
-             //  std::cout << "1L is HighPt " << std::endl;
-             }
-        //     std::cout << "Pass tO Tracks" <<std::endl;
+       const ParticleMass muMass    = 0.10565837;
+       float muSigma                = muMass*1.e-6;
                  
-                 ////COMENT MESON KINEMATIC FIT
-            /*
-             TLorentzVector pion14V,pion24V,pipi4V,phi2K, Zl1, Zl2, ZVector; 
-             pion14V.SetXYZM(iTrack1->px(),iTrack1->py(),iTrack1->pz(),kaon_mass);
-             pion24V.SetXYZM(iTrack2->px(),iTrack2->py(),iTrack2->pz(),kaon_mass);
-             Zl1.SetXYZM(lept1->px(), lept1->py(), lept1->pz(), lept1->mass());
-             Zl2.SetXYZM(lept2->px(), lept2->py(), lept2->pz(), lept2->mass());
-             pipi4V=pion14V+pion24V;
-             ZVector= Zl1 + Zl2 + pipi4V;
-             if(pipi4V.M()<0.970 || pipi4V.M()>1.070) continue;
-             //Z mass cuts
-             if(ZVector.M() < 60 || ZVector.M() > 120) continue;
-           
-             //Now let's checks if our muons do not use the same tracks as we are using now
-             //if ( IsTheSame2(*iTrack1,*lept1) || IsTheSame2(*iTrack1,*lept2) ) continue; //miniAOD
-             //if ( IsTheSame2(*iTrack2,*lept1) || IsTheSame2(*iTrack2,*lept2) ) continue;
-             if ( IsTheSame2(iTrack1,*lept1) || IsTheSame2(iTrack1,*lept2) ) continue;
-             if ( IsTheSame2(iTrack2,*lept1) || IsTheSame2(iTrack2,*lept2) ) continue;
-
-             //Now let's see if these two tracks make a vertex
-             //reco::TransientTrack pion1TT((*theTTB).build(iTrack1->pseudoTrack())); //miniAOD
-             //reco::TransientTrack pion2TT((*theTTB).build(iTrack2->pseudoTrack()));
-             reco::TransientTrack pion1TT((*theTTB).build(iTrack1));
-             reco::TransientTrack pion2TT((*theTTB).build(iTrack2));
-	     std::vector<reco::TransientTrack> KKTTks;
-	     //KKTTks.push_back(theTTB->build(iTrack1->pseudoTrack() )); //miniAOD
-	     //KKTTks.push_back(theTTB->build(iTrack2->pseudoTrack() ));
-	     KKTTks.push_back(theTTB->build(iTrack1));
-	     KKTTks.push_back(theTTB->build(iTrack2));
-	     //std::pair<bool,Measurement1D> tkPVdist1 = IPTools::absoluteImpactParameter3D(KKTTks.at(0),*PV); //miniAOD
-	     //std::pair<bool,Measurement1D> tkPVdist2 = IPTools::absoluteImpactParameter3D(KKTTks.at(1),*PV);
-	     std::pair<bool,Measurement1D> tkPVdist1 = IPTools::absoluteImpactParameter3D(KKTTks.at(0),bestPtVtx);
-	     std::pair<bool,Measurement1D> tkPVdist2 = IPTools::absoluteImpactParameter3D(KKTTks.at(1),bestPtVtx);
-
-          
-             //initial chi2 and ndf before kinematic fits.
-             float chi = 0.;
-             float ndf = 0.;
-	     //////////////////////////////////////////////////////
-	     //    S t a r t   t h e   K i n e m a t i c   F i t //
-	     //////////////////////////////////////////////////////
-	     //phi Kinematic Fit
-             KinematicParticleFactoryFromTransientTrack pFactory;
-
-             std::vector<RefCountedKinematicParticle> kaonParticles;
-             kaonParticles.push_back(pFactory.particle(pion1TT,kaon_mass,chi,ndf,kaon_sigma));
-             kaonParticles.push_back(pFactory.particle(pion2TT,kaon_mass,chi,ndf,kaon_sigma));
-             KinematicParticleVertexFitter phi_fitter;
-
-             RefCountedKinematicTree phiVertexFitTree;
-             try{
-                 phiVertexFitTree = phi_fitter.fit(kaonParticles);
-             }
-             catch (...) {
-                 std::cout<<" Exception caught ... continuing 2 "<<std::endl;
-                 continue;
-             }
-             //psiVertexFitTree = fitter.fit(muonParticles);
-             if (!phiVertexFitTree->isValid()){
-               //std::cout << "caught an exception in the psi vertex fit" << std::endl;
-               continue;
-             }
-             //std::cout << "phi Fit OK" <<std::endl;
-             phiVertexFitTree->movePointerToTheTop();
-
-             RefCountedKinematicParticle phi_vFit = phiVertexFitTree->currentParticle();
-             RefCountedKinematicVertex phi_vFit_vertex = phiVertexFitTree->currentDecayVertex();
-
-             if( phi_vFit_vertex->chiSquared() < 0 ){
-               //std::cout << "negative chisq from psi fit" << endl;
-               continue;
-             }
-             double phiVtxP = TMath::Prob(phi_vFit_vertex->chiSquared(),(int)phi_vFit_vertex->degreesOfFreedom());
-             if(phiVtxP<=0.0)continue;
-
-             phi2K.SetXYZM(phi_vFit->currentState().globalMomentum().x(),phi_vFit->currentState().globalMomentum().y(),
-                   phi_vFit->currentState().globalMomentum().z(),phi_vFit->currentState().mass());
-             */
+       //Z Kinematic Fit
+       KinematicParticleFactoryFromTransientTrack pFactory;
+       float chi = 0;
+       float ndf = 0;
+       
+       std::vector<RefCountedKinematicParticle> ZDaughters;
+       try {
+          ZDaughters.push_back(pFactory.particle(muon1TT,   muMass, chi, ndf, muSigma));
+          ZDaughters.push_back(pFactory.particle(muon2TT,   muMass, chi, ndf, muSigma));
+          ZDaughters.push_back(pFactory.particle(lep1TT,  muMass, chi, ndf, muSigma));
+          ZDaughters.push_back(pFactory.particle(lep2TT,  muMass, chi, ndf, muSigma));
+       }
+         
+       KinematicParticleVertexFitter ZVertexFitter;
+       try{
+          RefCountedKinematicTree ZTree = ZVertexFitter.fit(ZDaughters);
+       }
+       catch(...){
+          continue
+       }
+         
+       if (ZTree->isEmpty())continue;
+       ZTree->movePointerToTheTop();
+         
+       RefCountedKinematicParticle fitZ = ZTree->currentParticle();
+       RefCountedKinematicVertex ZDecayVertex = ZTree->currentDecayVertex();
+       //if the Fit is valid Fill the Tree and provide the Zcandidates
+       int passFit = 0;
+       float ZM_fit    = 0;
+       float ZPx_fit   = 0;
+       float ZPy_fit   = 0;
+       float ZPz_fit   = 0;
+       float ZVtxX_fit = 0;
+       float ZVtxY_fit = 0;
+       float ZVtxZ_fit = 0;
+       float ZVtxP_fit = 0;
                  
-         /////////////////////////////////////////////////////
-         //    T r a n s i e n t   T r a c k s  b u i l d e r //
-         //////////////////////////////////////////////////////
-         reco::TrackRef JpsiTk[2] = {muon1->innerTrack(), muon2->innerTrack()};
-         std::vector<reco::TransientTrack> MuMuTTks;
-         MuMuTTks.push_back(theTTB->build(&JpsiTk[0]));
-         MuMuTTks.push_back(theTTB->build(&JpsiTk[1]));
-         std::pair<bool,Measurement1D> tkPVdist1 = IPTools::absoluteImpactParameter3D(MuMuTTks.at(0),*PV);
-         std::pair<bool,Measurement1D> tkPVdist2 = IPTools::absoluteImpactParameter3D(MuMuTTks.at(1),*PV);
-         if (!tkPVdist1.first || !tkPVdist2.first ) continue;
-         //if (fabs(tkPVdist1.second.significance())>4.) continue;
-         //if (fabs(tkPVdist2.second.significance())>4.) continue;
-                 
-         reco::TrackRef dilepTk[2]={
-         ( dynamic_cast<const pat::Muon*>(dilepton->daughter("lepton1")))->innerTrack(),
-         ( dynamic_cast<const pat::Muon*>(dilepton->daughter("lepton2")))->innerTrack()};
-         //build the dimuon secondary vertex
-         std::vector<reco::TransientTrack> LLTTks;
-         LLTTks.push_back(theTTB->build(&dilepTk[0]));
-         LLTTks.push_back(theTTB->build(&dilepTk[1]));
-         std::pair<bool,Measurement1D> tkPVdistel1 = IPTools::absoluteImpactParameter3D(LLTTks.at(0),*PV);
-         std::pair<bool,Measurement1D> tkPVdistel2 = IPTools::absoluteImpactParameter3D(LLTTks.at(1),*PV);
-         if (!tkPVdistel1.first || !tkPVdistel2.first) continue;
-         const ParticleMass muMass    = 0.10565837;
-         float muSigma                = muMass*1.e-6;
-                 
-         //Z Kinematic Fit
-         KinematicParticleFactoryFromTransientTrack pFactory;
-                 
-         std::vector<RefCountedKinematicParticle> ZDaughters;
-         ZDaughters.push_back(pFactory.particle (MuMuTTks[0], muMass, float(0), float(0), muSigma));
-	     ZDaughters.push_back(pFactory.particle (MuMuTTks[1], muMass, float(0), float(0), muSigma));
-	     ZDaughters.push_back(pFactory.particle (LLTTks[0],  muMass, float(0), float(0), muSigma));
-	     ZDaughters.push_back(pFactory.particle (LLTTks[1],  muMass, float(0), float(0), muSigma));
-
-        KinematicParticleVertexFitter ZVertexFitter;
-        RefCountedKinematicTree ZTree = ZVertexFitter.fit(ZDaughters);
-                 
-        if (ZTree->isEmpty())continue;
-        ZTree->movePointerToTheTop();
-        RefCountedKinematicParticle fitZ = ZTree->currentParticle();
-        RefCountedKinematicVertex ZDecayVertex = ZTree->currentDecayVertex();
-        //if the Fit is valid Fill the Tree and provide the Zcandidates
-        int passFit = 0;
-        float ZM_fit    = 0;
-        float ZPx_fit   = 0;
-        float ZPy_fit   = 0;
-        float ZPz_fit   = 0;
-        float ZVtxX_fit = 0;
-        float ZVtxY_fit = 0;
-        float ZVtxZ_fit = 0;
-        float ZVtxP_fit = 0;
-                 
-        if (fitZ->currentState().isValid()) {
+       if (fitZ->currentState().isValid()) {
         //std::cout << "Fiz Zpass" <<std::endl;
         //if (ZDecayVertex->chiSquared() < 0) continue;
            ZM_fit  = fitZ->currentState().mass();
@@ -807,7 +658,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
            //if (ZVtxP_fit <= 0.0) continue;
            passFit = 1;
         }
-        else {
+       else {
             ZM_fit    = 0;
             ZPx_fit   = 0;
             ZPy_fit   = 0;
@@ -818,202 +669,158 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
             ZVtxP_fit = ChiSquaredProbability((double)(ZDecayVertex->chiSquared()),
                                (double)(ZDecayVertex->degreesOfFreedom()));
         }
-		float Z_px = muon1->px()+muon2->px()+lept1->px()+lept2->px();
-		float Z_py = muon1->py()+muon2->py()+lept1->py()+lept2->py();
-		float Z_pz = muon1->pz()+muon2->pz()+lept1->pz()+lept2->pz();
+       float Z_px = muon1->px()+muon2->px()+lept1->px()+lept2->px();
+       float Z_py = muon1->py()+muon2->py()+lept1->py()+lept2->py();
+       float Z_pz = muon1->pz()+muon2->pz()+lept1->pz()+lept2->pz();
 
+       TLorentzVector m1, m2, l1, l2;
+       m1.SetPtEtaPhiM(muon1->pt(), muon1->eta(),muon1->phi(),muon1->mass());
+       m2.SetPtEtaPhiM(muon2->pt(), muon2->eta(),muon2->phi(),muon2->mass());
+       l1.SetPtEtaPhiM(lept1->pt(), lept1->eta(),lept1->phi(),lept1->mass());
+       l2.SetPtEtaPhiM(lept2->pt(), lept2->eta(),lept2->phi(),lept2->mass());
+       TLorentzVector theZ = m1+m2+l1+l2;
                 
-        TLorentzVector m1, m2, l1, l2;
-		//k1.SetPtEtaPhiM(iTrack1->pt(), iTrack1->eta(),iTrack1->phi(),iTrack1->mass()); //miniAOD
-		//k2.SetPtEtaPhiM(iTrack2->pt(), iTrack2->eta(),iTrack2->phi(),iTrack2->mass());
-		m1.SetPtEtaPhiM(muon1->pt(), muon1->eta(),muon1->phi(),muon1->mass());
-		m2.SetPtEtaPhiM(muon2->pt(), muon2->eta(),muon2->phi(),muon2->mass());
-		l1.SetPtEtaPhiM(lept1->pt(), lept1->eta(),lept1->phi(),lept1->mass());
-		l2.SetPtEtaPhiM(lept2->pt(), lept2->eta(),lept2->phi(),lept2->mass());
-		TLorentzVector theZ = m1+m2+l1+l2;
-                
+       float mdxy1 = -1, mdz1 = -1, mdxy2 = -1, mdz2 = -1;
 
-             // }
-             //   catch(...){
-             //        std::cout<< "unable to extract track"<<std::endl;
-             //        continue;
-             //   }	
-		//////////////////////////////////////////////////////
-		//  I m p a c t   P a ra m e t e r s                //
-		//////////////////////////////////////////////////////
+       mdxy1 = muon1->muonBestTrack()->dxy(PV->position());
+       mdz1 =  muon1->muonBestTrack()->dz(PV->position());
+       mdxy2 = muon2->muonBestTrack()->dxy(PV->position());
+       mdz2 =  muon2->muonBestTrack()->dz(PV->position());
 
-  		float mdxy1 = -1, mdz1 = -1, mdxy2 = -1, mdz2 = -1;
-  		//float kdxy1, kdz1, kdxy2, kdz2;
-	//	try{ 
-		/*	float kdxy1 = iTrack1->bestTrack()->dxy(PV->position());
-			float kdz1 =  iTrack1->bestTrack()->dz(PV->position());
-			float kdxy2 = iTrack2->bestTrack()->dxy(PV->position());
-			float kdz2 =  iTrack2->bestTrack()->dz(PV->position());*/
-            mdxy1 = muon1->muonBestTrack()->dxy(PV->position());
-			mdz1 =  muon1->muonBestTrack()->dz(PV->position());
-			mdxy2 = muon2->muonBestTrack()->dxy(PV->position());
-			mdz2 =  muon2->muonBestTrack()->dz(PV->position());
-	//	}   
-        //        catch(...){
-	//		std::cout<< "unable to obtain impact parameters for tracks" << std::endl;
-        //                continue;
-	//	}
-                ////////////////////////////////////////////////////////////////////////////////
-		// Get the Z boson
-        /// check if convinatory mesing with us
-        //std::cout << "lept 1 Pt: " << lept1->pt() << ", eta-phi: "<< lept1->eta() << " - " << lept1->phi()  <<std::endl;
-        //std::cout << "lept 2 Pt: " << lept2->pt() << ", eta-phi: "<< lept2->eta() << " - " << lept2->phi()  <<std::endl;
-        //std::cout << "muon 1 Pt: " << muon1->pt() << ", eta-phi: "<< muon1->eta() << " - " << muon1->phi()  <<std::endl;
-        //std::cout << "muon 2 Pt: " << muon2->pt() << ", eta-phi: "<< muon2->eta() << " - " << muon2->phi()  <<std::endl;
-        //std::cout << "Z mass from fit --> " << ZM_fit <<" Event Cand: "<< Event_Cand <<std::endl;
-        if (ZM_fit < 60.0) continue;
-        if (ZM_fit > 150.0) continue;
-		reco::CompositeCandidate recoZ(0, math::XYZTLorentzVector(ZPx_fit, ZPy_fit, ZPz_fit,
+       if (ZM_fit < 60.0) continue;
+       if (ZM_fit > 150.0) continue;
+       reco::CompositeCandidate recoZ(0, math::XYZTLorentzVector(ZPx_fit, ZPy_fit, ZPz_fit,
 			      sqrt(ZM_fit*ZM_fit + ZPx_fit*ZPx_fit + ZPy_fit*ZPy_fit +
 			      ZPz_fit*ZPz_fit)), math::XYZPoint(ZVtxX_fit,
-			       ZVtxY_fit, ZVtxZ_fit), 23);
+                  ZVtxY_fit, ZVtxZ_fit), 23);
 
-		reco::CompositeCandidate msrdZ(0, math::XYZTLorentzVector( Z_px, Z_py, Z_pz,
+       reco::CompositeCandidate msrdZ(0, math::XYZTLorentzVector( Z_px, Z_py, Z_pz,
 			      sqrt(theZ.M()*theZ.M() + Z_px*Z_px + Z_py*Z_py +
 			      Z_pz*Z_pz)), math::XYZPoint(ZVtxX_fit,
-			       ZVtxY_fit, ZVtxZ_fit), 23);
-		pat::CompositeCandidate patMZ(msrdZ);
-		pat::CompositeCandidate patZ(recoZ);
-        //New
-        patZ.addUserInt("passFit_", passFit);
-        patZ.addUserInt("nonia_", nonia );
-        patZ.addUserInt("nmuons_",nmuons);
-        patZ.addUserInt("nPV_",   nPV   );
+                  ZVtxY_fit, ZVtxZ_fit), 23);
+       pat::CompositeCandidate patMZ(msrdZ);
+       pat::CompositeCandidate patZ(recoZ);
+       //New
+       patZ.addUserInt("passFit_", passFit);
+       patZ.addUserInt("nonia_", nonia );
+       patZ.addUserInt("nmuons_",nmuons);
+       patZ.addUserInt("nPV_",   nPV   );
                  
-        patZ.addUserFloat("vProb",ZVtxP_fit);
-        patZ.addUserFloat("vChi2",ZDecayVertex->chiSquared());
-		patZ.addUserFloat("ZvtxX",ZVtxX_fit);
-		patZ.addUserFloat("ZvtxY",ZVtxY_fit);
-		patZ.addUserFloat("ZvtxZ",ZVtxZ_fit);
-		patZ.addUserFloat("dRm1m2",dR6);
-		patZ.addUserFloat("dRl1l2",dR5);
-		patZ.addUserFloat("dRl1m1",dR1);
-		patZ.addUserFloat("dRl1m2",dR2);
-		patZ.addUserFloat("dRl2m1",dR3);
-		patZ.addUserFloat("dRl2m2",dR4);
+       patZ.addUserFloat("vProb",ZVtxP_fit);
+       patZ.addUserFloat("vChi2",ZDecayVertex->chiSquared());
+       patZ.addUserFloat("ZvtxX",ZVtxX_fit);
+       patZ.addUserFloat("ZvtxY",ZVtxY_fit);
+       patZ.addUserFloat("ZvtxZ",ZVtxZ_fit);
+       patZ.addUserFloat("dRm1m2",dR6);
+       patZ.addUserFloat("dRl1l2",dR5);
+       patZ.addUserFloat("dRl1m1",dR1);
+       patZ.addUserFloat("dRl1m2",dR2);
+       patZ.addUserFloat("dRl2m1",dR3);
+       patZ.addUserFloat("dRl2m2",dR4);
 
-
-		bool child = ZTree->movePointerToTheFirstChild();
-                /////////////////////////////////////////////////
-		//get first muon
-		RefCountedKinematicParticle fitMu1 = ZTree->currentParticle();
-        float mu1M_fit ;
-        float mu1Q_fit ;
-        float mu1Px_fit;
-        float mu1Py_fit;
-        float mu1Pz_fit;
+       bool child = ZTree->movePointerToTheFirstChild();
+       /////////////////////////////////////////////////
+       //get first muon
+       RefCountedKinematicParticle fitMu1 = ZTree->currentParticle();
+       float mu1M_fit ;
+       float mu1Q_fit ;
+       float mu1Px_fit;
+       float mu1Py_fit;
+       float mu1Pz_fit;
                  
-		if (!child){
-            //std::cout << "M1" << std::endl;
-            mu1M_fit  = 0;
-            mu1Q_fit  = 0;
-            mu1Px_fit = 0;
-            mu1Py_fit = 0;
-            mu1Pz_fit = 0;
-        }
-        else{
-            mu1M_fit  = fitMu1->currentState().mass();
-            mu1Q_fit  = fitMu1->currentState().particleCharge();
-            mu1Px_fit = fitMu1->currentState().kinematicParameters().momentum().x();
-            mu1Py_fit = fitMu1->currentState().kinematicParameters().momentum().y();
-            mu1Pz_fit = fitMu1->currentState().kinematicParameters().momentum().z();
-        }
-		reco::CompositeCandidate msrdM1(muon1->charge(), math::XYZTLorentzVector(muon1->px(), muon1->py(), muon1->pz(),
-                sqrt((muMass)*(muMass) + (muon1->px())*(muon1->px()) + (muon1->py())*(muon1->py()) +
-                (muon1->pz())*(muon1->pz()))), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
+       if (!child){
+           //std::cout << "M1" << std::endl;
+           mu1M_fit  = 0;
+           mu1Q_fit  = 0;
+           mu1Px_fit = 0;
+           mu1Py_fit = 0;
+           mu1Pz_fit = 0;
+       }
+       else{
+           mu1M_fit  = fitMu1->currentState().mass();
+           mu1Q_fit  = fitMu1->currentState().particleCharge();
+           mu1Px_fit = fitMu1->currentState().kinematicParameters().momentum().x();
+           mu1Py_fit = fitMu1->currentState().kinematicParameters().momentum().y();
+           mu1Pz_fit = fitMu1->currentState().kinematicParameters().momentum().z();
+       }
+       reco::CompositeCandidate msrdM1(muon1->charge(), math::XYZTLorentzVector(muon1->px(), muon1->py(), muon1->pz(),
+               sqrt((muMass)*(muMass) + (muon1->px())*(muon1->px()) + (muon1->py())*(muon1->py()) +
+               (muon1->pz())*(muon1->pz()))), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
 
-		pat::CompositeCandidate pat_msrdM1(msrdM1);
+       pat::CompositeCandidate pat_msrdM1(msrdM1);
 
-		reco::CompositeCandidate recoM1(mu1Q_fit, math::XYZTLorentzVector(mu1Px_fit, mu1Py_fit, mu1Pz_fit,
-					     sqrt(mu1M_fit*mu1M_fit + mu1Px_fit*mu1Px_fit + mu1Py_fit*mu1Py_fit +
-					     mu1Pz_fit*mu1Pz_fit)), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
+       reco::CompositeCandidate recoM1(mu1Q_fit, math::XYZTLorentzVector(mu1Px_fit, mu1Py_fit, mu1Pz_fit,
+                           sqrt(mu1M_fit*mu1M_fit + mu1Px_fit*mu1Px_fit + mu1Py_fit*mu1Py_fit +
+                           mu1Pz_fit*mu1Pz_fit)), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
 
-		pat::CompositeCandidate patM1(recoM1);
+       pat::CompositeCandidate patM1(recoM1);
 
-		patM1.addUserFloat("Dxy",mdxy1);
-		patM1.addUserFloat("Dz",mdz1);
-        //new
-        patM1.addUserFloat("dRIso"    ,getIso( *muon1 ) );
-        patM1.addUserFloat("dIP3DSig", tkPVdist1.second.significance());
+       patM1.addUserFloat("Dxy",mdxy1);
+       patM1.addUserFloat("Dz",mdz1);
+       //new
+       patM1.addUserFloat("dRIso"    ,getIso( *muon1 ) );
+       patM1.addUserFloat("dIP3DSig", tkPVdist1.second.significance());
         
-		patM1.addUserFloat("dIP3D",tkPVdist1.second.value());
-		patM1.addUserFloat("dIP3DErr",tkPVdist1.second.error());
-              /* 
-		int phiK1_TrackerLWM = iTrack1->bestTrack()->hitPattern().trackerLayersWithMeasurement();
-		int phiK1_PixelLWM   = iTrack1->bestTrack()->hitPattern().pixelLayersWithMeasurement();
-		int phiK1_ValPixHit  = iTrack1->bestTrack()->hitPattern().numberOfValidPixelHits();
+       patM1.addUserFloat("dIP3D",tkPVdist1.second.value());
+       patM1.addUserFloat("dIP3DErr",tkPVdist1.second.error());
 
-		int phiK2_TrackerLWM = iTrack2->bestTrack()->hitPattern().trackerLayersWithMeasurement();
-		int phiK2_PixelLWM   = iTrack2->bestTrack()->hitPattern().pixelLayersWithMeasurement();
-		int phiK2_ValPixHit  = iTrack2->bestTrack()->hitPattern().numberOfValidPixelHits();
-               */
-		int psiM1_TrackerLWM = muon1->muonBestTrack()->hitPattern().trackerLayersWithMeasurement();
-		int psiM1_PixelLWM   = muon1->muonBestTrack()->hitPattern().pixelLayersWithMeasurement();
-		int psiM1_ValPixHit  = muon1->muonBestTrack()->hitPattern().numberOfValidPixelHits();
-		int psiM2_TrackerLWM = muon2->muonBestTrack()->hitPattern().trackerLayersWithMeasurement();
-		int psiM2_PixelLWM   = muon2->muonBestTrack()->hitPattern().pixelLayersWithMeasurement();
-		int psiM2_ValPixHit  = muon2->muonBestTrack()->hitPattern().numberOfValidPixelHits();
+       int psiM1_TrackerLWM = muon1->muonBestTrack()->hitPattern().trackerLayersWithMeasurement();
+       int psiM1_PixelLWM   = muon1->muonBestTrack()->hitPattern().pixelLayersWithMeasurement();
+       int psiM1_ValPixHit  = muon1->muonBestTrack()->hitPattern().numberOfValidPixelHits();
+       int psiM2_TrackerLWM = muon2->muonBestTrack()->hitPattern().trackerLayersWithMeasurement();
+       int psiM2_PixelLWM   = muon2->muonBestTrack()->hitPattern().pixelLayersWithMeasurement();
+       int psiM2_ValPixHit  = muon2->muonBestTrack()->hitPattern().numberOfValidPixelHits();
 
-        patM1.addUserInt("ZMu1Qid_", ZMu1Qid);
-		patM1.addUserFloat("psiM1_TrackerLWM_", psiM1_TrackerLWM);
-		patM1.addUserFloat("psiM1_PixelLWM_",  psiM1_PixelLWM);
-		patM1.addUserFloat("psiM1_ValPixHit_", psiM1_ValPixHit);
-        ///////////////////////////////////////////////////////
-        //get second Muon
-		child = ZTree->movePointerToTheNextChild();
-		RefCountedKinematicParticle fitMu2 = ZTree->currentParticle();
-        float mu2M_fit ;
-        float mu2Q_fit ;
-        float mu2Px_fit;
-        float mu2Py_fit;
-        float mu2Pz_fit;
+       patM1.addUserInt("ZMu1Qid_", ZMu1Qid);
+       patM1.addUserFloat("psiM1_TrackerLWM_", psiM1_TrackerLWM);
+       patM1.addUserFloat("psiM1_PixelLWM_",  psiM1_PixelLWM);
+       patM1.addUserFloat("psiM1_ValPixHit_", psiM1_ValPixHit);
+       ///////////////////////////////////////////////////////
+       //get second Muon
+       child = ZTree->movePointerToTheNextChild();
+       RefCountedKinematicParticle fitMu2 = ZTree->currentParticle();
+       float mu2M_fit ;
+       float mu2Q_fit ;
+       float mu2Px_fit;
+       float mu2Py_fit;
+       float mu2Pz_fit;
 
-        if (!child){
+       if (!child){
             //std::cout << "Mu2" << std::endl;
             mu2M_fit  = 0;
             mu2Q_fit  = 0;
             mu2Px_fit = 0;
             mu2Py_fit = 0;
             mu2Pz_fit = 0;
-        }
-        else{
-            mu2M_fit  = fitMu2->currentState().mass();
-            mu2Q_fit  = fitMu2->currentState().particleCharge();
-            mu2Px_fit =  fitMu2->currentState().kinematicParameters().momentum().x();
-            mu2Py_fit =  fitMu2->currentState().kinematicParameters().momentum().y();
-            mu2Pz_fit =  fitMu2->currentState().kinematicParameters().momentum().z();
-        }
+       }
+       else{
+           mu2M_fit  = fitMu2->currentState().mass();
+           mu2Q_fit  = fitMu2->currentState().particleCharge();
+           mu2Px_fit =  fitMu2->currentState().kinematicParameters().momentum().x();
+           mu2Py_fit =  fitMu2->currentState().kinematicParameters().momentum().y();
+           mu2Pz_fit =  fitMu2->currentState().kinematicParameters().momentum().z();
+       }
                  
-		reco::CompositeCandidate recoM2(mu2Q_fit, math::XYZTLorentzVector(mu2Px_fit, mu2Py_fit, mu2Pz_fit,
-					     sqrt(mu2M_fit*mu2M_fit + mu2Px_fit*mu2Px_fit + mu2Py_fit*mu2Py_fit +
-					     mu2Pz_fit*mu2Pz_fit)), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
-/*
-		reco::CompositeCandidate msrdK2(iTrack2->charge(), math::XYZTLorentzVector(iTrack2->px(), iTrack2->py(), iTrack2->pz(),
-		      sqrt((iTrack2->mass())*(iTrack2->mass()) + (iTrack2->px())*(iTrack2->px()) + (iTrack2->py())*(iTrack2->py()) +
-					 (iTrack2->pz())*(iTrack2->pz()))), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
-*/
-		reco::CompositeCandidate msrdM2(muon2->charge(), math::XYZTLorentzVector(muon2->px(), muon2->py(), muon2->pz(),
-		      sqrt((muMass)*(muMass) + (muon2->px())*(muon2->px()) + (muon2->py())*(muon2->py()) +
+       reco::CompositeCandidate recoM2(mu2Q_fit, math::XYZTLorentzVector(mu2Px_fit, mu2Py_fit, mu2Pz_fit,
+                           sqrt(mu2M_fit*mu2M_fit + mu2Px_fit*mu2Px_fit + mu2Py_fit*mu2Py_fit +
+                           mu2Pz_fit*mu2Pz_fit)), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
+
+       reco::CompositeCandidate msrdM2(muon2->charge(), math::XYZTLorentzVector(muon2->px(), muon2->py(), muon2->pz(),
+		             sqrt((muMass)*(muMass) + (muon2->px())*(muon2->px()) + (muon2->py())*(muon2->py()) +
 					 (muon2->pz())*(muon2->pz()))), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
 
-		pat::CompositeCandidate pat_msrdM2(msrdM2);
+       pat::CompositeCandidate pat_msrdM2(msrdM2);
 
-		pat::CompositeCandidate patM2(recoM2);
-		patM2.addUserFloat("Dxy",mdxy2);
-		patM2.addUserFloat("Dz",mdz2);
-        //New
-        patM2.addUserFloat("dRIso"    ,getIso( *muon2 ) );
-        patM2.addUserFloat("dIP3DSig", tkPVdist2.second.significance());
+       pat::CompositeCandidate patM2(recoM2);
+       patM2.addUserFloat("Dxy",mdxy2);
+       patM2.addUserFloat("Dz",mdz2);
+       //New
+       patM2.addUserFloat("dRIso"    ,getIso( *muon2 ) );
+       patM2.addUserFloat("dIP3DSig", tkPVdist2.second.significance());
                  
         patM2.addUserFloat("dIP3d", tkPVdist2.second.significance());
 		patM2.addUserFloat("dIP3D",tkPVdist2.second.value());
 		patM2.addUserFloat("dIP3DErr",tkPVdist2.second.error());
-           
         patM2.addUserInt("ZMu2Qid_", ZMu2Qid);
 		patM2.addUserFloat("psiM2_TrackerLWM_", psiM2_TrackerLWM);
 		patM2.addUserFloat("psiM2_PixelLWM_",  psiM2_PixelLWM);
@@ -1194,9 +1001,10 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 
              //}end of ifValidFit
 
-        }//end of loop for dimuon
-
-   }//end for dilepton
+        }//end of loop for iMuon1
+      }  //end of loop for iMuon2
+   }//end of loop for iMuon3
+   }//end of loop for iMuon4
    iEvent.put(std::move(ZCandColl),"ZCandidates");
 }//end produce 
 
