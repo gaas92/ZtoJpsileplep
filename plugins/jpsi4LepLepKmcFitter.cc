@@ -414,10 +414,10 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
        reco::TrackRef glbTrack_m2 = muon2->track();
        if (glbTrack_l1.isNull() || glbTrack_l2.isNull() || glbTrack_m1.isNull() || glbTrack_m2.isNull()) continue;
        
-       if (!(glbTrack_l1->quality(reco::TrackRef::highPurity))) continue;
-       if (!(glbTrack_l2->quality(reco::TrackRef::highPurity))) continue;
-       if (!(glbTrack_m1->quality(reco::TrackRef::highPurity))) continue;
-       if (!(glbTrack_m2->quality(reco::TrackRef::highPurity))) continue;
+       if (!(glbTrack_l1->quality(reco::TrackBase::highPurity))) continue;
+       if (!(glbTrack_l2->quality(reco::TrackBase::highPurity))) continue;
+       if (!(glbTrack_m1->quality(reco::TrackBase::highPurity))) continue;
+       if (!(glbTrack_m2->quality(reco::TrackBase::highPurity))) continue;
        
          
        int ZLe1Qid = 0;
