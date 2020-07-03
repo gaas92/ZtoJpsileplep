@@ -417,7 +417,6 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
        if (!(glbTrack_l2->quality(reco::TrackBase::highPurity))) continue;
        if (!(glbTrack_m1->quality(reco::TrackBase::highPurity))) continue;
        if (!(glbTrack_m2->quality(reco::TrackBase::highPurity))) continue;
-       std::cout << "muon ok 420" << std::endl;
 
          
        int ZLe1Qid = 0;
@@ -517,7 +516,8 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
        std::pair<bool,Measurement1D> tkPVdistem1 = IPTools::absoluteImpactParameter3D(muon1TT,*PV);
        std::pair<bool,Measurement1D> tkPVdistem2 = IPTools::absoluteImpactParameter3D(muon2TT,*PV);
          
-       if(!tkPVdistel1.first || !tkPVdistel2.first || !tkPVdistem1.first || tkPVdistem2.first) continue;
+       if(!tkPVdistel1.first || !tkPVdistel2.first || !tkPVdistem1.first || !tkPVdistem2.first) continue;
+       //std::cout << "muon ok 520" << std::endl;
 
        //Isolation
        double dR1 = -1, dR2 = -1, dR3 = -1, dR4 = -1, dR5 = -1, dR6 = -1;
