@@ -179,6 +179,7 @@ bool jpsiElec4l_KmcFitter::isAncestor(int a_pdgId, const reco::Candidate * parti
 // ------------ method called to produce the data  ------------
 void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
+  std::cout<< "good KFitter start" << std::endl;
   using namespace edm;
   std::auto_ptr<pat::ElectronCollection > selectedCollection(new pat::ElectronCollection ); //new
   std::unique_ptr<pat::CompositeCandidateCollection> ZCandColl(new pat::CompositeCandidateCollection); 
@@ -298,10 +299,10 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
   int nonia = 0;
   int nmuons = muons->size();
   int nPV    = primaryVertices_handle->size();
-    
-    for(View<pat::Muon>::const_iterator iMuon1 = muons->begin(); iMuon1 != muons->end(); ++iMuon1){
-    for(View<pat::Muon>::const_iterator iMuon2 = iMuon1+1; iMuon2 != muons->end(); ++iMuon2){
-     for(View<pat::Electron>::const_iterator iElec1 = electrons->begin(); iElec1 != electrons->end(); ++iElec1){
+  std::cout<< "good KFitter load" << std::endl;
+  for(View<pat::Muon>::const_iterator iMuon1 = muons->begin(); iMuon1 != muons->end(); ++iMuon1){
+   for(View<pat::Muon>::const_iterator iMuon2 = iMuon1+1; iMuon2 != muons->end(); ++iMuon2){
+    for(View<pat::Electron>::const_iterator iElec1 = electrons->begin(); iElec1 != electrons->end(); ++iElec1){
      for(View<pat::Electron>::const_iterator iElec2 = iElec1+1; iElec2 != electrons->end(); ++iElec2){
         if(iMuon1 == iMuon2) continue;
         if(iElec1 == iElec2) continue;
@@ -1092,7 +1093,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
    } //end iMuon2
   }// end iMuon1
   iEvent.put(std::move(ZCandColl),"ZCandidates");
-  //std::cout << "is ZCandColl empty ?" << /*ZCandColl->empty() <<*/ std::endl; 
+  std::cout << "is ZCandColl empty ?" << ZCandColl->empty() << std::endl; 
   //std::cout << "jpsiElec4l_KmcFitter is working ok" << std::endl;
 }
 

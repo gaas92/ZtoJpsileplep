@@ -736,7 +736,7 @@ void Zjpsi_eeMCTupler::analyze(const edm::Event & iEvent, const edm::EventSetup 
 
   //std::cout << "is Empty ? " << ZCands->empty() << std::endl;
   if (ZCands.isValid() && !ZCands->empty()) {
-      //std::cout << "ZCands is not empty: " << std::endl;
+      std::cout << "ZCands is not empty: tupler working ..." << std::endl;
       unsigned int csize = ZCands->size();
       //if (bestCandidateOnly_) csize = 1;
 
