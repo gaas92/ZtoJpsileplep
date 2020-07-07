@@ -301,8 +301,8 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
   int nPV    = primaryVertices_handle->size();
   std::cout<< "good KFitter load" << std::endl;
   for(View<pat::Muon>::const_iterator iMuon1 = muons->begin(); iMuon1 != muons->end(); ++iMuon1){
-      std::cout << " works 304 " << std::endl;
    for(View<pat::Muon>::const_iterator iMuon2 = iMuon1+1; iMuon2 != muons->end(); ++iMuon2){
+       std::cout << " works 305 " << std::endl;
     for(View<pat::Electron>::const_iterator iElec1 = electrons->begin(); iElec1 != electrons->end(); ++iElec1){
      for(View<pat::Electron>::const_iterator iElec2 = iElec1+1; iElec2 != electrons->end(); ++iElec2){
         if(iMuon1 == iMuon2) continue;
