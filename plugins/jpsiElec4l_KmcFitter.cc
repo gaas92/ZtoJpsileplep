@@ -216,7 +216,6 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
   //// Select  the best PV      ////
   //////////////////////////////////
   
-  if (!dileptons.isValid() )return; 	
 
   if(primaryVertices_handle->empty())return;  
   
@@ -300,7 +299,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
     
     for(View<pat::Muon>::const_iterator iMuon1 = muons->begin(); iMuon1 != muons->end(); ++iMuon1){
     for(View<pat::Muon>::const_iterator iMuon2 = iMuon1+1; iMuon2 != muons->end(); ++iMuon2){
-     for(View<pat::Electron>::const_iterator iElec1 = electrons->begin(); iElec1 != electrons->end(); iElec1){
+     for(View<pat::Electron>::const_iterator iElec1 = electrons->begin(); iElec1 != electrons->end(); ++iElec1){
      for(View<pat::Electron>::const_iterator iElec2 = iElec1+1; iElec2 != electrons->end(); ++iElec2){
         if(iMuon1 == iMuon2) continue;
         if(iElec1 == iElec2) continue;
@@ -342,7 +341,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
         reco::TrackRef glbTrack_m1 = muon1->track();
         reco::TrackRef glbTrack_m2 = muon2->track();
 
-        if(glbTrack_l1.isNull() || glbTrack_l2.isNull() || glbTrack_m1.isNull() glbTrack_m2.isNull()) continue;
+        if(glbTrack_l1.isNull() || glbTrack_l2.isNull() || glbTrack_m1.isNull() || glbTrack_m2.isNull()) continue;
         if(!(glbTrack_m1->quality(reco::TrackBase::highPurity))) continue;
         if(!(glbTrack_m2->quality(reco::TrackBase::highPurity))) continue;
 
