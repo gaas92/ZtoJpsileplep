@@ -306,7 +306,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
      for(View<pat::Electron>::const_iterator iElec2 = iElec1+1; iElec2 != electrons->end(); ++iElec2){
         if(iMuon1 == iMuon2) continue;
         if(iElec1 == iElec2) continue;
-        
+        std::cout << " works 309 " << std::endl;
         int ch_m1 = iMuon1->charge();
         int ch_m2 = iMuon2->charge();
         int ch_e1 = iElec1->charge();
