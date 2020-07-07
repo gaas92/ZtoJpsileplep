@@ -766,16 +766,16 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
         patMu1.addUserFloat("Dz",mdz1);
         //new
         patMu1.addUserFloat("dRIso"    ,getIso( *muon1 ) );
-        patMu1.addUserFloat("dIP3DSig", tkPVdist1.second.significance());
+        patMu1.addUserFloat("dIP3DSig", tkPVdistm1.second.significance());
           
-        patMu1.addUserFloat("dIP3D",tkPVdist1.second.value());
-        patMu1.addUserFloat("dIP3DErr",tkPVdist1.second.error());
+        patMu1.addUserFloat("dIP3D", tkPVdistm1.second.value());
+        patMu1.addUserFloat("dIP3DErr", tkPVdistm1.second.error());
         ////////////////////////////////
         ///////// MY MUON Q ID /////////
         ////////////////////////////////
         //patMu1.addUserFloat("JpM1Qid_", JpM1Qid);
                                 
-        patMu1.addUserFloat("muon1Mu8DiEle12_", muon1Mu8DiEle12);
+        //patMu1.addUserFloat("muon1Mu8DiEle12_", muon1Mu8DiEle12);
                        
         patMu1.addUserInt("JpM1Qid_", ZMu1Qid);
         //patMu1.addUserFloat("JpM1Qid_TP_", JpM1Qid_TP);
@@ -821,13 +821,13 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
         patMu2.addUserFloat("Dz",mdz2);
         //New
         patMu2.addUserFloat("dRIso"    ,getIso( *muon2 ) );
-        patMu2.addUserFloat("dIP3DSig", tkPVdist2.second.significance());
+        patMu2.addUserFloat("dIP3DSig", tkPVdistm2.second.significance());
           
-        patMu2.addUserFloat("dIP3D",tkPVdist2.second.value());
-        patMu2.addUserFloat("dIP3DErr",tkPVdist2.second.error());
+        patMu2.addUserFloat("dIP3D", tkPVdistm2.second.value());
+        patMu2.addUserFloat("dIP3DErr",tkPVdistm2.second.error());
 		          
         //patMu2.addUserFloat("JpM2Qid_", JpM2Qid);
-        patMu2.addUserFloat("muon2Mu8DiEle12_", muon2Mu8DiEle12);
+        //patMu2.addUserFloat("muon2Mu8DiEle12_", muon2Mu8DiEle12);
 		             
         patMu2.addUserInt("JpM2Qid_", ZMu2Qid);
         //patMu2.addUserFloat("JpM2Qid_TP_", JpM2Qid_TP);
@@ -905,10 +905,10 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
                 
         patL1.addUserFloat("dRIso"	,getIsoVar( *lept1 ) );
         //New
-        patL1.addUserFloat("dIP3DSig",tkPVdistel1.second.significance());
+        patL1.addUserFloat("dIP3DSig", tkPVdistl1.second.significance());
           
-        patL1.addUserFloat("dIP3D"	,tkPVdistel1.second.value());
-        patL1.addUserFloat("dIP3DErr"	,tkPVdistel1.second.error());
+        patL1.addUserFloat("dIP3D"	, tkPVdistl1.second.value());
+        patL1.addUserFloat("dIP3DErr"	, tkPVdistl1.second.error());
                 
         patL1.addUserFloat("dRIsoEA", ElectronRelIso(*lept1));
         //std::cout << " dRisoEA l1 ~" << ElectronRelIso(*lept1) << std::endl;
@@ -965,9 +965,9 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
             L2Py_fit =    fitL2->currentState().kinematicParameters().momentum().y();
             L2Pz_fit =    fitL2->currentState().kinematicParameters().momentum().z();
         }
-				reco::CompositeCandidate recoL2(L2Q_fit, math::XYZTLorentzVector(L2Px_fit, L2Py_fit, L2Pz_fit, 
-                                         sqrt(L2M_fit*L2M_fit + L2Px_fit*L2Px_fit + L2Py_fit*L2Py_fit +
-                                         L2Pz_fit*L2Pz_fit)), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
+        reco::CompositeCandidate recoL2(L2Q_fit, math::XYZTLorentzVector(L2Px_fit, L2Py_fit, L2Pz_fit,
+                                        sqrt(L2M_fit*L2M_fit + L2Px_fit*L2Px_fit + L2Py_fit*L2Py_fit +
+                                        L2Pz_fit*L2Pz_fit)), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
 
         reco::CompositeCandidate msrdL2(lept2->charge(), math::XYZTLorentzVector(lept2->px(), lept2->py(), lept2->pz(),
                                         sqrt((lept2->mass())*(lept2->mass()) + (lept2->px())*(lept2->px()) + (lept2->py())*(lept2->py()) +
