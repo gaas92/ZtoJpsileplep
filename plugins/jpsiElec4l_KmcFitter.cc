@@ -996,9 +996,9 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
         patL2.addUserFloat("corrfactor_", corrfactor_2);
                 
         patL2.addUserFloat("dRIso"	,getIsoVar( *lept2 ) );
-        patL2.addUserFloat("dIP3DSig",tkPVdistel2.second.significance());
-        patL2.addUserFloat("dIP3D"	,tkPVdistel2.second.value());
-        patL2.addUserFloat("dIP3DErr"	,tkPVdistel2.second.error());
+        patL2.addUserFloat("dIP3DSig",tkPVdistl2.second.significance());
+        patL2.addUserFloat("dIP3D"	, tkPVdistl2.second.value());
+        patL2.addUserFloat("dIP3DErr"	, tkPVdistl2.second.error());
     
         patL2.addUserFloat("dRIsoEA", ElectronRelIso(*lept2));
         patL2.addUserFloat("trackMomentumAtVtx"   , (float)sqrt(lept2->trackMomentumAtVtx().mag2()));
