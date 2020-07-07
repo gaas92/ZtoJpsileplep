@@ -134,7 +134,8 @@ jpsiElec4l_KmcFitter::jpsiElec4l_KmcFitter(const edm::ParameterSet& iConfig){
 	//dimuon_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter< edm::InputTag>("dimuon"));
 	//dielec_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter<edm::InputTag>("dilepton"));
     //electronsMiniAODToken_ = mayConsume<edm::View<pat::Electron>>(iConfig.getParameter<edm::InputTag>("electronsMiniAOD"));
-    electronsMiniAODToken_ = consumes<edm::View<pat::Electron>>(iConfig.getParameter<edm::InputTag>("electronsMiniAOD"));
+
+    electronsMiniAODToken_ = mayConsume<edm::View<pat::Electron>>(iConfig.getParameter<edm::InputTag>("electronsMiniAOD"));
     muonToken_ = consumes<edm::View<pat::Muon>>(iConfig.getParameter<edm::InputTag>("muons"));
     
 	primaryVertices_Label = consumes<reco::VertexCollection>(iConfig.getParameter< edm::InputTag>("primaryVertices"));
