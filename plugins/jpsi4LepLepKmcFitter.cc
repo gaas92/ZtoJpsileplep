@@ -297,6 +297,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
    //double chiVtxSqdProb = ChiSquaredProbability((double)(PV.chi2()),(double)(PV.ndof())); 
    //int breaker = 0;
    // We Cycle over dileptons for the Kfit
+    if (gen_z_p4.M() != 0){   //only for mc
     for(View<pat::Muon>::const_iterator iMuon1 = muons->begin(); iMuon1 != muons->end(); ++iMuon1){
     for(View<pat::Muon>::const_iterator iMuon2 = iMuon1+1; iMuon2 != muons->end(); ++iMuon2){
      for(View<pat::Muon>::const_iterator iMuon3 = iMuon2+1; iMuon3 != muons->end(); ++iMuon3){
@@ -1010,6 +1011,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
    }//end of loop for iMuon3
    }//end of loop for iMuon4
    iEvent.put(std::move(ZCandColl),"ZCandidates");
+   }//end if gen only MC
 }//end produce 
 
 // ------------ method called once each stream before processing any runs, lumis or events  ------------
