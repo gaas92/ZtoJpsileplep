@@ -75,4 +75,15 @@ process.oniarootupler = cms.EDAnalyzer('ZjpsiMCTupler',
 #process.oniaSequence = cms.Sequence(process.onia2MuMuPAT) ##No trigger matching for 2017yet
 process.leptonSequence = cms.Sequence(process.Zfitter)
 
-process.p = cms.Path(process.leptonSequence*process.oniarootupler)
+#process.p = cms.Path(process.leptonSequence*process.oniarootupler)
+process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
+process.printTree = cms.EDAnalyzer("ParticleTreeDrawer",
+                                   src = cms.InputTag("genParticles"),
+                                   printP4 = cms.untracked.bool(False),
+                                   printPtEtaPhi = cms.untracked.bool(False),
+                                   printVertex = cms.untracked.bool(False),
+                                   printStatus = cms.untracked.bool(False),
+                                   printIndex = cms.untracked.bool(False),
+                                   status = cms.untracked.vint32( 3 )
+                                   )
+process.p = cms.Path(process.printTree)
