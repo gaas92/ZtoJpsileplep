@@ -260,21 +260,21 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                     int stable_id = (*packed)[k].pdgId();
                     if (stable_id != 11 && stable_id != -11) continue;
                     if (stable_dau != nullptr && isAncestor(mom,stable_dau) && fromZ > 3) { // if stable comes from Z
-                        std::cout<< "+-> Mu " << stable_dau->charge() <<" ||id & n muons " << stable_id <<" "<< fromZ <<  std::endl;
+                        //std::cout<< "+-> Mu " << stable_dau->charge() <<" ||id & n muons " << stable_id <<" "<< fromZ <<  std::endl;
                         if(stable_id == 11 && temp_lep_1.M() == 0){ // if muon- && not previiulsy assigned
-                            std::cout << " matched 1 " << std::endl;
+                            //std::cout << " matched 1 " << std::endl;
                             temp_lep_1.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                         }
                         else if(stable_id == -11 && temp_lep_2.M() == 0){ // if muon+ && not previusly assigned
-                            std::cout << " matched 2 " << std::endl;
+                            //std::cout << " matched 2 " << std::endl;
                             temp_lep_2.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                         }
                         else if(stable_id == 11 && temp_mu_1.M() == 0){ // if muon- && not previusly assigned
-                            std::cout << " matched 3 " << std::endl;
+                            //std::cout << " matched 3 " << std::endl;
                             temp_mu_1.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                         }
                         else if(stable_id == -11 && temp_mu_2.M() == 0){ // if muon+ && not previusly assigned
-                            std::cout << " matched 4 " << std::endl;
+                            //std::cout << " matched 4 " << std::endl;
                             temp_mu_2.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                         }
                     }// end if stable particle cames from Z
@@ -289,8 +289,13 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                        gen_jpsi_p4 = temp_mu_1 + temp_mu_2;
                        gen_z_vtx.SetXYZ(mom->vx(),mom->vy(),mom->vz());
                        TLorentzVector zz = temp_lep_1 + temp_lep_2 + temp_mu_1 + temp_mu_2;
-                       //std::cout << "Found Z to 4l (2 mu + 2 mu), Z cand mass ~ " << gen_z_p4.M() << std::endl;
-                       //std::cout << "4 lep gen mass ~ " << zz.M() << std::endl;
+                       std::cout << "Found Z to 4l (2 mu + 2 mu), Z cand mass ~ " << gen_z_p4.M() << std::endl;
+                       std::cout << "4 lep gen mass ~ " << zz.M() << std::endl;
+                       std::cout << "lep1 Pt: " << temp_mu_1.Pt() << std::endl;
+                       std::cout << "lep2 Pt: " << temp_mu_2.Pt() << std::endl;
+                       std::cout << "lep3 Pt: " << temp_mu_3.Pt() << std::endl;
+                       std::cout << "lep4 Pt: " << temp_mu_4.Pt() << std::endl;
+
                     }
                 }
             }// end if Z
