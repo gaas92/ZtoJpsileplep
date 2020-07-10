@@ -258,7 +258,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                     const reco::Candidate * stable_dau = &(*packed)[k];
                     int stable_id = (*packed)[k].pdgId();
                     if (stable_dau != nullptr && isAncestor(mom,stable_dau) && fromZ > 3) { // if stable comes from Z
-                        std::cout<< "+-> Mu " << stable_dau.charge() <<" || n daug " << fromZ <<  std::endl;
+                        std::cout<< "+-> Mu " << stable_dau->charge() <<" || n daug " << fromZ <<  std::endl;
                         if(stable_id == 11 && temp_lep_1.M() == 0){ // if muon- && not previiulsy assigned
                             temp_lep_1.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                         }
