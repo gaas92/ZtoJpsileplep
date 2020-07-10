@@ -258,17 +258,21 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                     const reco::Candidate * stable_dau = &(*packed)[k];
                     int stable_id = (*packed)[k].pdgId();
                     if (stable_dau != nullptr && isAncestor(mom,stable_dau) && fromZ > 3) { // if stable comes from Z
-                        std::cout<< "+-> Mu " << stable_dau->charge() <<" || n daug " << fromZ <<  std::endl;
+                        std::cout<< "+-> Mu " << stable_dau->charge() <<" ||id & n daug " << stable_id <<" "<< fromZ <<  std::endl;
                         if(stable_id == 11 && temp_lep_1.M() == 0){ // if muon- && not previiulsy assigned
+                            std::cout << " matched 1 " << std::endl;
                             temp_lep_1.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                         }
                         else if(stable_id == -11 && temp_lep_2.M() == 0){ // if muon+ && not previusly assigned
+                            std::cout << " matched 2 " << std::endl;
                             temp_lep_2.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                         }
                         else if(stable_id == 11 && temp_mu_1.M() == 0){ // if muon- && not previusly assigned
+                            std::cout << " matched 3 " << std::endl;
                             temp_mu_1.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                         }
                         else if(stable_id == -11 && temp_mu_2.M() == 0){ // if muon+ && not previusly assigned
+                            std::cout << " matched 4 " << std::endl;
                             temp_mu_2.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                         }
                     }// end if stable particle cames from Z
