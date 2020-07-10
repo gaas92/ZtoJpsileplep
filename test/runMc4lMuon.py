@@ -15,8 +15,7 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc')
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-    #'/store/mc/RunIIAutumn18MiniAOD/ZZTo4L_TuneCP5_DoubleScattering_13TeV-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15-v5/00000/6072A673-CF57-DB43-8744-6D0D46E0D670.root'
-    '/store/mc/RunIIFall17DRPremix/ZZTo4L_13TeV_powheg_pythia8/AODSIM/94X_mc2017_realistic_v10-v2/60000/FEFEC5DE-83D7-E711-B3DC-FA163EF3C52F.root' #only test AOD
+    '/store/mc/RunIIFall17MiniAODv2/ZZTo4L_13TeV_powheg_pythia8/MINIAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/10000/3EC32699-A342-E811-B867-0025907DE2A0.root'
    )
 
 )
@@ -73,18 +72,8 @@ process.oniarootupler = cms.EDAnalyzer('ZjpsiMCTupler',
 
 
 
-#process.oniaSequence = cms.Sequence(process.onia2MuMuPAT) ##No trigger matching for 2017yet
+#process.oniaSequence = cms.Sequence(process.onia2MuMuPAT) 
 process.leptonSequence = cms.Sequence(process.Zfitter)
 
-#process.p = cms.Path(process.leptonSequence*process.oniarootupler)
-process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
-process.printTree = cms.EDAnalyzer("ParticleTreeDrawer",
-                                   src = cms.InputTag("genParticles"),
-                                   printP4 = cms.untracked.bool(False),
-                                   printPtEtaPhi = cms.untracked.bool(False),
-                                   printVertex = cms.untracked.bool(False),
-                                   printStatus = cms.untracked.bool(False),
-                                   printIndex = cms.untracked.bool(False),
-                                   status = cms.untracked.vint32( 3 )
-                                   )
-process.p = cms.Path(process.printTree)
+process.p = cms.Path(process.leptonSequence*process.oniarootupler)
+

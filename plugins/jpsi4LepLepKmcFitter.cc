@@ -240,6 +240,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
             const reco::Candidate *mom = &(*pruned)[i];
             if (std::isnan(mom->mass())) continue;
             if(abs(mom->pdgId()) == 23){ // if generated is Z boson
+                std::cout << "Z "<< std::endl;
                 TLorentzVector temp_lep_1, temp_lep_2, temp_mu_1, temp_mu_2; //define tempotals
                 temp_lep_1.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
                 temp_lep_2.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
@@ -257,6 +258,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                     const reco::Candidate * stable_dau = &(*packed)[k];
                     int stable_id = (*packed)[k].pdgId();
                     if (stable_dau != nullptr && isAncestor(mom,stable_dau) && fromZ > 3) { // if stable comes from Z
+                        std::cout<< "+-> Mu " << stable_dau.charge() <<" || n daug " << fromZ <<  std::endl;
                         if(stable_id == 11 && temp_lep_1.M() == 0){ // if muon- && not previiulsy assigned
                             temp_lep_1.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                         }
