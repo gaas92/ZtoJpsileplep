@@ -251,7 +251,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                     const reco::Candidate * stable_dau = &(*packed)[k];
                     int stable_id = (*packed)[k].pdgId();
                     if (stable_dau != nullptr && isAncestor(mom,stable_dau)) {
-                        if (stable_id != 11 && stable_id != -11) continue
+                        if (stable_id != 11 && stable_id != -11) continue;
                         fromZ++;
                     }
                 }
