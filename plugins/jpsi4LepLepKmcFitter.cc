@@ -240,7 +240,6 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
             const reco::Candidate *mom = &(*pruned)[i];
             if (std::isnan(mom->mass())) continue;
             if(abs(mom->pdgId()) == 23){ // if generated is Z boson
-                std::cout << "Z "<< std::endl;
                 TLorentzVector temp_lep_1, temp_lep_2, temp_mu_1, temp_mu_2; //define tempotals
                 temp_lep_1.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
                 temp_lep_2.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
