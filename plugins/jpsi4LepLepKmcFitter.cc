@@ -1007,7 +1007,11 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 
         ZCandColl->push_back(patZ);
         std::cout << "Zcand OK " << gen_z_p4.M() << " vs " << ZM_fit <<std::endl;
-        
+        std::cout << "Lep 1 Pt "  << gen_lepton1_p4.Pt()  << " vs " << patL1.pt() << std::endl;
+        std::cout << "Lep 2 Pt "  << gen_lepton2_p4.Pt()  << " vs " << patL2.pt() << std::endl;
+        std::cout << "Muon 1 Pt " << gen_muon1_p4.Pt()    << " vs " << patM1.pt() << std::endl;
+        std::cout << "Muon 2 Pt " << gen_muon2_p4.Pt()    << " vs " << patM2.pt() << std::endl;
+
 /*test
         ZCandColl->push_back(patZ);
         breaker +=1;
