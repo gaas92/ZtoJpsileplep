@@ -291,10 +291,10 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                        TLorentzVector zz = temp_lep_1 + temp_lep_2 + temp_mu_1 + temp_mu_2;
                        std::cout << "Found Z to 4l (2 mu + 2 mu), Z cand mass ~ " << gen_z_p4.M() << std::endl;
                        std::cout << "4 lep gen mass ~ " << zz.M() << std::endl;
-                       std::cout << "lep1 Pt: " << temp_mu_1.Pt() << std::endl;
-                       std::cout << "lep2 Pt: " << temp_mu_2.Pt() << std::endl;
-                       std::cout << "lep3 Pt: " << temp_mu_3.Pt() << std::endl;
-                       std::cout << "lep4 Pt: " << temp_mu_4.Pt() << std::endl;
+                       std::cout << "lep1 Pt: " << temp_lep_1.Pt() << std::endl;
+                       std::cout << "lep2 Pt: " << temp_lep_2.Pt() << std::endl;
+                       std::cout << "mu1  Pt: " << temp_mu_1.Pt()  << std::endl;
+                       std::cout << "mu2  Pt: " << temp_mu_2.Pt()  << std::endl;
 
                     }
                 }
