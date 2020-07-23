@@ -64,6 +64,10 @@
 #include "Math/VectorUtil.h"
 #include "TLorentzVector.h"
 
+#include <iostream>  
+#include<string>  
+#include <unordered_map> 
+
 #include "DataFormats/PatCandidates/interface/PackedCandidate.h" // muy importante para MiniAOD
 
 //
@@ -80,6 +84,8 @@ class jpsi4LepLepKmcFitter : public edm::stream::EDProducer<> {
       bool IsTheSame2(const reco::TrackRef& tk, const pat::Muon& mu);
       double getIso(const pat::Muon& mu);
    private:
+      void printMCtree(const reco::Candidate *, int);
+      std::string printName(int);
       bool    isAncestor(const reco::Candidate*, const reco::Candidate*);
       bool    isAncestor(int, const reco::Candidate*);
       virtual void beginStream(edm::StreamID) override;
@@ -144,6 +150,82 @@ jpsi4LepLepKmcFitter::~jpsi4LepLepKmcFitter()
 //
 // member functions
 //
+//Try to print mc Tree
+std::string jpsi4LepLepKmcFitter::printName(int pdgid){
+    /*
+    std::string retstr;
+    if(pdgid == 11){
+        retstr = "e-";
+    }
+    else if (pdgid == -11){
+        retstr = "e+";
+    }
+    else if (pdgid == 22){
+        retstr = "gamma";
+    }
+    else if (pdgid == 13){
+        retstr = "mu-";
+    }
+    else if (pdgid == -13){
+        retstr = "mu+";
+    }
+    else if (pdgid == 23){
+        retstr = "Z";
+    }
+    else {
+        retstr = std::to_string(pdgid);
+    }
+    */
+    std::unordered_map<int, std::string> umap; 
+    umap[11]  = "e-";
+    umap[-11] = "e+";
+    umap[13]  = "mu-";
+    umap[-13] = "mu+";
+    umap[22]  = "gamma";
+    umap[23]  = "Z";
+    umap[12]  = "Ve";
+    umap[14]  = "Vmu";
+    umap[-14] = "-Vmu";
+    umap[15]  = "tau-";
+    umap[-15] = "tau+";
+    umap[16]  = "Vtau";
+    umap[-16] = "-Vtau";
+    umap[111] = "pi0";
+    umap[211] = "pi+";
+    umap[-211]= "pi-";
+    std::string retstr;
+    if (umap.find(pdgid) == umap.end()){
+        retstr = std::to_string(pdgid);
+    }
+    else{
+        retstr = umap.at(pdgid);
+    }
+
+    return retstr;
+}
+
+void jpsi4LepLepKmcFitter::printMCtree(const reco::Candidate* mother, int indent=0){
+    if (mother == NULL){
+         std::cout << "end tree" << std::endl;
+         return;
+    }
+    if (mother->numberOfDaughters() > 1){   
+        if(indent){
+                std::cout << std::setw(indent) << " ";
+        }  
+        std::cout << printName(mother->pdgId()) <<" has "<< mother->numberOfDaughters() <<" daughters " <<std::endl;
+    }    
+    for (size_t i=0; i< mother->numberOfDaughters(); i++){
+        const reco::Candidate * daughter = mother->daughter(i);
+        if (mother->numberOfDaughters() > 1){       
+            if(indent){
+                std::cout << std::setw(indent) << " ";
+            }
+            std::cout << " daugter "<< i+1 <<": "<<  printName(daughter->pdgId()) << std::endl;
+        }
+        if (daughter->numberOfDaughters()) printMCtree(daughter, indent+4);
+    }
+}
 //recursively check is a given particle is ancestor
 bool jpsi4LepLepKmcFitter::isAncestor(const reco::Candidate* ancestor, const reco::Candidate * particle) {
     if (ancestor == particle ) return true;
@@ -235,6 +317,31 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
     int n_Z_dau = 0;
     int Event_Cand = 1;
     //NEW MC ALV
+    int tst = 0;
+    if (pruned.isValid()){ //if mc exist
+    //std::cout<< "Valid pruned container" << std::endl;
+        for(size_t i=0; i<pruned->size(); i++){ // loop over generated events        
+            const reco::Candidate *mom = &(*pruned)[i];
+            if (std::isnan(mom->mass())) continue;
+            if(abs(mom->pdgId()) == 23){ // if generated is Z boson
+                int fromZ = 0;
+                for(size_t k=0; k<packed->size(); k++){
+                    const reco::Candidate * stable_dau = &(*packed)[k];
+                    int stable_id = (*packed)[k].pdgId();
+                    if (stable_dau != nullptr && isAncestor(mom,stable_dau)) {
+                        if (stable_id != 11 && stable_id != -11) continue; //muons as final states
+                        fromZ++;
+                    }
+                }
+                if (fromZ < 4) continue;
+                std::cout<< "Found Z, print Tree ... " << tst << std::endl;
+                if (tst > 2) break;
+                printMCtree(mom, 0);
+                tst++;
+            }//end if generated is Z
+        }//end loop over pruned 
+    }//end if pruned
+    /*
     if (pruned.isValid() ){ // if mc collection exists
         for(size_t i=0; i<pruned->size(); i++){ // loop over generated events
             const reco::Candidate *mom = &(*pruned)[i];
@@ -301,7 +408,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
             }// end if Z
         }// end loop of generated events
     }//end pruned
-
+    */
     //NEW for muons and psi pairs
     int nonia = 0 ;//dimuons->size();
     int nmuons = muons->size();//dileptons->size()*2;

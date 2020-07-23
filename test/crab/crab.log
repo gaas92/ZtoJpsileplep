@@ -1,0 +1,22 @@
+DEBUG 2020-06-30 15:38:38.946 UTC: 	 CRAB Client version: 3.3.2005
+DEBUG 2020-06-30 15:38:38.947 UTC: 	 Running on: Linux lxplus720.cern.ch 3.10.0-1127.8.2.el7.x86_64 #1 SMP Tue May 12 16:57:42 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux - CentOS Linux 7 (Core)
+DEBUG 2020-06-30 15:38:39.126 UTC: 	 OpenSSl version: OpenSSL 1.0.2k-fips  26 Jan 2017 (Library: OpenSSL 1.0.2d-fips 9 Jul 2015)
+DEBUG 2020-06-30 15:38:39.127 UTC: 	 Executing command: 'status'
+DEBUG 2020-06-30 15:38:39.127 UTC: 	 Found CRAB cache file /afs/cern.ch/user/g/gayalasa/.crab3
+ERROR 2020-06-30 15:38:39.152 UTC: 	 Cannot find .requestcache file in CRAB project directory /afs/cern.ch/work/g/gayalasa/public/Zll/z_sl7/ZtoJpsill/CMSSW_10_6_3/src/AnalizeZll/ZtoJpsileplep/test/crab/2018MC_4l_ee_v1
+ERROR 2020-06-30 15:38:39.152 UTC: 	 Caught ClientException exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.2005.01/bin/crab", line 165, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.2005.01/bin/crab", line 150, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.2005.01/lib/CRABClient/Commands/status.py", line 41, in __init__
+    SubCommand.__init__(self, logger, cmdargs)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.2005.01/lib/CRABClient/Commands/SubCommand.py", line 278, in __init__
+    SubCommand.validateOptions(self)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.2005.01/lib/CRABClient/Commands/SubCommand.py", line 623, in validateOptions
+    self.loadLocalCache()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.2005.01/lib/CRABClient/Commands/SubCommand.py", line 485, in loadLocalCache
+    raise ex
+CachefileNotFoundException: Cannot find .requestcache file in CRAB project directory /afs/cern.ch/work/g/gayalasa/public/Zll/z_sl7/ZtoJpsill/CMSSW_10_6_3/src/AnalizeZll/ZtoJpsileplep/test/crab/2018MC_4l_ee_v1
+INFO 2020-06-30 15:38:39.171 UTC: 	 Log file is /afs/cern.ch/work/g/gayalasa/public/Zll/z_sl7/ZtoJpsill/CMSSW_10_6_3/src/AnalizeZll/ZtoJpsileplep/test/crab/crab.log
