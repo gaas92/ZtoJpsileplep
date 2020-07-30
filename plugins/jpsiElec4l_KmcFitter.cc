@@ -97,7 +97,10 @@ class jpsiElec4l_KmcFitter : public edm::stream::EDProducer<>{
       Float_t getEtaInSeed(const pat::Electron&);
     
       Float_t ElectronRelIso(const pat::Electron&);
-    
+
+      void printMCtree(const reco::Candidate *, int);
+      std::string printName(int);
+
       bool IsTheSame(const pat::GenericParticle& tk, const pat::Muon& mu);
       bool IsTheSame2(const reco::TrackRef& tk, const pat::Muon& mu);
       bool    isAncestor(const reco::Candidate*, const reco::Candidate*);
@@ -114,11 +117,11 @@ class jpsiElec4l_KmcFitter : public edm::stream::EDProducer<>{
       //virtual void endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&) override;
 
       // ----------member data ---------------------------
-        //edm::EDGetTokenT<pat::CompositeCandidateCollection> dimuon_Label;
-        //edm::EDGetTokenT<pat::CompositeCandidateCollection> dielec_Label;
+        edm::EDGetTokenT<pat::CompositeCandidateCollection> dimuon_Label;
+        edm::EDGetTokenT<pat::CompositeCandidateCollection> dielec_Label;
         edm::EDGetTokenT<reco::VertexCollection> primaryVertices_Label;
-        edm::EDGetToken electronsMiniAODToken_;
-        edm::EDGetTokenT<edm::View<pat::Muon>> muonToken_;
+        //edm::EDGetToken electronsMiniAODToken_;
+        //edm::EDGetTokenT<edm::View<pat::Muon>> muonToken_;
     
         edm::EDGetTokenT<reco::GenParticleCollection> genCands_;
         edm::EDGetTokenT<pat::PackedGenParticleCollection > packedGenToken_;
@@ -131,12 +134,12 @@ class jpsiElec4l_KmcFitter : public edm::stream::EDProducer<>{
 
 
 jpsiElec4l_KmcFitter::jpsiElec4l_KmcFitter(const edm::ParameterSet& iConfig){
-	//dimuon_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter< edm::InputTag>("dimuon"));
-	//dielec_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter<edm::InputTag>("dilepton"));
+	dimuon_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter< edm::InputTag>("dimuon"));
+	dielec_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter<edm::InputTag>("dilepton"));
     //electronsMiniAODToken_ = mayConsume<edm::View<pat::Electron>>(iConfig.getParameter<edm::InputTag>("electronsMiniAOD"));
 
-    electronsMiniAODToken_ = mayConsume<edm::View<pat::Electron>>(iConfig.getParameter<edm::InputTag>("electronsMiniAOD"));
-    muonToken_ = consumes<edm::View<pat::Muon>>(iConfig.getParameter<edm::InputTag>("muons"));
+    //electronsMiniAODToken_ = mayConsume<edm::View<pat::Electron>>(iConfig.getParameter<edm::InputTag>("electronsMiniAOD"));
+    //muonToken_ = consumes<edm::View<pat::Muon>>(iConfig.getParameter<edm::InputTag>("muons"));
     
 	primaryVertices_Label = consumes<reco::VertexCollection>(iConfig.getParameter< edm::InputTag>("primaryVertices"));
     
@@ -157,6 +160,61 @@ jpsiElec4l_KmcFitter::jpsiElec4l_KmcFitter(const edm::ParameterSet& iConfig){
 //
 // member functions
 //
+//Try to print mc Tree
+std::string jpsiElec4l_KmcFitter::printName(int pdgid){
+    std::unordered_map<int, std::string> umap; 
+    umap[11]  = "e-";
+    umap[-11] = "e+";
+    umap[13]  = "mu-";
+    umap[-13] = "mu+";
+    umap[22]  = "gamma";
+    umap[23]  = "Z";
+    umap[12]  = "Ve";
+    umap[14]  = "Vmu";
+    umap[-14] = "-Vmu";
+    umap[15]  = "tau-";
+    umap[-15] = "tau+";
+    umap[16]  = "Vtau";
+    umap[-16] = "-Vtau";
+    umap[111] = "pi0";
+    umap[211] = "pi+";
+    umap[-211]= "pi-";
+    std::string retstr;
+    if (umap.find(pdgid) == umap.end()){
+        retstr = std::to_string(pdgid);
+    }
+    else{
+        retstr = umap.at(pdgid);
+    }
+
+    return retstr;
+}
+
+void jpsiElec4l_KmcFitter::printMCtree(const reco::Candidate* mother, int indent=0){
+    if (mother == NULL){
+         std::cout << "end tree" << std::endl;
+         return;
+    }
+    if (mother->numberOfDaughters() > 0){   
+        if(indent){
+                std::cout << std::setw(indent) << " ";
+        }  
+        std::cout << printName(mother->pdgId()) <<" has "<< mother->numberOfDaughters() <<" daughters " <<std::endl;
+    }
+    int extraIndent = 0;    
+    for (size_t i=0; i< mother->numberOfDaughters(); i++){
+        const reco::Candidate * daughter = mother->daughter(i);
+        if (mother->numberOfDaughters() > 0){       
+            if(indent){
+                std::cout << std::setw(indent) << " ";
+            }
+            std::cout << " daugter "<< i+1 <<": "<<  printName(daughter->pdgId()) << " with Pt: ";
+            std::cout << daughter->pt() << " | Eta: "<< daughter->eta() << " | Phi: "<< daughter->phi() << " | mass: "<< daughter->mass() << std::endl;
+            extraIndent+=4;
+        }
+        if (daughter->numberOfDaughters()) printMCtree(daughter, indent+extraIndent);
+    }
+}
 //recursively check is a given particle is ancestor
 bool jpsiElec4l_KmcFitter::isAncestor(const reco::Candidate* ancestor, const reco::Candidate * particle) {
     if (ancestor == particle ) return true;
@@ -179,22 +237,21 @@ bool jpsiElec4l_KmcFitter::isAncestor(int a_pdgId, const reco::Candidate * parti
 // ------------ method called to produce the data  ------------
 void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-  std::cout<< "good KFitter start" << std::endl;
   using namespace edm;
   std::auto_ptr<pat::ElectronCollection > selectedCollection(new pat::ElectronCollection ); //new
   std::unique_ptr<pat::CompositeCandidateCollection> ZCandColl(new pat::CompositeCandidateCollection); 
      
-  //edm::Handle<pat::CompositeCandidateCollection> dimuons;
-  //iEvent.getByToken(dimuon_Label,dimuons);
+  edm::Handle<pat::CompositeCandidateCollection> dimuons;
+  iEvent.getByToken(dimuon_Label,dimuons);
   
-  //edm::Handle<pat::CompositeCandidateCollection> dileptons;
-  //iEvent.getByToken(dielec_Label,dileptons);
+  edm::Handle<pat::CompositeCandidateCollection> dileptons;
+  iEvent.getByToken(dielec_Label,dileptons);
 
-  edm::Handle<edm::View<pat::Electron> > electrons; //new
-  if( !electrons.isValid() ) iEvent.getByToken(electronsMiniAODToken_,electrons); //new
+  //edm::Handle<edm::View<pat::Electron> > electrons; //new
+  //if( !electrons.isValid() ) iEvent.getByToken(electronsMiniAODToken_,electrons); //new
   
-  edm::Handle<View<pat::Muon>> muons;
-  iEvent.getByToken(muonToken_, muons);
+  //edm::Handle<View<pat::Muon>> muons;
+  //iEvent.getByToken(muonToken_, muons);
     
   edm::Handle<reco::VertexCollection> primaryVertices_handle;
   iEvent.getByToken(primaryVertices_Label, primaryVertices_handle);
@@ -245,109 +302,174 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
   gen_lepton2_p4.SetPtEtaPhiM(0.,0.,0.,0.);
   gen_z_vtx.SetXYZ(0.,0.,0.);
   gen_jpsi_vtx.SetXYZ(0.,0.,0.);
+  int tst = 0;
   int n_Z_dau = 0;
   int Event_Cand = 1;
-   //std::cout << "test" << std::endl;
+  //std::cout << "test" << std::endl;
   //NEW MC ALV
-  if (pruned.isValid() ){ // if mc collection exists
-      for(size_t i=0; i<pruned->size(); i++){ // loop over generated events
-          const reco::Candidate *mom = &(*pruned)[i];
-          if (std::isnan(mom->mass())) continue;
-          if(abs(mom->pdgId()) == 23){ // if generated is Z boson
-              TLorentzVector temp_lep_1, temp_lep_2, temp_mu_1, temp_mu_2; //define tempotals
-              temp_lep_1.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
-              temp_lep_2.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
-              temp_mu_1.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
-              temp_mu_2.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
-              for(size_t k=0; k<packed->size(); k++){ //loop over stable particle collection
-                  const reco::Candidate * stable_dau = &(*packed)[k];
-                  int stable_id = (*packed)[k].pdgId();
-                  if (stable_dau != nullptr && isAncestor(mom,stable_dau)) { // if stable comes from Z
-                      if(stable_id == 11 && temp_lep_1.M() == 0){ // if electron && not previiulsy assigned
-                          temp_lep_1.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
-                      }
-                      if(stable_id == -11 && temp_lep_2.M() == 0){ // if positron && not previusly assigned
-                          temp_lep_2.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
-                      }
-                      if(stable_id == 13 && temp_mu_1.M() == 0){ // if muon- && not previusly assigned
-                          temp_mu_1.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
-                      }
-                      if(stable_id == -13 && temp_mu_2.M() == 0){ // if muon+ && not previusly assigned
-                          temp_mu_2.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
-                      }
-                  }// end if stable particle cames from Z
-              }//end loop of stable particles
-              if (temp_lep_1.M() != 0 && temp_lep_2.M() !=0 && temp_mu_1.M() != 0 && temp_mu_2.M() !=0){ //if 4 leptons has been found
-                  gen_z_p4.SetPtEtaPhiM(mom->pt(),mom->eta(),mom->phi(),mom->mass());
-                  if(!std::isnan(gen_z_p4.M())){
-                     gen_lepton1_p4 = temp_lep_1;
-                     gen_lepton2_p4 = temp_lep_2;
-                     gen_muon1_p4 = temp_mu_1;
-                     gen_muon2_p4 = temp_mu_2;
-                     gen_jpsi_p4 = temp_mu_1 + temp_mu_2;
-                     gen_z_vtx.SetXYZ(mom->vx(),mom->vy(),mom->vz());
-                     TLorentzVector zz = temp_lep_1 + temp_lep_2 + temp_mu_1 + temp_mu_2;
-                     //std::cout << "Found Z to 4l (2 mu + 2 el), Z cand mass ~ " << gen_z_p4.M() << std::endl;
-                     //std::cout << "4 lep gen mass ~ " << zz.M() << std::endl;
-                  }
-              }
-          }// end if Z
-      }// end loop of generated events
-  }//end pruned
+  if (pruned.isValid()){ //if mc exist
+    //std::cout<< "Valid pruned container" << std::endl;
+        for(size_t i=0; i<pruned->size(); i++){ // loop over generated events        
+            const reco::Candidate *mom = &(*pruned)[i];
+            if (std::isnan(mom->mass())) continue;
+            if(abs(mom->pdgId()) == 23){ // if generated is Z boson
+                TLorentzVector temp_lep_1, temp_lep_2, temp_mu_1, temp_mu_2; //define tempotals
+                temp_lep_1.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_lep_2.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_mu_1.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_mu_2.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                int mfromZ = 0;
+                int efromZ = 0;
+                int tfromZ = 0;
+                int zfromZ = 0;
+                if (mom->numberOfDaughters() == 1){
+                    if (mom->daughter(0)->pdgId() == 23) zfromZ++; 
+                }
+                if (zfromZ) continue;
+                for(size_t k=0; k<packed->size(); k++){
+                    const reco::Candidate * stable_dau = &(*packed)[k];
+                    int stable_id = (*packed)[k].pdgId();
+                    if (stable_dau != nullptr && isAncestor(mom,stable_dau)) {
+                        if (stable_id == 13 || stable_id == -13) { //electros 11 muons 13 as final states
+                            mfromZ++;
+                        }
+                        else if (stable_id == 11 || stable_id == -11){
+                            efromZ++;
+                        }
+                        else if (stable_id == 16 || stable_id == -16){
+                            tfromZ++;
+                        }
+                    }
+                }
+                //if ((efromZ == 2 && mfromZ == 2) || mfromZ == 4) {
+                if (mfromZ >= 2 && efromZ >= 2 && tfromZ == 0){    
+                    if (tst > 2) break;
+                    std::cout<< "Found Z with mass: "<< mom->mass() <<", print Tree ... " << tst << std::endl;                    
+                    printMCtree(mom, 0);
+                    for(size_t k=0; k<packed->size(); k++){
+                       const reco::Candidate * stable_dau = &(*packed)[k];
+                       int stable_id = (*packed)[k].pdgId();
+                       if (stable_dau != nullptr && isAncestor(mom,stable_dau)) { 
+                           if (stable_id != 13 && stable_id != -13 && stable_id != 11 && stable_id != -11) continue;
+                           if(stable_id == 11 && temp_lep_1.M() == 0){ // if muon- && not previiulsy assigned
+                                std::cout << " matched 1 "  << " with Pt: ";
+                                std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
+                                temp_lep_1.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                            }
+                            else if(stable_id == -11 && temp_lep_2.M() == 0){ // if muon+ && not previusly assigned
+                                std::cout << " matched 2 "  << " with Pt: ";
+                                std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
+                                temp_lep_2.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                            }
+                            else if(stable_id == 13 && temp_mu_1.M() == 0){ // if muon- && not previusly assigned
+                                std::cout << " matched 3 "  << " with Pt: ";
+                                std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
+                                temp_mu_1.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                            }
+                            else if(stable_id == -13 && temp_mu_2.M() == 0){ // if muon+ && not previusly assigned
+                                std::cout << " matched 4 "  << " with Pt: ";
+                                std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
+                                temp_mu_2.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                            }
+                       }
+                    }
+                    tst++;
+                }
+                if (temp_lep_1.M() != 0 && temp_lep_2.M() !=0 && temp_mu_1.M() != 0 && temp_mu_2.M() !=0){ //if 4 leptons has been found
+                    gen_z_p4.SetPtEtaPhiM(mom->pt(),mom->eta(),mom->phi(),mom->mass());
+                    if(!std::isnan(gen_z_p4.M())){
+                        gen_lepton1_p4 = temp_lep_1;
+                        gen_lepton2_p4 = temp_lep_2;
+                        gen_muon1_p4 = temp_mu_1;
+                        gen_muon2_p4 = temp_mu_2; 
+                       /* 
+                       TLorentzVector dil_1 = temp_lep_1 + temp_lep_2;
+                       TLorentzVector dim_1 = temp_mu_1  + temp_mu_2;
 
+                       TLorentzVector dil_2 = temp_lep_1 + temp_mu_2;
+                       TLorentzVector dim_2 = temp_lep_2 + temp_mu_1;
+
+                       float DM1, DM2;
+                       DM1 = dil_1.M() - dim_1.M();
+                       DM2 = dil_2.M() - dim_2.M();
+                       if(std::abs(DM1) > std::abs(DM2)){
+                          if (DM1 > 0){ 
+                              gen_lepton1_p4 = temp_lep_1;
+                              gen_lepton2_p4 = temp_lep_2;
+                              gen_muon1_p4 = temp_mu_1;
+                              gen_muon2_p4 = temp_mu_2;  
+                          }
+                          else {
+                              gen_lepton1_p4 = temp_mu_1;
+                              gen_lepton2_p4 = temp_mu_2;
+                              gen_muon1_p4 = temp_lep_1;
+                              gen_muon2_p4 = temp_lep_2;  
+                          }
+                       }
+                       else {
+                          if (DM2 > 0){
+                              gen_lepton1_p4 = temp_lep_1;
+                              gen_lepton2_p4 = temp_mu_2;
+                              gen_muon1_p4 = temp_mu_1;
+                              gen_muon2_p4 = temp_lep_2;
+                          } 
+                          else {
+                              gen_lepton1_p4 = temp_mu_1;
+                              gen_lepton2_p4 = temp_lep_2;
+                              gen_muon1_p4 = temp_lep_1;
+                              gen_muon2_p4 = temp_mu_2;
+                          }
+                       }*/ 
+                       TLorentzVector zz = gen_lepton1_p4 + gen_lepton2_p4 + gen_muon1_p4 + gen_muon2_p4;
+                       TLorentzVector gen_dilep = gen_lepton1_p4 + gen_lepton2_p4;
+                       TLorentzVector gen_dimun = gen_muon1_p4 + gen_muon2_p4;
+                       std::cout << "Found Z to 4l (2 mu + 2 mu), Z cand mass ~ " << gen_z_p4.M() << std::endl;
+                       std::cout << "4 lep gen mass ~ " << zz.M() << std::endl;
+                       std::cout << "lep1 Pt: " << gen_lepton1_p4.Pt() << std::endl;
+                       std::cout << "lep2 Pt: " << gen_lepton2_p4.Pt() << std::endl;
+                       std::cout << "mu1  Pt: " << gen_muon1_p4.Pt()  << std::endl;
+                       std::cout << "mu2  Pt: " << gen_muon2_p4.Pt()  << std::endl;
+                       std::cout << "dilep & dimuon: " << gen_dilep.M() << " & " << gen_dimun.M() << std::endl; 
+
+                    }
+                }// end if generated 4 muons     
+            }//end if generated is Z
+        }//end loop over pruned 
+    }//end if pruned
+  if (tst) std::cout << "x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x NEW EVENT -x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x" << std::endl; 
   //NEW for muons and psi pairs
-  int nonia = 0;
-  int nmuons = muons->size();
+  //NEW for muons and psi pairs
+  
+  
+  int nonia = dimuons->size();
+  int nmuons = dileptons->size()*2;
   int nPV    = primaryVertices_handle->size();
-  std::cout<< "good KFitter load" << std::endl;
-  for(View<pat::Muon>::const_iterator iMuon1 = muons->begin(); iMuon1 != muons->end(); ++iMuon1){
-   for(View<pat::Muon>::const_iterator iMuon2 = iMuon1+1; iMuon2 != muons->end(); ++iMuon2){
-    for(edm::View<pat::Electron>::const_iterator iElec1 = electrons->begin(); iElec1 != electrons->end(); ++iElec1){
-        std::cout << " works 306 " << std::endl;
-     for(edm::View<pat::Electron>::const_iterator iElec2 = iElec1+1; iElec2 != electrons->end(); ++iElec2){
-        if(iMuon1 == iMuon2) continue;
-        if(iElec1 == iElec2) continue;
-        int ch_m1 = iMuon1->charge();
-        int ch_m2 = iMuon2->charge();
-        int ch_e1 = iElec1->charge();
-        int ch_e2 = iElec2->charge();
-        
-        if((ch_m1+ch_m2+ch_e1+ch_e2) != 0 ) continue;
-        
-        const pat::Muon* muon1 = 0;
-        const pat::Muon* muon2 = 0;
-        const pat::Electron* lept1 = 0;
-        const pat::Electron* lept2 = 0;
-         
-        if(ch_e1 == -1 && ch_e2 == 1){
-            lept1 = &(*iElec1);
-            lept2 = &(*iElec2);
-        }
-        else if(ch_e1 == 1 && ch_e2 == -1) {
-            lept1 = &(*iElec2);
-            lept2 = &(*iElec1);
-        }
-        else continue;
-        
-        if(ch_m1 == -1 && ch_m2 == 1){
-            muon1 = &(*iMuon1);
-            muon2 = &(*iMuon2);
-        }
-        else if(ch_m1 == 1 && ch_m2 == -1) {
-            muon1 = &(*iMuon2);
-            muon2 = &(*iMuon1);
-        }
-        else continue;
-         
-        reco::TrackRef glbTrack_l1 = lept1->track();
-        reco::TrackRef glbTrack_l2 = lept2->track();
+  if (gen_z_p4.M() != 0 && nonia && nmuons){
+  std::cout<< "+X+X+X+X+X+X+X+X+X+X+X+X+X+X START READING DATA X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X" << std::endl;
+  std::cout<< "dimuon length: " << nonia << std::endl;
+  std::cout<< "dilepton length:  " << nmuons << std::endl;
+  for (pat::CompositeCandidateCollection::const_iterator dilepton = dileptons->begin(); dilepton != dileptons->end(); ++dilepton){
+  for (pat::CompositeCandidateCollection::const_iterator dimuon = dimuons->begin(); dimuon != dimuons->end() ; ++dimuon){
+        //Jpsi Muons
+        std::cout << "test 454 " << std::endl;
+	    const pat::Muon* muon1 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon1"));
+	    const pat::Muon* muon2 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon2"));
+
+        const pat::Electron* lept1 = dynamic_cast<const pat::Electron*>(dilepton->daughter("lepton1"));
+        const pat::Electron* lept2 = dynamic_cast<const pat::Electron*>(dilepton->daughter("lepton2"));
+        std::cout << "test 460 "<<std::endl;    
+        //reco::TrackRef glbTrack_l1 = lept1->track(); //leads to segmentation fault :(
+        //reco::TrackRef glbTrack_l2 = lept2->track();
+        reco::TrackRef glbTrack_l1 = lept1->closestCtfTrackRef();
+        reco::TrackRef glbTrack_l2 = lept2->closestCtfTrackRef();
         reco::TrackRef glbTrack_m1 = muon1->track();
         reco::TrackRef glbTrack_m2 = muon2->track();
-
+        std::cout << "test 465 " << std::endl;
         if(glbTrack_l1.isNull() || glbTrack_l2.isNull() || glbTrack_m1.isNull() || glbTrack_m2.isNull()) continue;
+        std::cout << "test 467 " << std::endl;
         if(!(glbTrack_m1->quality(reco::TrackBase::highPurity))) continue;
         if(!(glbTrack_m2->quality(reco::TrackBase::highPurity))) continue;
-
+        std::cout << "test 469 " << std::endl;
 	    float jpsiVprob=0;
 	    float jpsiChi2=0;
 	    //jpsiVprob = dimuon->userFloat("vProb");
@@ -361,85 +483,87 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
         if ( muon1->isGlobalMuon()){
           ZMu1Qid = 1;
           //std::cout << "1L is Global" << std::endl;
-      }
-        if ( muon1->isLooseMuon()){
-      ZMu1Qid += 10;
-      // std::cout << "1L is Loose " << std::endl;
-      }
-        if ( muon1->isMediumMuon()){
-      ZMu1Qid += 100;
-      //  std::cout << "1L is Medium " << std::endl;
-      }
-        if ( muon1->isTightMuon(*PV)){
-      ZMu1Qid += 1000;
-      //  std::cout << "1L is Tight " << std::endl;
-      }
-        if ( muon1->isSoftMuon(*PV)){
-      ZMu1Qid += 10000;
-      //  std::cout << "1L is Soft " << std::endl;
-      }
-        if ( muon1->isHighPtMuon(*PV)){
-      ZMu1Qid += 100000;
-      //  std::cout << "1L is HighPt " << std::endl;
-      }
-        if ( muon1->isPFMuon()){
-      ZMu1Qid += 1000000;
-      //    std::cout << "1L is ParticleFlow " << std::endl;
-      }
-        if ( muon1->isTrackerMuon()){
-      ZMu1Qid += 10000000;
-      //  std::cout << "1L is HighPt " << std::endl;
-      }
-        // Muon 2 (from Jpsi)
-        if ( muon2->isGlobalMuon()){
-      ZMu2Qid = 1;
-      // std::cout << "2L is Global " << std::endl;
-      }
-        if ( muon2->isLooseMuon()){
-      ZMu2Qid += 10;
-      //std::cout << "2L is Loose " << std::endl;
-      }
-        if ( muon2->isMediumMuon()){
-      ZMu2Qid += 100;
-      //std::cout << "2L is Medium " << std::endl;
-      }
-        if ( muon2->isTightMuon(*PV)){
-      ZMu2Qid += 1000;
-      //std::cout << "2L is Tight " << std::endl;
-      }
-        if ( muon2->isSoftMuon(*PV)){
-      ZMu2Qid += 10000;
-      //std::cout << "2L is Soft " << std::endl;
-      }
-        if ( muon2->isHighPtMuon(*PV)){
-      ZMu2Qid += 100000;
-      //std::cout << "2L is HighPt " << std::endl;
-      }
-        if ( muon2->isPFMuon()){
-      ZMu2Qid += 1000000;
-      //std::cout << "2L is Global " << std::endl;
-      }
-        if ( muon2->isTrackerMuon()){
-      ZMu2Qid += 10000000;
-      //  std::cout << "1L is HighPt " << std::endl;
-      }
+        }
+          if ( muon1->isLooseMuon()){
+        ZMu1Qid += 10;
+        // std::cout << "1L is Loose " << std::endl;
+        }
+          if ( muon1->isMediumMuon()){
+        ZMu1Qid += 100;
+        //  std::cout << "1L is Medium " << std::endl;
+        }
+          if ( muon1->isTightMuon(*PV)){
+        ZMu1Qid += 1000;
+        //  std::cout << "1L is Tight " << std::endl;
+        }
+          if ( muon1->isSoftMuon(*PV)){
+        ZMu1Qid += 10000;
+        //  std::cout << "1L is Soft " << std::endl;
+        }
+          if ( muon1->isHighPtMuon(*PV)){
+        ZMu1Qid += 100000;
+        //  std::cout << "1L is HighPt " << std::endl;
+        }
+          if ( muon1->isPFMuon()){
+        ZMu1Qid += 1000000;
+        //    std::cout << "1L is ParticleFlow " << std::endl;
+        }
+          if ( muon1->isTrackerMuon()){
+        ZMu1Qid += 10000000;
+        //  std::cout << "1L is HighPt " << std::endl;
+        }
+          // Muon 2 (from Jpsi)
+          if ( muon2->isGlobalMuon()){
+        ZMu2Qid = 1;
+        // std::cout << "2L is Global " << std::endl;
+        }
+          if ( muon2->isLooseMuon()){
+        ZMu2Qid += 10;
+        //std::cout << "2L is Loose " << std::endl;
+        }
+          if ( muon2->isMediumMuon()){
+        ZMu2Qid += 100;
+        //std::cout << "2L is Medium " << std::endl;
+        }
+          if ( muon2->isTightMuon(*PV)){
+        ZMu2Qid += 1000;
+        //std::cout << "2L is Tight " << std::endl;
+        }
+          if ( muon2->isSoftMuon(*PV)){
+        ZMu2Qid += 10000;
+        //std::cout << "2L is Soft " << std::endl;
+        }
+          if ( muon2->isHighPtMuon(*PV)){
+        ZMu2Qid += 100000;
+        //std::cout << "2L is HighPt " << std::endl;
+        }
+          if ( muon2->isPFMuon()){
+        ZMu2Qid += 1000000;
+        //std::cout << "2L is Global " << std::endl;
+        }
+          if ( muon2->isTrackerMuon()){
+        ZMu2Qid += 10000000;
+        //  std::cout << "1L is HighPt " << std::endl;
+        }
+        std::cout << "test 548 " << std::endl;
         int psiM1_TrackerLWM = muon1->muonBestTrack()->hitPattern().trackerLayersWithMeasurement();
         int psiM1_PixelLWM   = muon1->muonBestTrack()->hitPattern().pixelLayersWithMeasurement();
         int psiM1_ValPixHit  = muon1->muonBestTrack()->hitPattern().numberOfValidPixelHits();
         int psiM2_TrackerLWM = muon2->muonBestTrack()->hitPattern().trackerLayersWithMeasurement();
         int psiM2_PixelLWM   = muon2->muonBestTrack()->hitPattern().pixelLayersWithMeasurement();
         int psiM2_ValPixHit  = muon2->muonBestTrack()->hitPattern().numberOfValidPixelHits();
- 	
+ 	    std::cout << "test 555 " << std::endl;
         reco::TransientTrack lept1TT((*theTTBuilder).build(glbTrack_l1));
         reco::TransientTrack lept2TT((*theTTBuilder).build(glbTrack_l2));
         reco::TransientTrack muon1TT((*theTTBuilder).build(glbTrack_m1));
         reco::TransientTrack muon2TT((*theTTBuilder).build(glbTrack_m2));
-         
-        std::pair<bool, Measurement1D> tkPVdistl1 = IPTools::absoluteImpactParameter3D(lept1TT, *PV);
-        std::pair<bool, Measurement1D> tkPVdistl2 = IPTools::absoluteImpactParameter3D(lept2TT, *PV);
+        std::cout << "test 560 " << std::endl; 
         std::pair<bool, Measurement1D> tkPVdistm1 = IPTools::absoluteImpactParameter3D(muon1TT, *PV);
         std::pair<bool, Measurement1D> tkPVdistm2 = IPTools::absoluteImpactParameter3D(muon2TT, *PV);
-        
+        std::cout<< "test 564 " << std::endl;
+        std::pair<bool, Measurement1D> tkPVdistl1 = IPTools::absoluteImpactParameter3D(lept1TT, *PV);
+        std::pair<bool, Measurement1D> tkPVdistl2 = IPTools::absoluteImpactParameter3D(lept2TT, *PV);
+        std:: cout << "test 566 "<< std::endl;
         if(!tkPVdistl1.first || !tkPVdistl2.first || !tkPVdistm1.first || !tkPVdistm2.first) continue;
          
         //cambiar pues ahora son electrones
@@ -558,7 +682,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
             }
         ZLe1Qid = convertBinaryToDecimal(ZLe1Qid_n);
         ZLe2Qid = convertBinaryToDecimal(ZLe2Qid_n);
-          
+        std::cout << "test 685  "<< std::endl;  
         int ZLe1_TrackerLWM = lept1->gsfTrack()->hitPattern().trackerLayersWithMeasurement();
         int ZLe1_PixelLWM   = lept1->gsfTrack()->hitPattern().pixelLayersWithMeasurement();
         int ZLe1_ValPixHit  = lept1->gsfTrack()->hitPattern().numberOfValidPixelHits();
@@ -590,7 +714,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
         float ldz2  = lept2->bestTrack()->dz(PV->position());
 		
         if ( dRel1mu1 <0.01 || dRel1mu2<0.01 || dRel2mu1 <0.01 || dRel2mu2<0.01 ) continue;
-
+        std::cout << "test 717" << std::endl;
         ///ORIGINAL CODE
         //reco::TransientTrack tt1 = theTTBuilder->build(lept1->gsfTrack());
         //reco::TransientTrack tt2 = theTTBuilder->build(lept2->gsfTrack());
@@ -626,7 +750,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
         catch (...){
             continue;
         }
-
+        std::cout << "test 753 " << std::endl;
         KinematicParticleVertexFitter ZVertexFitter;
         RefCountedKinematicTree ZTree;
         try{
@@ -642,7 +766,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
         ZTree->movePointerToTheTop();
         RefCountedKinematicParticle fitZ = ZTree->currentParticle();
 		RefCountedKinematicVertex ZDecayVertex = ZTree->currentDecayVertex();
-
+        std::cout << "test 769 " << std::endl;
         //std::cout << "is FitZ Valid ??" << fitZ->currentState().isValid() << std::endl;
         int passFit = 0;
         float ZM_fit    = 0;
@@ -676,6 +800,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
             ZVtxZ_fit = 0;
             ZVtxP_fit = ChiSquaredProbability((double)(ZDecayVertex->chiSquared()), (double)(ZDecayVertex->degreesOfFreedom()));
         }
+        std::cout << "test 803 " << std::endl;
         float Z_px = muon1->px()+muon2->px()+lept1->px()+lept2->px();
         float Z_py = muon1->py()+muon2->py()+lept1->py()+lept2->py();
         float Z_pz = muon1->pz()+muon2->pz()+lept1->pz()+lept2->pz();
@@ -702,24 +827,26 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
                        Z_pz*Z_pz)), math::XYZPoint(ZVtxX_fit,
 	      		       ZVtxY_fit, ZVtxZ_fit), 23);
         pat::CompositeCandidate patMZ(msrdZ);
-		pat::CompositeCandidate patZ(recoZ);
+		//pat::CompositeCandidate patZ(recoZ);
+		pat::CompositeCandidate *patZ = new pat::CompositeCandidate(recoZ);
         //New
-        patZ.addUserInt("passFit_", passFit);
-        patZ.addUserInt("nonia_", nonia );
-        patZ.addUserInt("nmuons_",nmuons);
-        patZ.addUserInt("nPV_",   nPV   );
+        std::cout << "test 832 " << std::endl;
+        patZ->addUserInt("passFit_", passFit);
+        patZ->addUserInt("nonia_", nonia );
+        patZ->addUserInt("nmuons_",nmuons);
+        patZ->addUserInt("nPV_",   nPV   );
           
-        patZ.addUserFloat("vProb",ZVtxP_fit);
-        patZ.addUserFloat("vChi2",ZDecayVertex->chiSquared());
-        patZ.addUserFloat("ZvtxX",ZVtxX_fit);
-        patZ.addUserFloat("ZvtxY",ZVtxY_fit);
-        patZ.addUserFloat("ZvtxZ",ZVtxZ_fit);
-        patZ.addUserFloat("dRm1m2",dRm1m2);
-        patZ.addUserFloat("dRl1l2",dRel1el2);
-        patZ.addUserFloat("dRl1m1",dRel1mu1);
-        patZ.addUserFloat("dRl1m2",dRel1mu2);
-        patZ.addUserFloat("dRl2m1",dRel2mu1);
-        patZ.addUserFloat("dRl2m2",dRel2mu2);
+        patZ->addUserFloat("vProb",ZVtxP_fit);
+        patZ->addUserFloat("vChi2",ZDecayVertex->chiSquared());
+        patZ->addUserFloat("ZvtxX",ZVtxX_fit);
+        patZ->addUserFloat("ZvtxY",ZVtxY_fit);
+        patZ->addUserFloat("ZvtxZ",ZVtxZ_fit);
+        patZ->addUserFloat("dRm1m2",dRm1m2);
+        patZ->addUserFloat("dRl1l2",dRel1el2);
+        patZ->addUserFloat("dRl1m1",dRel1mu1);
+        patZ->addUserFloat("dRl1m2",dRel1mu2);
+        patZ->addUserFloat("dRl2m1",dRel2mu1);
+        patZ->addUserFloat("dRl2m2",dRel2mu2);
 
         ////////////////////////////////
         ///////// MY MUON Q ID /////////
@@ -733,7 +860,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
         float mu1Px_fit;
         float mu1Py_fit;
         float mu1Pz_fit;
-          
+        std::cout << "test 862 " << std::endl;   
         if (!child){
             //std::cout << "Mu1" << std::endl;
             mu1M_fit  = 0;
@@ -794,7 +921,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
         float mu2Px_fit;
         float mu2Py_fit;
         float mu2Pz_fit;
-          
+        std::cout << "test 923" << std::endl;  
         if (!child){
             //std::cout << "Mu2" << std::endl;
             mu2M_fit  = 0;
@@ -834,7 +961,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
 		             
         patMu2.addUserInt("JpM2Qid_", ZMu2Qid);
         //patMu2.addUserFloat("JpM2Qid_TP_", JpM2Qid_TP);
-
+        std::cout << "test 963 " << std::endl;
         patMu2.addUserFloat("psiM2_TrackerLWM_", psiM2_TrackerLWM);
         patMu2.addUserFloat("psiM2_PixelLWM_",  psiM2_PixelLWM);
         patMu2.addUserFloat("psiM2_ValPixHit_", psiM2_ValPixHit);
@@ -891,7 +1018,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
 
         patL1.addUserFloat("Dxy_gsf"        , lept1->gsfTrack()->dxy(PV->position()));
         patL1.addUserFloat("Dz_gsf"         , lept1->gsfTrack()->dz(PV->position()));
-                
+        std::cout << "test 1020 " << std::endl;                
         //only data, no userFloat for mc
         float corrEt_1;//  lept1->et() * lept1->userFloat("ecalTrkEnergyPostCorr")/lept1->energy();
         float corrfactor_1;// lept1->userFloat("ecalTrkEnergyPostCorr") / lept1->energy();
@@ -905,15 +1032,16 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
         }
         patL1.addUserFloat("corrEt_", corrEt_1);
         patL1.addUserFloat("corrfactor_", corrfactor_1);
-                
+        std::cout << "test 1034 " << std::endl;        
         patL1.addUserFloat("dRIso"	,getIsoVar( *lept1 ) );
         //New
         patL1.addUserFloat("dIP3DSig", tkPVdistl1.second.significance());
-          
+        std::cout << "test 1038 " << std::endl;  
         patL1.addUserFloat("dIP3D"	, tkPVdistl1.second.value());
         patL1.addUserFloat("dIP3DErr"	, tkPVdistl1.second.error());
                 
         patL1.addUserFloat("dRIsoEA", ElectronRelIso(*lept1));
+        std::cout << "test 1043 " << std::endl;
         //std::cout << " dRisoEA l1 ~" << ElectronRelIso(*lept1) << std::endl;
         patL1.addUserFloat("trackMomentumAtVtx"   , (float)sqrt(lept1->trackMomentumAtVtx().mag2()));
         patL1.addUserFloat("ecalEnergy"           , (float)lept1->ecalEnergy());
@@ -923,7 +1051,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
         patL1.addUserFloat("HoE"                  , (float)lept1->hadronicOverEm());
         patL1.addUserFloat("ooEmooP"              , (float)fabs(1/lept1->ecalEnergy() - 1/sqrt(lept1->trackMomentumAtVtx().mag2())));
         patL1.addUserFloat("passConversionVeto"   , (float)lept1->passConversionVeto());
-
+        std::cout << "test 1053 " << std::endl;
         patL1.addUserFloat("dPhiInSeed" , lept1->deltaPhiSuperClusterTrackAtVtx());
         patL1.addUserFloat("dEtaInSeed" , getEtaInSeed( *lept1 )) ;
         patL1.addUserFloat("SigmaIEtaIEta" ,lept1->full5x5_sigmaIetaIeta());
@@ -945,6 +1073,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
         patL1.addUserFloat("lept1Ele25wpT_", lept1Ele25wpT);
         patL1.addUserFloat("lept1Ele23_12_", lept1Ele23_12);
         patL1.addUserFloat("lept1Mu8DiEle12_", lept1Mu8DiEle12);
+        std::cout << "test 1075 " << std::endl;
         //get Lepton
         child = ZTree->movePointerToTheNextChild();
         RefCountedKinematicParticle fitL2 = ZTree->currentParticle();
@@ -1067,33 +1196,34 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
             (gen_lepton2_p4.Pz())*(gen_lepton2_p4.Pz()))), math::XYZPoint(gen_z_vtx.x(), gen_z_vtx.y(), gen_z_vtx.z()));
         pat::CompositeCandidate pat_mcL2(mc_L2);
 
-        patZ.addDaughter(jpsi,"jpsi");
-        patZ.addDaughter(msrd_jpsi, "msrd_jpsi");
-        patZ.addDaughter(patL1,"lepton1");
-        patZ.addDaughter(patL2,"lepton2");
-        patZ.addDaughter(pat_msrdL1, "msrd_lepton1");
-        patZ.addDaughter(pat_msrdL2, "msrd_lepton2");
-        patZ.addDaughter(patMZ, "patMZ");
+        patZ->addDaughter(jpsi,"jpsi");
+        patZ->addDaughter(msrd_jpsi, "msrd_jpsi");
+        patZ->addDaughter(patL1,"lepton1");
+        patZ->addDaughter(patL2,"lepton2");
+        patZ->addDaughter(pat_msrdL1, "msrd_lepton1");
+        patZ->addDaughter(pat_msrdL2, "msrd_lepton2");
+        patZ->addDaughter(patMZ, "patMZ");
                 
-        patZ.addDaughter(pat_mcZ, "mcZ");
-        patZ.addDaughter(pat_mcPsi, "mcPsi");
-        patZ.addDaughter(pat_mcM1, "mcM1");
-        patZ.addDaughter(pat_mcM2, "mcM2");
-        patZ.addDaughter(pat_mcL1, "mcL1");
-        patZ.addDaughter(pat_mcL2, "mcL2");
-                
-        patZ.addUserInt("Event_Cand_", Event_Cand);
+        patZ->addDaughter(pat_mcZ, "mcZ");
+        patZ->addDaughter(pat_mcPsi, "mcPsi");
+        patZ->addDaughter(pat_mcM1, "mcM1");
+        patZ->addDaughter(pat_mcM2, "mcM2");
+        patZ->addDaughter(pat_mcL1, "mcL1");
+        patZ->addDaughter(pat_mcL2, "mcL2");
+               
+        patZ->addUserInt("Event_Cand_", Event_Cand);
         Event_Cand++;
-                
-		ZCandColl->push_back(patZ);
+		ZCandColl->push_back(*patZ);
+        std::cout << "test 1216, zcandcoll size? , empty ?"<< ZCandColl->size()<< " | " <<ZCandColl->empty() << std::endl;        
         //std::cout<< "something has been pushed"	<< std::endl;
-			
-      }//end elec 1
-     }// end elec 2
-   } //end iMuon2
-  }// end iMuon1
+   } //end dimuon
+  }// end dilepton
+  std::cout << "test 1220 -<-<-<-<-<-<-<-<-< " << std::endl;
   iEvent.put(std::move(ZCandColl),"ZCandidates");
-  std::cout << "is ZCandColl empty ?" << ZCandColl->empty() << std::endl; 
+  std::cout << "is ZCandColl empty ?" << ZCandColl->empty() << std::endl;
+  std::cout<< "+X+X+X+X+X+X+X+X+X+X+X+X+X+X END READING DATA X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X" << std::endl;
+  }// end if good MC
+  
   //std::cout << "jpsiElec4l_KmcFitter is working ok" << std::endl;
 }
 

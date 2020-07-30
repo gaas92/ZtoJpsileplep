@@ -99,10 +99,10 @@ class jpsi4LepLepKmcFitter : public edm::stream::EDProducer<> {
 
       // ----------member data ---------------------------
       //edm::EDGetTokenT<edm::View<pat::PackedCandidate>> trackCollection_label; //miniAPD
-      //edm::EDGetTokenT<pat::CompositeCandidateCollection> dimuon_Label;
+      edm::EDGetTokenT<pat::CompositeCandidateCollection> dimuon_Label;
       edm::EDGetTokenT<reco::VertexCollection> primaryVertices_Label;
-      //edm::EDGetTokenT<pat::CompositeCandidateCollection> dilepton_Label;
-      edm::EDGetTokenT<edm::View<pat::Muon>> muonToken_;
+      edm::EDGetTokenT<pat::CompositeCandidateCollection> dilepton_Label;
+      //edm::EDGetTokenT<edm::View<pat::Muon>> muonToken_;
 
       //edm::EDGetTokenT<reco::BeamSpot> BSLabel_;
       edm::EDGetTokenT<reco::GenParticleCollection> genCands_;
@@ -125,10 +125,10 @@ class jpsi4LepLepKmcFitter : public edm::stream::EDProducer<> {
 jpsi4LepLepKmcFitter::jpsi4LepLepKmcFitter(const edm::ParameterSet& iConfig)
 {
    //trackCollection_label = consumes<edm::View<pat::PackedCandidate>>(iConfig.getParameter<edm::InputTag>("Tracks")); //miniAOD
-    //dimuon_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter< edm::InputTag>("dimuon"));
+    dimuon_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter< edm::InputTag>("dimuon"));
     primaryVertices_Label = consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("primaryVertices"));
-    //dilepton_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter<edm::InputTag>("dilepton"));
-    muonToken_ = consumes<edm::View<pat::Muon>>(iConfig.getParameter<edm::InputTag>("muons"));
+    dilepton_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter<edm::InputTag>("dilepton"));
+    //muonToken_ = consumes<edm::View<pat::Muon>>(iConfig.getParameter<edm::InputTag>("muons"));
 
    //BSLabel_ = consumes<reco::BeamSpot>(iConfig.getParameter<edm::InputTag>("beamSpotLabel"));
    genCands_ = consumes<reco::GenParticleCollection>(iConfig.getParameter < edm::InputTag > ("GenParticles"));
@@ -209,21 +209,24 @@ void jpsi4LepLepKmcFitter::printMCtree(const reco::Candidate* mother, int indent
          std::cout << "end tree" << std::endl;
          return;
     }
-    if (mother->numberOfDaughters() > 1){   
+    if (mother->numberOfDaughters() > 0){   
         if(indent){
                 std::cout << std::setw(indent) << " ";
         }  
         std::cout << printName(mother->pdgId()) <<" has "<< mother->numberOfDaughters() <<" daughters " <<std::endl;
-    }    
+    }
+    int extraIndent = 0;    
     for (size_t i=0; i< mother->numberOfDaughters(); i++){
         const reco::Candidate * daughter = mother->daughter(i);
-        if (mother->numberOfDaughters() > 1){       
+        if (mother->numberOfDaughters() > 0){       
             if(indent){
                 std::cout << std::setw(indent) << " ";
             }
-            std::cout << " daugter "<< i+1 <<": "<<  printName(daughter->pdgId()) << std::endl;
+            std::cout << " daugter "<< i+1 <<": "<<  printName(daughter->pdgId()) << " with Pt: ";
+            std::cout << daughter->pt() << " | Eta: "<< daughter->eta() << " | Phi: "<< daughter->phi() << " | mass: "<< daughter->mass() << std::endl;
+            extraIndent+=4;
         }
-        if (daughter->numberOfDaughters()) printMCtree(daughter, indent+4);
+        if (daughter->numberOfDaughters()) printMCtree(daughter, indent+extraIndent);
     }
 }
 //recursively check is a given particle is ancestor
@@ -253,17 +256,17 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
    edm::ESHandle<TransientTrackBuilder> theTTB;
    iSetup.get<TransientTrackRecord>().get("TransientTrackBuilder",theTTB); 
 
-   //edm::Handle<pat::CompositeCandidateCollection> dileptons;
-   //iEvent.getByToken(dilepton_Label,dileptons); //dilepton
+   edm::Handle<pat::CompositeCandidateCollection> dileptons;
+   iEvent.getByToken(dilepton_Label,dileptons); //dilepton
     
-   //edm::Handle<pat::CompositeCandidateCollection> dimuons;
-   //iEvent.getByToken(dimuon_Label,dimuons); //dimuon
+   edm::Handle<pat::CompositeCandidateCollection> dimuons;
+   iEvent.getByToken(dimuon_Label,dimuons); //dimuon
 
    //edm::Handle< View<pat::PackedCandidate> > thePATTrackHandle;  //miniAOD
    //iEvent.getByToken(trackCollection_label,thePATTrackHandle);  //Tracks
 
-   edm::Handle< View<pat::Muon> > muons;
-   iEvent.getByToken(muonToken_,muons);
+   //edm::Handle< View<pat::Muon> > muons;
+   //iEvent.getByToken(muonToken_,muons);
     
    edm::Handle<reco::VertexCollection> vertices;
    iEvent.getByToken(primaryVertices_Label, vertices);    //primaryVertices
@@ -324,23 +327,125 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
             const reco::Candidate *mom = &(*pruned)[i];
             if (std::isnan(mom->mass())) continue;
             if(abs(mom->pdgId()) == 23){ // if generated is Z boson
-                int fromZ = 0;
+                TLorentzVector temp_lep_1, temp_lep_2, temp_mu_1, temp_mu_2; //define tempotals
+                temp_lep_1.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_lep_2.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_mu_1.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_mu_2.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                int mfromZ = 0;
+                int efromZ = 0;
+                int tfromZ = 0;
+                int zfromZ = 0;
+                if (mom->numberOfDaughters() == 1){
+                    if (mom->daughter(0)->pdgId() == 23) zfromZ++; 
+                }
+                if (zfromZ) continue;
                 for(size_t k=0; k<packed->size(); k++){
                     const reco::Candidate * stable_dau = &(*packed)[k];
                     int stable_id = (*packed)[k].pdgId();
                     if (stable_dau != nullptr && isAncestor(mom,stable_dau)) {
-                        if (stable_id != 11 && stable_id != -11) continue; //muons as final states
-                        fromZ++;
+                        if (stable_id == 13 || stable_id == -13) { //electros 11 muons 13 as final states
+                            mfromZ++;
+                        }
+                        else if (stable_id == 11 || stable_id == -11){
+                            efromZ++;
+                        }
+                        else if (stable_id == 16 || stable_id == -16){
+                            tfromZ++;
+                        }
                     }
                 }
-                if (fromZ < 4) continue;
-                std::cout<< "Found Z, print Tree ... " << tst << std::endl;
-                if (tst > 2) break;
-                printMCtree(mom, 0);
-                tst++;
+                //if ((efromZ == 2 && mfromZ == 2) || mfromZ == 4) {
+                if (mfromZ > 2 && tfromZ == 0){    
+                    if (tst > 2) break;
+                    std::cout<< "Found Z with mass: "<< mom->mass() <<", print Tree ... " << tst << std::endl;                    
+                    printMCtree(mom, 0);
+                    for(size_t k=0; k<packed->size(); k++){
+                       const reco::Candidate * stable_dau = &(*packed)[k];
+                       int stable_id = (*packed)[k].pdgId();
+                       if (stable_dau != nullptr && isAncestor(mom,stable_dau)) { 
+                           if (stable_id != 13 && stable_id != -13) continue;
+                           if(stable_id == 13 && temp_lep_1.M() == 0){ // if muon- && not previiulsy assigned
+                                std::cout << " matched 1 "  << " with Pt: ";
+                                std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
+                                temp_lep_1.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                            }
+                            else if(stable_id == -13 && temp_lep_2.M() == 0){ // if muon+ && not previusly assigned
+                                std::cout << " matched 2 "  << " with Pt: ";
+                                std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
+                                temp_lep_2.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                            }
+                            else if(stable_id == 13 && temp_mu_1.M() == 0){ // if muon- && not previusly assigned
+                                std::cout << " matched 3 "  << " with Pt: ";
+                                std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
+                                temp_mu_1.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                            }
+                            else if(stable_id == -13 && temp_mu_2.M() == 0){ // if muon+ && not previusly assigned
+                                std::cout << " matched 4 "  << " with Pt: ";
+                                std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
+                                temp_mu_2.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                            }
+                       }
+                    }
+                    tst++;
+                }
+                if (temp_lep_1.M() != 0 && temp_lep_2.M() !=0 && temp_mu_1.M() != 0 && temp_mu_2.M() !=0){ //if 4 leptons has been found
+                    gen_z_p4.SetPtEtaPhiM(mom->pt(),mom->eta(),mom->phi(),mom->mass());
+                    if(!std::isnan(gen_z_p4.M())){
+                       TLorentzVector dil_1 = temp_lep_1 + temp_lep_2;
+                       TLorentzVector dim_1 = temp_mu_1  + temp_mu_2;
+
+                       TLorentzVector dil_2 = temp_lep_1 + temp_mu_2;
+                       TLorentzVector dim_2 = temp_lep_2 + temp_mu_1;
+
+                       float DM1, DM2;
+                       DM1 = dil_1.M() - dim_1.M();
+                       DM2 = dil_2.M() - dim_2.M();
+                       if(std::abs(DM1) > std::abs(DM2)){
+                          if (DM1 > 0){ 
+                              gen_lepton1_p4 = temp_lep_1;
+                              gen_lepton2_p4 = temp_lep_2;
+                              gen_muon1_p4 = temp_mu_1;
+                              gen_muon2_p4 = temp_mu_2;  
+                          }
+                          else {
+                              gen_lepton1_p4 = temp_mu_1;
+                              gen_lepton2_p4 = temp_mu_2;
+                              gen_muon1_p4 = temp_lep_1;
+                              gen_muon2_p4 = temp_lep_2;  
+                          }
+                       }
+                       else {
+                          if (DM2 > 0){
+                              gen_lepton1_p4 = temp_lep_1;
+                              gen_lepton2_p4 = temp_mu_2;
+                              gen_muon1_p4 = temp_mu_1;
+                              gen_muon2_p4 = temp_lep_2;
+                          } 
+                          else {
+                              gen_lepton1_p4 = temp_mu_1;
+                              gen_lepton2_p4 = temp_lep_2;
+                              gen_muon1_p4 = temp_lep_1;
+                              gen_muon2_p4 = temp_mu_2;
+                          }
+                       } 
+                       TLorentzVector zz = gen_lepton1_p4 + gen_lepton2_p4 + gen_muon1_p4 + gen_muon2_p4;
+                       TLorentzVector gen_dilep = gen_lepton1_p4 + gen_lepton2_p4;
+                       TLorentzVector gen_dimun = gen_muon1_p4 + gen_muon2_p4;
+                       std::cout << "Found Z to 4l (2 mu + 2 mu), Z cand mass ~ " << gen_z_p4.M() << std::endl;
+                       std::cout << "4 lep gen mass ~ " << zz.M() << std::endl;
+                       std::cout << "lep1 Pt: " << gen_lepton1_p4.Pt() << std::endl;
+                       std::cout << "lep2 Pt: " << gen_lepton2_p4.Pt() << std::endl;
+                       std::cout << "mu1  Pt: " << gen_muon1_p4.Pt()  << std::endl;
+                       std::cout << "mu2  Pt: " << gen_muon2_p4.Pt()  << std::endl;
+                       std::cout << "dilep & dimuon: " << gen_dilep.M() << " & " << gen_dimun.M() << std::endl; 
+
+                    }
+                }// end if generated 4 muons     
             }//end if generated is Z
         }//end loop over pruned 
     }//end if pruned
+    if (tst) std::cout << "x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x NEW EVENT -x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x" << std::endl;
     /*
     if (pruned.isValid() ){ // if mc collection exists
         for(size_t i=0; i<pruned->size(); i++){ // loop over generated events
@@ -410,124 +515,38 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
     }//end pruned
     */
     //NEW for muons and psi pairs
-    int nonia = 0 ;//dimuons->size();
-    int nmuons = muons->size();//dileptons->size()*2;
+    int nonia = dimuons->size();
+    int nmuons = dileptons->size()*2;
     int nPV    = vertices->size();
     
    //double chiVtxSqdProb = ChiSquaredProbability((double)(PV.chi2()),(double)(PV.ndof())); 
    //int breaker = 0;
    // We Cycle over dileptons for the Kfit
     if (gen_z_p4.M() != 0){   //only for mc
-    for(View<pat::Muon>::const_iterator iMuon1 = muons->begin(); iMuon1 != muons->end(); ++iMuon1){
-    for(View<pat::Muon>::const_iterator iMuon2 = iMuon1+1; iMuon2 != muons->end(); ++iMuon2){
-     for(View<pat::Muon>::const_iterator iMuon3 = iMuon2+1; iMuon3 != muons->end(); ++iMuon3){
-     for(View<pat::Muon>::const_iterator iMuon4 = iMuon3+1; iMuon4 != muons->end(); ++iMuon4){
-       if(iMuon1 == iMuon2) continue;
-       if(iMuon1 == iMuon3) continue;
-       if(iMuon1 == iMuon4) continue;
-
-       if(iMuon2 == iMuon3) continue;
-       if(iMuon2 == iMuon4) continue;
-         
-       if(iMuon3 == iMuon4) continue;
+    //if ((nonia && nmuons) || gen_z_p4.M() !=0 ){
+    std::cout<< "+X+X+X+X+X+X+X+X+X+X+X+X+X+X START READING DATA X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X" << std::endl;
+    std::cout<< "dimuon length: " << nonia << std::endl;
+    std::cout<< "dilepton length:  " << nmuons << std::endl;
+    for (pat::CompositeCandidateCollection::const_iterator dilepton = dileptons->begin(); dilepton != dileptons->end() /*test && breaker < 10*/; ++dilepton){
+    //std::cout << " enters dilepton " << std::endl;    
+    for (pat::CompositeCandidateCollection::const_iterator dimuon = dimuons->begin(); dimuon != dimuons->end() /*test && breaker < 10*/; ++dimuon){
+       //std::cout << " enters dimuon " << std::endl;     
+       const pat::Muon* lept1 = dynamic_cast<const pat::Muon*>(dilepton->daughter("lepton1"));
+       const pat::Muon* lept2 = dynamic_cast<const pat::Muon*>(dilepton->daughter("lepton2"));
+       const pat::Muon* muon1;  
+       const pat::Muon* muon2; 
        
-       int ch_m1 = iMuon1->charge();
-       int ch_m2 = iMuon2->charge();
-       int ch_m3 = iMuon3->charge();
-       int ch_m4 = iMuon4->charge();
-
-       if ((ch_m1+ch_m2+ch_m3+ch_m4) != 0 ) continue;
-
-       const pat::Muon* lept1 = 0;
-       const pat::Muon* lept2 = 0;
-       const pat::Muon* muon1 = 0;
-       const pat::Muon* muon2 = 0;
-           
-       if (ch_m1 == -1 && ch_m2 == -1 && ch_m3 == 1 && ch_m4 == 1){
-           if ((iMuon1->pt() + iMuon3->pt()) > (iMuon2->pt() +iMuon4->pt())){
-               lept1 = &(*iMuon1);
-               lept2 = &(*iMuon3);
-               muon1 = &(*iMuon2);
-               muon2 = &(*iMuon4);
-           }
-           else {
-               lept1 = &(*iMuon2);
-               lept2 = &(*iMuon4);
-               muon1 = &(*iMuon1);
-               muon2 = &(*iMuon3);
-           }
-       }//1
-       else if (ch_m1 == -1 && ch_m2 == 1 && ch_m3 == -1 && ch_m4 == 1){
-           if ((iMuon1->pt() + iMuon2->pt()) > (iMuon3->pt() +iMuon4->pt())){
-               lept1 = &(*iMuon1);
-               lept2 = &(*iMuon2);
-               muon1 = &(*iMuon3);
-               muon2 = &(*iMuon4);
-           }
-           else {
-               lept1 = &(*iMuon3);
-               lept2 = &(*iMuon4);
-               muon1 = &(*iMuon1);
-               muon2 = &(*iMuon2);
-           }
-       }//2
-       else if (ch_m1 == -1 && ch_m2 == 1 && ch_m3 == 1 && ch_m4 == -1){
-           if ((iMuon1->pt() + iMuon2->pt()) > (iMuon3->pt() +iMuon4->pt())){
-               lept1 = &(*iMuon1);
-               lept2 = &(*iMuon2);
-               muon1 = &(*iMuon4);
-               muon2 = &(*iMuon3);
-           }
-           else {
-               lept1 = &(*iMuon4);
-               lept2 = &(*iMuon3);
-               muon1 = &(*iMuon1);
-               muon2 = &(*iMuon2);
-           }
-       }//3
-       else if (ch_m1 == 1 && ch_m2 == -1 && ch_m3 == -1 && ch_m4 == 1){
-           if ((iMuon1->pt() + iMuon2->pt()) > (iMuon3->pt() +iMuon4->pt())){
-               lept1 = &(*iMuon2);
-               lept2 = &(*iMuon1);
-               muon1 = &(*iMuon3);
-               muon2 = &(*iMuon4);
-           }
-           else {
-               lept1 = &(*iMuon3);
-               lept2 = &(*iMuon4);
-               muon1 = &(*iMuon2);
-               muon2 = &(*iMuon1);
-           }
-       }//4
-       else if (ch_m1 == 1 && ch_m2 == -1 && ch_m3 == 1 && ch_m4 == -1){
-           if ((iMuon1->pt() + iMuon2->pt()) > (iMuon3->pt() +iMuon4->pt())){
-               lept1 = &(*iMuon2);
-               lept2 = &(*iMuon1);
-               muon1 = &(*iMuon4);
-               muon2 = &(*iMuon3);
-           }
-           else {
-               lept1 = &(*iMuon4);
-               lept2 = &(*iMuon3);
-               muon1 = &(*iMuon1);
-               muon2 = &(*iMuon2);
-           }
-       }//5
-       else if (ch_m1 == 1 && ch_m2 == 1 && ch_m3 == -1 && ch_m4 == -1){
-           if ((iMuon1->pt() + iMuon3->pt()) > (iMuon2->pt() +iMuon4->pt())){
-               lept1 = &(*iMuon3);
-               lept2 = &(*iMuon1);
-               muon1 = &(*iMuon4);
-               muon2 = &(*iMuon2);
-           }
-           else {
-               lept1 = &(*iMuon4);
-               lept2 = &(*iMuon2);
-               muon1 = &(*iMuon3);
-               muon2 = &(*iMuon1);
-           }
-       }//6
+       if (dimuon->daughter("muon1")->charge() == -1 && dimuon->daughter("muon2")->charge() == 1){
+            muon1 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon1"));
+            muon2 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon2"));
+       }
+       else if (dimuon->daughter("muon1")->charge() == 1 && dimuon->daughter("muon2")->charge() == -1) {
+            muon2 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon1"));
+            muon1 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon2"));
+       }
        else continue;
+       //check muon charge 1 --> -  |||| 2 --> +
+
        reco::TrackRef glbTrack_l1 = lept1->track();
        reco::TrackRef glbTrack_l2 = lept2->track();
        reco::TrackRef glbTrack_m1 = muon1->track();
@@ -538,6 +557,10 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
        if (!(glbTrack_l2->quality(reco::TrackBase::highPurity))) continue;
        if (!(glbTrack_m1->quality(reco::TrackBase::highPurity))) continue;
        if (!(glbTrack_m2->quality(reco::TrackBase::highPurity))) continue;
+       //std::cout << " pass track purity  " << std::endl;
+       if (muon1->pt() == lept1->pt() && muon1->eta() == lept1->eta() && muon1->phi() == lept1->phi()) continue;
+       if (muon2->pt() == lept2->pt() && muon1->eta() == lept1->eta() && muon1->phi() == lept1->phi()) continue;
+
 
          
        int ZLe1Qid = 0;
@@ -638,6 +661,8 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
        std::pair<bool,Measurement1D> tkPVdistem2 = IPTools::absoluteImpactParameter3D(muon2TT,*PV);
          
        if(!tkPVdistel1.first || !tkPVdistel2.first || !tkPVdistem1.first || !tkPVdistem2.first) continue;
+       //std::cout << " pass track valid  " << std::endl;
+
        //std::cout << "muon ok 520" << std::endl;
 
        //Isolation
@@ -649,7 +674,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
        dR5 = deltaR(*(lept1->innerTrack()), *(lept2->innerTrack()));
        dR6 = deltaR(*(muon1->innerTrack()), *(muon2->innerTrack()));
        if ( dR1<0.01 || dR2<0.01 || dR3<0.01 ||dR4<0.01 ) continue;
-
+       //std::cout << " pass dR " << std::endl;
 
        //////////// MY MUON ID ///////////////
        ///////////////////////////////////////
@@ -814,6 +839,9 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 
        if (ZM_fit < 60.0) continue;
        if (ZM_fit > 150.0) continue;
+       //std::cout << " pass mass window " << std::endl;
+
+
        reco::CompositeCandidate recoZ(0, math::XYZTLorentzVector(ZPx_fit, ZPy_fit, ZPz_fit,
 			      sqrt(ZM_fit*ZM_fit + ZPx_fit*ZPx_fit + ZPy_fit*ZPy_fit +
 			      ZPz_fit*ZPz_fit)), math::XYZPoint(ZVtxX_fit,
@@ -1130,11 +1158,11 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 
              //}end of ifValidFit
 
-        }//end of loop for iMuon1
-      }  //end of loop for iMuon2
-   }//end of loop for iMuon3
-   }//end of loop for iMuon4
+    }//end loop for dimuon
+    }//end loop for dilepton
+
    iEvent.put(std::move(ZCandColl),"ZCandidates");
+   std::cout<< "+X+X+X+X+X+X+X+X+X+X+X+X+X+X END READING DATA X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X" << std::endl;
    }//end if gen only MC
 }//end produce 
 

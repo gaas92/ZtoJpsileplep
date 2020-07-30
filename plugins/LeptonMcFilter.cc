@@ -142,6 +142,7 @@ LeptonMcFilter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
   }
   if ( PV==vertices->end() ) return;
   // loop over all the muons and check if it is a valid track
+  //std::cout << "START LEPTON FILTER muon container lenght: "<< muons->size() << std::endl;
   for (View<pat::Muon>::const_iterator muon1 = muons->begin(); muon1 != muons->end(); ++muon1 ) {
         reco::TrackRef track_1 = muon1->track();
         if (track_1.isNull()) continue;
@@ -149,18 +150,22 @@ LeptonMcFilter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
         std::pair<bool,Measurement1D> tkPVdist1 = IPTools::absoluteImpactParameter3D(tt1,*PV);
         if (!tkPVdist1.first) continue;
         if (abs(tkPVdist1.second.significance())>4.) continue;
+        //std::cout << "PASS MU 1, LOOPING OVER MU 2" << std::endl;
         for (View<pat::Muon>::const_iterator muon2 = muons->begin() ;muon2 !=  muons->end(); ++muon2 ) {
                 if((muon1->charge() * muon2->charge()) != -1) continue;
-                if(muon1==muon1) continue; //v7 add
+                if(muon1==muon2) continue; //v7 add
                 if(!(track_1->quality(reco::TrackBase::highPurity))) continue; //v7
                 if(!(track_1->quality(reco::TrackBase::highPurity))) continue; //v7
+                //std::cout << "PASS HIGH PURITY" << std::endl;
                 reco::TrackRef track_2 = muon2->track();
                 if (track_2.isNull()) continue;
+                //std::cout << "PASS is null"<< std::endl;
                 reco::TransientTrack tt2 = theTTBuilder->build(*muon2->track());
                 std::pair<bool,Measurement1D> tkPVdist2 = IPTools::absoluteImpactParameter3D(tt2,*PV);
                 if (!tkPVdist2.first) continue;
                 if (abs(tkPVdist2.second.significance())>4.) continue;
                 pat::CompositeCandidate myCand;
+                //std::cout << "Pass significance saving event " << std::endl; 
                 myCand.setP4( muon1->p4() + muon2->p4());
                 //Leoton 1 is negative and 2 is positive
                 if(muon1->charge() == -1){
@@ -168,8 +173,8 @@ LeptonMcFilter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                    myCand.addDaughter( *muon2      ,"lepton2");
                 }
                 else{
-                    myCand.addDaughter( *muon2      ,"lepton1");
-                    myCand.addDaughter( *muon1      ,"lepton2");
+                   myCand.addDaughter( *muon2      ,"lepton1");
+                   myCand.addDaughter( *muon1      ,"lepton2");
                 }
                 dileptonColl->push_back(myCand);
         }
