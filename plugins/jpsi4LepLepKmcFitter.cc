@@ -321,6 +321,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
     int Event_Cand = 1;
     //NEW MC ALV
     int tst = 0;
+    int z_gen = 0;
     if (pruned.isValid()){ //if mc exist
     //std::cout<< "Valid pruned container" << std::endl;
         for(size_t i=0; i<pruned->size(); i++){ // loop over generated events        
@@ -336,6 +337,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                 int efromZ = 0;
                 int tfromZ = 0;
                 int zfromZ = 0;
+                z_gen++;
                 if (mom->numberOfDaughters() == 1){
                     if (mom->daughter(0)->pdgId() == 23) zfromZ++; 
                 }
@@ -522,7 +524,8 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
    //double chiVtxSqdProb = ChiSquaredProbability((double)(PV.chi2()),(double)(PV.ndof())); 
    //int breaker = 0;
    // We Cycle over dileptons for the Kfit
-    if (gen_z_p4.M() != 0){   //only for mc
+   //if (gen_z_p4.M() != 0){   //only for mc
+   if(1){
     //if ((nonia && nmuons) || gen_z_p4.M() !=0 ){
     std::cout<< "+X+X+X+X+X+X+X+X+X+X+X+X+X+X START READING DATA X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X" << std::endl;
     std::cout<< "dimuon length: " << nonia << std::endl;
@@ -858,6 +861,8 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
        patZ.addUserInt("nonia_", nonia );
        patZ.addUserInt("nmuons_",nmuons);
        patZ.addUserInt("nPV_",   nPV   );
+       patZ.addUserInt("tst_", tst);
+       patZ.addUserInt("z_gen_", z_gen);
                  
        patZ.addUserFloat("vProb",ZVtxP_fit);
        patZ.addUserFloat("vChi2",ZDecayVertex->chiSquared());

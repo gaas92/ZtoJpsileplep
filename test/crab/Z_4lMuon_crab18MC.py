@@ -93,15 +93,15 @@ def main():
 
         # Will submit one task for each of these input datasets.
         inputDatasets = [ 
-                          #'/ZZTo4L_TuneCP5_13TeV_powheg_pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15_ext1-v2/MINIAODSIM', # MC 4l 2mu 2mu
-                          #'/ZZTo4L_TuneCP5_13TeV_powheg_pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15_ext2-v2/MINIAODSIM',
-                           '/ZZTo4L_13TeV_powheg_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM' #2016 stefanos
+                          '/ZZTo4L_TuneCP5_13TeV_powheg_pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15_ext1-v2/MINIAODSIM', # MC 4l 2mu 2mu
+                          '/ZZTo4L_TuneCP5_13TeV_powheg_pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15_ext2-v2/MINIAODSIM',
+                          '/ZZTo4L_13TeV_powheg_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM' #2016 stefanos
 
                  	]
  
         for inDS in inputDatasets:
              # inDS is of the form /A/B/C. Since B is unique for each inDS, use this in the CRAB request name.
-            config.General.requestName = 'ZZTo4L_TuneCP5_13TeV' # hardcoded because is to big inDS.split('/')[1]+inDS.split('/')[2]
+            config.General.requestName = (inDS.split('/')[1]).split('-')[0]+(inDS.split('/')[1]).split('-')[-1]#'ZZTo4L_TuneCP5_13TeV' # hardcoded because is to big inDS.split('/')[1]+inDS.split('/')[2]
             config.Data.inputDataset = inDS
             config.Data.outputDatasetTag = '%s_%s' % (config.General.workArea, config.General.requestName)
             # Submit.

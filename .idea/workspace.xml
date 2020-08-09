@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ffa4147d-30ff-4b4f-b2c4-fc8fd2eadb5c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/ZjpsiMCTupler.cc" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/ZjpsiMCTupler.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/jpsi4LepLepKmcFitter.cc" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/jpsi4LepLepKmcFitter.cc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/crab/Z_4lMuon_crab18MC.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/crab/Z_4lMuon_crab18MC.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/runMc4lMuon.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/runMc4lMuon.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -12,11 +16,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test/crab/Z_4lMuon_crab18MC.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="301">
-              <caret line="72" column="38" selection-start-line="72" selection-start-column="38" selection-end-line="72" selection-end-column="38" />
+            <state relative-caret-position="185">
+              <caret line="103" column="110" selection-start-line="103" selection-start-column="110" selection-end-line="103" selection-end-column="110" />
             </state>
           </provider>
         </entry>
@@ -24,16 +28,27 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/runMc4lMuon.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="19" column="191" selection-start-line="19" selection-start-column="191" selection-end-line="19" selection-end-column="191" />
+            <state relative-caret-position="581">
+              <caret line="44" column="71" selection-start-line="44" selection-start-column="71" selection-end-line="44" selection-end-column="71" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/plugins/jpsi4LepLepKmcFitter.cc">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2737" />
+            <state relative-caret-position="327">
+              <caret line="864" column="38" selection-start-line="864" selection-start-column="38" selection-end-line="864" selection-end-column="38" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/plugins/ZjpsiMCTupler.cc">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="449">
+              <caret line="606" column="41" selection-start-line="606" selection-start-column="41" selection-end-line="606" selection-end-column="41" />
+            </state>
           </provider>
         </entry>
       </file>
@@ -46,6 +61,8 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/test/runMc4lMuon.py" />
+        <option value="$PROJECT_DIR$/plugins/jpsi4LepLepKmcFitter.cc" />
+        <option value="$PROJECT_DIR$/plugins/ZjpsiMCTupler.cc" />
         <option value="$PROJECT_DIR$/test/crab/Z_4lMuon_crab18MC.py" />
       </list>
     </option>
@@ -70,7 +87,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -98,6 +114,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -134,7 +151,7 @@
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24606581" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20243205" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -164,23 +181,32 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/crab/Z_4lMuon_crab18MC.py">
+    <entry file="file://$PROJECT_DIR$/plugins/ZjpsiMCTupler.cc">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="301">
-          <caret line="72" column="38" selection-start-line="72" selection-start-column="38" selection-end-line="72" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/runMc4lMuon.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="191" selection-start-line="19" selection-start-column="191" selection-end-line="19" selection-end-column="191" />
+        <state relative-caret-position="449">
+          <caret line="606" column="41" selection-start-line="606" selection-start-column="41" selection-end-line="606" selection-end-column="41" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/plugins/jpsi4LepLepKmcFitter.cc">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2737" />
+        <state relative-caret-position="327">
+          <caret line="864" column="38" selection-start-line="864" selection-start-column="38" selection-end-line="864" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/runMc4lMuon.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="581">
+          <caret line="44" column="71" selection-start-line="44" selection-start-column="71" selection-end-line="44" selection-end-column="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/crab/Z_4lMuon_crab18MC.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="185">
+          <caret line="103" column="110" selection-start-line="103" selection-start-column="110" selection-end-line="103" selection-end-column="110" />
+        </state>
       </provider>
     </entry>
   </component>

@@ -42,7 +42,7 @@ process.onia2MuMuPAT.beamSpotTag=cms.InputTag('offlineBeamSpot')
 process.onia2MuMuPAT.higherPuritySelection=cms.string("isGlobalMuon")
 process.onia2MuMuPAT.lowerPuritySelection=cms.string("isGlobalMuon")
 #process.onia2MuMuPAT.dimuonSelection=cms.string("2.55 < mass && mass < 3.65") ## linea 149
-process.onia2MuMuPAT.dimuonSelection=cms.string("0.01 < mass && mass < 20.0") ## linea 149
+process.onia2MuMuPAT.dimuonSelection=cms.string("0.01 < mass && mass < 50.0") ## linea 149
 process.onia2MuMuPAT.addMCTruth = cms.bool(False)
 
 
