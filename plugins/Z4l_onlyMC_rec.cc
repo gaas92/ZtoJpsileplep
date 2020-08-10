@@ -198,7 +198,8 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             const reco::Candidate *mom = &(*pruned)[i];
             if (std::isnan(mom->mass())) continue;
             if(abs(mom->pdgId()) == 23){ // if generated is Z boson
-                TLorentzVector temp_lep_1, temp_lep_2, temp_mu_1, temp_mu_2; //define tempotals
+                TLorentzVector temp_mu1N, temp_mu1P, temp_mu2N, temp_mu2P; //define tempotals
+                TLorentzVector temp_el1N, temp_el1P, temp_el2N, temp_el2P; //define tempotals
                 temp_mu1P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
                 temp_mu1N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
                 temp_mu2P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
