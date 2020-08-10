@@ -91,6 +91,9 @@ class Z4l_onlyMC_rec : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
       int tfromZ;
       int zfromZ;
 
+      int goodmuons;
+      int goodelecs;
+
       TLorentzVector gen_z_p4;
       TLorentzVector gen_muon1N;
       TLorentzVector gen_muon1P;
@@ -133,6 +136,9 @@ Z4l_onlyMC_rec::Z4l_onlyMC_rec(const edm::ParameterSet& iConfig)
    Z_tree->Branch("efromZ", &efromZ, "efromZ/I");
    Z_tree->Branch("tfromZ", &tfromZ, "tfromZ/I");
    Z_tree->Branch("zfromZ", &zfromZ, "zfromZ/I");
+
+   Z_tree->Branch("goodmuons", &goodmuons, "goodmuons/I");
+   Z_tree->Branch("goodelecs", &goodelecs, "goodelecs/I");
 
    Z_tree->Branch("gen_z_p4", "TLorentzVector", &gen_z_p4);
    Z_tree->Branch("gen_muon1N",      "TLorentzVector", &gen_muon1N);
@@ -212,8 +218,8 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 efromZ = 0;
                 tfromZ = 0;
                 zfromZ = 0;
-                int goodmuons = 0;
-                int goodelecs = 0;
+                goodmuons = 0;
+                goodelecs = 0;
                 z_gen++;
                 if (mom->numberOfDaughters() == 1){
                     if (mom->daughter(0)->pdgId() == 23) zfromZ++;
