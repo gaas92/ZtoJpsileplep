@@ -86,12 +86,14 @@ class Z4l_onlyMC_rec : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
 
       TTree *Z_tree;
       TLorentzVector gen_z_p4;
-      TLorentzVector gen_muonN_p4;
-      TLorentzVector gen_muonP_p4;
-      TLorentzVector gen_dilepton_p4;
-      TLorentzVector gen_dimuon_p4;
-      TLorentzVector gen_lepton1_p4;
-      TLorentzVector gen_lepton2_p4;
+      TLorentzVector gen_muon1N;
+      TLorentzVector gen_muon1P;
+      TLorentzVector gen_muon2N;
+      TLorentzVector gen_muon2P;
+      TLorentzVector gen_elec1N;
+      TLorentzVector gen_elec1P;
+      TLorentzVector gen_elec2N;
+      TLorentzVector gen_elec2P;
 
 };
 
@@ -122,12 +124,14 @@ Z4l_onlyMC_rec::Z4l_onlyMC_rec(const edm::ParameterSet& iConfig)
    Z_tree = fs->make < TTree > ("ZTree", "Tree of Z4leptons");
 
    Z_tree->Branch("gen_z_p4", "TLorentzVector", &gen_z_p4);
-   Z_tree->Branch("gen_muonN_p4",  "TLorentzVector", &gen_muonN_p4);
-   Z_tree->Branch("gen_muonP_p4",  "TLorentzVector", &gen_muonP_p4);
-   Z_tree->Branch("gen_dimuon_p4", "TLorentzVector", &gen_dimuon_p4);
-   Z_tree->Branch("gen_dilepton_p4", "TLorentzVector", &gen_dilepton_p4);
-   Z_tree->Branch("gen_lepton1_p4",  "TLorentzVector", &gen_lepton1_p4);
-   Z_tree->Branch("gen_lepton2_p4",  "TLorentzVector", &gen_lepton2_p4);
+   Z_tree->Branch("gee_muon1N",      "TLorentzVector", &gen_muon1N);
+   Z_tree->Branch("gen_muon1P",      "TLorentzVector", &gen_muon1P);
+   Z_tree->Branch("gen_muon2N",      "TLorentzVector", &gen_muon2N);
+   Z_tree->Branch("gen_muon2P",      "TLorentzVector", &gen_muon2P);
+   Z_tree->Branch("gen_elec1N",      "TLorentzVector", &gen_elec1N);
+   Z_tree->Branch("gen_elec1P",      "TLorentzVector", &gen_elec1P);
+   Z_tree->Branch("gen_elec2N",      "TLorentzVector", &gen_elec2N);
+   Z_tree->Branch("gen_elec2P",      "TLorentzVector", &gen_elec2P);
 
 //} //end of NotOnlyGen
 }//end of constructor 
@@ -158,17 +162,20 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    // The navigation from status 1 to pruned is possible (the other direction should be made by hand)
    edm::Handle<pat::PackedGenParticleCollection> packed;
    iEvent.getByToken(packedGenToken_,packed);
-   TLorentzVector gen_z_p4,gen_jpsi_p4,gen_muon1_p4,gen_muon2_p4,gen_lepton1_p4,gen_lepton2_p4;
-    TVector3       gen_z_vtx,gen_jpsi_vtx;
 
     gen_z_p4.SetPtEtaPhiM(0.,0.,0.,0.);
-    gen_jpsi_p4.SetPtEtaPhiM(0.,0.,0.,0.);
-    gen_muon1_p4.SetPtEtaPhiM(0.,0.,0.,0.);
-    gen_muon2_p4.SetPtEtaPhiM(0.,0.,0.,0.);
-    gen_lepton1_p4.SetPtEtaPhiM(0.,0.,0.,0.);
-    gen_lepton2_p4.SetPtEtaPhiM(0.,0.,0.,0.);
-    gen_z_vtx.SetXYZ(0.,0.,0.);
-    gen_jpsi_vtx.SetXYZ(0.,0.,0.);
+
+    gee_muon1N.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_muon1P.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_muon2N.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_muon2P.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_elec1N.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_elec1P.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_elec2N.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_elec2P.SetPtEtaPhiM(0.,0.,0.,0.);
+
+
+
     int n_Z_dau = 0;
     int Event_Cand = 1;
     //NEW MC ALV
@@ -210,10 +217,12 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                     }
                 }
                 //if ((efromZ == 2 && mfromZ == 2) || mfromZ == 4) {
-                if (mfromZ > 2 && tfromZ == 0){
-                    if (tst > 2) break;
+                //if (mfromZ > 2 && tfromZ == 0){
+                if(1){
+                    //if (tst > 2) break;
                     std::cout<< "Found Z with mass: "<< mom->mass() <<", print Tree ... " << tst << std::endl;
                     printMCtree(mom, 0);
+                    /*
                     for(size_t k=0; k<packed->size(); k++){
                        const reco::Candidate * stable_dau = &(*packed)[k];
                        int stable_id = (*packed)[k].pdgId();
@@ -240,9 +249,10 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                                 temp_mu_2.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                             }
                        }
-                    }
+                    }*/
                     tst++;
                 }
+                /*
                 if (temp_lep_1.M() != 0 && temp_lep_2.M() !=0 && temp_mu_1.M() != 0 && temp_mu_2.M() !=0){ //if 4 leptons has been found
                     gen_z_p4.SetPtEtaPhiM(mom->pt(),mom->eta(),mom->phi(),mom->mass());
                     if(!std::isnan(gen_z_p4.M())){
@@ -296,12 +306,13 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
                     }
                 }// end if generated 4 muons
+                */
             }//end if generated is Z
         }//end loop over pruned
     }//end if pruned
     if (tst) std::cout << "x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x NEW EVENT -x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x" << std::endl;
 
-   if (tst) {
+   if (0) {
 
       Z_tree->Fill();
 
