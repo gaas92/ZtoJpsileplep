@@ -135,7 +135,7 @@ Z4l_onlyMC_rec::Z4l_onlyMC_rec(const edm::ParameterSet& iConfig)
    Z_tree->Branch("zfromZ", &zfromZ, "zfromZ/I");
 
    Z_tree->Branch("gen_z_p4", "TLorentzVector", &gen_z_p4);
-   Z_tree->Branch("gee_muon1N",      "TLorentzVector", &gen_muon1N);
+   Z_tree->Branch("gen_muon1N",      "TLorentzVector", &gen_muon1N);
    Z_tree->Branch("gen_muon1P",      "TLorentzVector", &gen_muon1P);
    Z_tree->Branch("gen_muon2N",      "TLorentzVector", &gen_muon2N);
    Z_tree->Branch("gen_muon2P",      "TLorentzVector", &gen_muon2P);
@@ -293,18 +293,19 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 if (tst){ //if leptons have been found
                     gen_z_p4.SetPtEtaPhiM(mom->pt(),mom->eta(),mom->phi(),mom->mass());
                     if(!std::isnan(gen_z_p4.M())){
+                       if (gen_z_p4.M()!=0){
+                          gen_muon1N = temp_mu1N;
+                          gen_muon1P = temp_el1P;
+                          gen_muon2N = temp_mu2N;
+                          gen_muon2P = temp_mu2P;
 
-                       gen_muon1N = temp_mu1N;
-                       gen_muon1P = temp_el1P;
-                       gen_muon2N = temp_mu2N;
-                       gen_muon2P = temp_mu2P;
+                          gen_elec1N = temp_el1N;
+                          gen_elec1P = temp_el1P;
+                          gen_elec2N = temp_el2N;
+                          gen_elec2P = temp_el2P;
 
-                       gen_elec1N = temp_el1N;
-                       gen_elec1P = temp_el1P;
-                       gen_elec2N = temp_el2N;
-                       gen_elec2P = temp_el2P;
-
-                       Z_tree->Fill();
+                          Z_tree->Fill();
+                       }
                     }
                 }// end if generated 4 muons
 
