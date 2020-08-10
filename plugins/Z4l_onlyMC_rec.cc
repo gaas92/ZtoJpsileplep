@@ -85,6 +85,12 @@ class Z4l_onlyMC_rec : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
       virtual void endJob() override;
 
       TTree *Z_tree;
+
+      int mfromZ;
+      int efromZ;
+      int tfromZ;
+      int zfromZ;
+
       TLorentzVector gen_z_p4;
       TLorentzVector gen_muon1N;
       TLorentzVector gen_muon1P;
@@ -122,6 +128,11 @@ Z4l_onlyMC_rec::Z4l_onlyMC_rec(const edm::ParameterSet& iConfig)
    edm::Service<TFileService> fs;
    //Now we assing the member variables to the result TTree
    Z_tree = fs->make < TTree > ("ZTree", "Tree of Z4leptons");
+
+   Z_tree->Branch("mfromZ", &mfromZ, "mfromZ/I")
+   Z_tree->Branch("efromZ", &efromZ, "efromZ/I")
+   Z_tree->Branch("tfromZ", &tfromZ, "tfromZ/I")
+   Z_tree->Branch("zfromZ", &zfromZ, "zfromZ/I")
 
    Z_tree->Branch("gen_z_p4", "TLorentzVector", &gen_z_p4);
    Z_tree->Branch("gee_muon1N",      "TLorentzVector", &gen_muon1N);
@@ -188,14 +199,18 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             if (std::isnan(mom->mass())) continue;
             if(abs(mom->pdgId()) == 23){ // if generated is Z boson
                 TLorentzVector temp_lep_1, temp_lep_2, temp_mu_1, temp_mu_2; //define tempotals
-                temp_lep_1.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
-                temp_lep_2.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
-                temp_mu_1.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
-                temp_mu_2.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
-                int mfromZ = 0;
-                int efromZ = 0;
-                int tfromZ = 0;
-                int zfromZ = 0;
+                temp_mu1P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_mu1N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_mu2P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_mu2N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_el1P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_el1N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_el2P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_el2N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                mfromZ = 0;
+                efromZ = 0;
+                tfromZ = 0;
+                zfromZ = 0;
                 z_gen++;
                 if (mom->numberOfDaughters() == 1){
                     if (mom->daughter(0)->pdgId() == 23) zfromZ++;
@@ -222,101 +237,81 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                     //if (tst > 2) break;
                     std::cout<< "Found Z with mass: "<< mom->mass() <<", print Tree ... " << tst << std::endl;
                     printMCtree(mom, 0);
-                    /*
+
                     for(size_t k=0; k<packed->size(); k++){
                        const reco::Candidate * stable_dau = &(*packed)[k];
                        int stable_id = (*packed)[k].pdgId();
                        if (stable_dau != nullptr && isAncestor(mom,stable_dau)) {
                            //if (stable_id != 13 && stable_id != -13) continue;
-                           if(stable_id == 13 && temp_lep_1.M() == 0){ // if muon- && not previiulsy assigned
+                           if(stable_id == 13 && temp_mu1N.M() == 0){ // if muon- && not previiulsy assigned
                                 std::cout << " matched 1 "  << " with Pt: ";
                                 std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
-                                temp_lep_1.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                                temp_mu1N.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                             }
-                            else if(stable_id == -13 && temp_lep_2.M() == 0){ // if muon+ && not previusly assigned
+                            else if(stable_id == -13 && temp_mu1P.M() == 0){ // if muon+ && not previusly assigned
                                 std::cout << " matched 2 "  << " with Pt: ";
                                 std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
-                                temp_lep_2.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                                temp_mu1P.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                             }
-                            else if(stable_id == 13 && temp_mu_1.M() == 0){ // if muon- && not previusly assigned
+                            else if(stable_id == 13 && temp_mu2N.M() == 0){ // if muon- && not previusly assigned
                                 std::cout << " matched 3 "  << " with Pt: ";
                                 std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
-                                temp_mu_1.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                                temp_mu2N.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                             }
-                            else if(stable_id == -13 && temp_mu_2.M() == 0){ // if muon+ && not previusly assigned
+                            else if(stable_id == -13 && temp_mu2P.M() == 0){ // if muon+ && not previusly assigned
                                 std::cout << " matched 4 "  << " with Pt: ";
                                 std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
-                                temp_mu_2.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                                temp_mu2P.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                            }
+                            /////ELECTRONS
+                            else if(stable_id == 11 && temp_el1N.M() == 0){ // if electron- && not previiulsy assigned
+                                std::cout << " matched 1 "  << " with Pt: ";
+                                std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
+                                temp_el1N.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                            }
+                            else if(stable_id == -11 && temp_el1P.M() == 0){ // if electron+ && not previusly assigned
+                                std::cout << " matched 2 "  << " with Pt: ";
+                                std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
+                                temp_el1P.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                            }
+                            else if(stable_id == 11 && temp_el2N.M() == 0){ // if electron- && not previusly assigned
+                                std::cout << " matched 3 "  << " with Pt: ";
+                                std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
+                                temp_el2N.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                            }
+                            else if(stable_id == -11 && temp_el2P.M() == 0){ // if electron+ && not previusly assigned
+                                std::cout << " matched 4 "  << " with Pt: ";
+                                std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
+                                temp_el2P.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                             }
                        }
-                    }*/
+                    }
                     tst++;
                 }
-                /*
-                if (temp_lep_1.M() != 0 && temp_lep_2.M() !=0 && temp_mu_1.M() != 0 && temp_mu_2.M() !=0){ //if 4 leptons has been found
+
+                if (tst){ //if leptons have been found
                     gen_z_p4.SetPtEtaPhiM(mom->pt(),mom->eta(),mom->phi(),mom->mass());
                     if(!std::isnan(gen_z_p4.M())){
-                       TLorentzVector dil_1 = temp_lep_1 + temp_lep_2;
-                       TLorentzVector dim_1 = temp_mu_1  + temp_mu_2;
 
-                       TLorentzVector dil_2 = temp_lep_1 + temp_mu_2;
-                       TLorentzVector dim_2 = temp_lep_2 + temp_mu_1;
+                       gen_muon1N = temp_mu1N;
+                       gen_muon1P = temp_el1P;
+                       gen_muon2N = temp_mu2N;
+                       gen_muon2P = temp_mu2P;
 
-                       float DM1, DM2;
-                       DM1 = dil_1.M() - dim_1.M();
-                       DM2 = dil_2.M() - dim_2.M();
-                       if(std::abs(DM1) > std::abs(DM2)){
-                          if (DM1 > 0){
-                              gen_lepton1_p4 = temp_lep_1;
-                              gen_lepton2_p4 = temp_lep_2;
-                              gen_muon1_p4 = temp_mu_1;
-                              gen_muon2_p4 = temp_mu_2;
-                          }
-                          else {
-                              gen_lepton1_p4 = temp_mu_1;
-                              gen_lepton2_p4 = temp_mu_2;
-                              gen_muon1_p4 = temp_lep_1;
-                              gen_muon2_p4 = temp_lep_2;
-                          }
-                       }
-                       else {
-                          if (DM2 > 0){
-                              gen_lepton1_p4 = temp_lep_1;
-                              gen_lepton2_p4 = temp_mu_2;
-                              gen_muon1_p4 = temp_mu_1;
-                              gen_muon2_p4 = temp_lep_2;
-                          }
-                          else {
-                              gen_lepton1_p4 = temp_mu_1;
-                              gen_lepton2_p4 = temp_lep_2;
-                              gen_muon1_p4 = temp_lep_1;
-                              gen_muon2_p4 = temp_mu_2;
-                          }
-                       }
-                       TLorentzVector zz = gen_lepton1_p4 + gen_lepton2_p4 + gen_muon1_p4 + gen_muon2_p4;
-                       TLorentzVector gen_dilep = gen_lepton1_p4 + gen_lepton2_p4;
-                       TLorentzVector gen_dimun = gen_muon1_p4 + gen_muon2_p4;
-                       std::cout << "Found Z to 4l (2 mu + 2 mu), Z cand mass ~ " << gen_z_p4.M() << std::endl;
-                       std::cout << "4 lep gen mass ~ " << zz.M() << std::endl;
-                       std::cout << "lep1 Pt: " << gen_lepton1_p4.Pt() << std::endl;
-                       std::cout << "lep2 Pt: " << gen_lepton2_p4.Pt() << std::endl;
-                       std::cout << "mu1  Pt: " << gen_muon1_p4.Pt()  << std::endl;
-                       std::cout << "mu2  Pt: " << gen_muon2_p4.Pt()  << std::endl;
-                       std::cout << "dilep & dimuon: " << gen_dilep.M() << " & " << gen_dimun.M() << std::endl;
+                       gen_elec1N = temp_el1N;
+                       gen_elec1P = temp_el1P;
+                       gen_elec2N = temp_el2N;
+                       gen_elec2P = temp_el2P;
 
+                       Z_tree->Fill();
                     }
                 }// end if generated 4 muons
-                */
+
             }//end if generated is Z
         }//end loop over pruned
     }//end if pruned
     if (tst) std::cout << "x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x NEW EVENT -x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x" << std::endl;
 
-   if (0) {
-
-      Z_tree->Fill();
-
-   }
 
 }//end analyze  
 //Try to print mc Tree
