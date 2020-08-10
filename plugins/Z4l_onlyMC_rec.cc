@@ -218,7 +218,7 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 }
                 //if ((efromZ == 2 && mfromZ == 2) || mfromZ == 4) {
                 //if (mfromZ > 2 && tfromZ == 0){
-                if(1){
+                if(tfromZ > 0){
                     //if (tst > 2) break;
                     std::cout<< "Found Z with mass: "<< mom->mass() <<", print Tree ... " << tst << std::endl;
                     printMCtree(mom, 0);
@@ -227,7 +227,7 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                        const reco::Candidate * stable_dau = &(*packed)[k];
                        int stable_id = (*packed)[k].pdgId();
                        if (stable_dau != nullptr && isAncestor(mom,stable_dau)) {
-                           if (stable_id != 13 && stable_id != -13) continue;
+                           //if (stable_id != 13 && stable_id != -13) continue;
                            if(stable_id == 13 && temp_lep_1.M() == 0){ // if muon- && not previiulsy assigned
                                 std::cout << " matched 1 "  << " with Pt: ";
                                 std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
