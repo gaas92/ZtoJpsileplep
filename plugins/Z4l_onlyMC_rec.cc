@@ -218,7 +218,7 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 }
                 //if ((efromZ == 2 && mfromZ == 2) || mfromZ == 4) {
                 //if (mfromZ > 2 && tfromZ == 0){
-                if(tfromZ > 0){
+                if(tfromZ == 0){
                     //if (tst > 2) break;
                     std::cout<< "Found Z with mass: "<< mom->mass() <<", print Tree ... " << tst << std::endl;
                     printMCtree(mom, 0);
