@@ -129,10 +129,10 @@ Z4l_onlyMC_rec::Z4l_onlyMC_rec(const edm::ParameterSet& iConfig)
    //Now we assing the member variables to the result TTree
    Z_tree = fs->make < TTree > ("ZTree", "Tree of Z4leptons");
 
-   Z_tree->Branch("mfromZ", &mfromZ, "mfromZ/I")
-   Z_tree->Branch("efromZ", &efromZ, "efromZ/I")
-   Z_tree->Branch("tfromZ", &tfromZ, "tfromZ/I")
-   Z_tree->Branch("zfromZ", &zfromZ, "zfromZ/I")
+   Z_tree->Branch("mfromZ", &mfromZ, "mfromZ/I");
+   Z_tree->Branch("efromZ", &efromZ, "efromZ/I");
+   Z_tree->Branch("tfromZ", &tfromZ, "tfromZ/I");
+   Z_tree->Branch("zfromZ", &zfromZ, "zfromZ/I");
 
    Z_tree->Branch("gen_z_p4", "TLorentzVector", &gen_z_p4);
    Z_tree->Branch("gee_muon1N",      "TLorentzVector", &gen_muon1N);
