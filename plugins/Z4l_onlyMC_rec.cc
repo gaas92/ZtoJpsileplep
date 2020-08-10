@@ -33,6 +33,8 @@
 #include "DataFormats/PatCandidates/interface/CompositeCandidate.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/PatCandidates/interface/GenericParticle.h"
+#include "DataFormats/PatCandidates/interface/PackedGenParticle.h"
+#include "DataFormats/PatCandidates/interface/PackedCandidate.h" // muy importante para MiniAOD
 
 //Trigger includes
 #include "DataFormats/Common/interface/TriggerResults.h"
@@ -45,8 +47,11 @@
 #include "TLorentzVector.h"
 #include "TTree.h"
 
+#include <DataFormats/HepMCCandidate/interface/GenParticle.h>
+
 #include <string>
 #include <vector>
+#include <unordered_map>
 //
 // class declaration
 //
