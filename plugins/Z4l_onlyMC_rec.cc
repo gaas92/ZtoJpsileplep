@@ -305,7 +305,7 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                     if(!std::isnan(gen_z_p4.M())){
                        if (gen_z_p4.M()!=0){
                           gen_muon1N = temp_mu1N;
-                          gen_muon1P = temp_el1P;
+                          gen_muon1P = temp_mu1P;
                           gen_muon2N = temp_mu2N;
                           gen_muon2P = temp_mu2P;
 
