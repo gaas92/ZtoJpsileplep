@@ -105,7 +105,7 @@ class Z4l_onlyMC_rec : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
 //
 // constructors and destructor
 //
-Z4l_onlyMC_rec::Z4l_onlyMC_rec(const edm::ParameterSet& iConfig):
+Z4l_onlyMC_rec::Z4l_onlyMC_rec(const edm::ParameterSet& iConfig)
 {
    genCands_ = consumes<reco::GenParticleCollection>(iConfig.getParameter < edm::InputTag > ("GenParticles"));
    packedGenToken_ = consumes<pat::PackedGenParticleCollection>((edm::InputTag)"packedGenParticles");

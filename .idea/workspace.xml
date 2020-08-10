@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ffa4147d-30ff-4b4f-b2c4-fc8fd2eadb5c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/plugins/Z4l_onlyMC_rec.cc" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/Z4l_onlyMC_rec.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/runOnlyGenZ4l.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/runOnlyGenZ4l.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -31,17 +31,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/plugins/Z4l_onlyMC_rec.cc">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/plugins/jpsi4LepLepKmcFitter.cc">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="37" selection-start-line="37" selection-end-line="37" />
-              <folding>
-                <element signature="e#0#17196#0" />
-                <element signature="e#0#8329#0" />
-                <element signature="e#0#8329#0" />
-                <element signature="e#0#8329#0" />
-              </folding>
+            <state relative-caret-position="-256">
+              <caret line="70" column="46" lean-forward="true" selection-start-line="70" selection-start-column="46" selection-end-line="70" selection-end-column="46" />
             </state>
           </provider>
         </entry>
@@ -55,11 +49,17 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/plugins/jpsi4LepLepKmcFitter.cc">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/plugins/Z4l_onlyMC_rec.cc">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="640">
-              <caret line="70" column="46" lean-forward="true" selection-start-line="70" selection-start-column="46" selection-end-line="70" selection-end-column="46" />
+            <state relative-caret-position="297">
+              <caret line="107" column="64" lean-forward="true" selection-start-line="107" selection-start-column="64" selection-end-line="107" selection-end-column="64" />
+              <folding>
+                <element signature="e#0#17196#0" />
+                <element signature="e#0#8329#0" />
+                <element signature="e#0#8329#0" />
+                <element signature="e#0#8329#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -225,15 +225,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/plugins/jpsi4LepLepKmcFitter.cc">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="640">
+        <state relative-caret-position="-256">
           <caret line="70" column="46" lean-forward="true" selection-start-line="70" selection-start-column="46" selection-end-line="70" selection-end-column="46" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/plugins/Z4l_onlyMC_rec.cc">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="37" selection-start-line="37" selection-end-line="37" />
+        <state relative-caret-position="297">
+          <caret line="107" column="64" lean-forward="true" selection-start-line="107" selection-start-column="64" selection-end-line="107" selection-end-column="64" />
           <folding>
             <element signature="e#0#17196#0" />
             <element signature="e#0#8329#0" />
