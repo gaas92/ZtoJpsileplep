@@ -165,7 +165,7 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
     gen_z_p4.SetPtEtaPhiM(0.,0.,0.,0.);
 
-    gee_muon1N.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_muon1N.SetPtEtaPhiM(0.,0.,0.,0.);
     gen_muon1P.SetPtEtaPhiM(0.,0.,0.,0.);
     gen_muon2N.SetPtEtaPhiM(0.,0.,0.,0.);
     gen_muon2P.SetPtEtaPhiM(0.,0.,0.,0.);
