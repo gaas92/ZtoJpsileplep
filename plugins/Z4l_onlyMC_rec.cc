@@ -306,7 +306,7 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                     tst++;
                 }
 
-                if (tst){ //if leptons have been found
+                if (goodelecs > 1 || goodmuons > 1){ //if leptons have been found
                     gen_z_p4.SetPtEtaPhiM(mom->pt(),mom->eta(),mom->phi(),mom->mass());
                     if(!std::isnan(gen_z_p4.M())){
                        if (gen_z_p4.M()!=0){
@@ -325,8 +325,7 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                           std::cout << " good gen elecs: "<< goodelecs << std::endl;
                        }
                     }
-                }// end if generated 4 muons
-
+                }// end if generated is good event
             }//end if generated is Z
         }//end loop over pruned
     }//end if pruned
