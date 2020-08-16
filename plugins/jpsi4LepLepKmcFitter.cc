@@ -86,8 +86,8 @@ class jpsi4LepLepKmcFitter : public edm::stream::EDProducer<> {
    private:
       void printMCtree(const reco::Candidate *, int);
       //recursive function to analyze a decay and match values to any of the 2-4 muon electrons and return the kind of decay channel
-      bool analyzeDecay(const reco::Candidate *, reco::Candidate&, reco::Candidate&, reco::Candidate&,
-                        reco::Candidate&, reco::Candidate&, reco::Candidate&, reco::Candidate&, reco::Candidate&, int&);
+      bool analyzeDecay(const reco::Candidate*, TLorentzVector&, TLorentzVector&, TLorentzVector&,
+                        TLorentzVector&, TLorentzVector&, TLorentzVector&, TLorentzVector&, TLorentzVector&, int&);
       std::string printName(int);
       bool    isAncestor(const reco::Candidate*, const reco::Candidate*);
       bool    isAncestor(int, const reco::Candidate*);
@@ -232,8 +232,8 @@ void jpsi4LepLepKmcFitter::printMCtree(const reco::Candidate* mother, int indent
         if (daughter->numberOfDaughters()) printMCtree(daughter, indent+extraIndent);
     }
 }
-bool jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, reco::Candidate& muP1, reco::Candidate& muN1, reco::Candidate& muP2, reco::Candidate& muN2,
-                                        reco::Candidate& elP1, reco::Candidate& elN1, reco::Candidate& elP2, reco::Candidate& elN2, int& decay){
+bool jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzVector& muP1, TLorentzVector& muN1, TLorentzVector& muP2, TLorentzVector& muN2,
+                                        TLorentzVector& elP1, TLorentzVector& elN1, TLorentzVector& elP2, TLorentzVector& elN2, int& decay){
     if (mother == NULL){
          std::cout << "end tree" << std::endl;
          return;
