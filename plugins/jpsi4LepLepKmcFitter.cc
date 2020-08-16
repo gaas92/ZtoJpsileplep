@@ -232,8 +232,8 @@ void jpsi4LepLepKmcFitter::printMCtree(const reco::Candidate* mother, int indent
         if (daughter->numberOfDaughters()) printMCtree(daughter, indent+extraIndent);
     }
 }
-bool jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, reco::Candidate& muP1, reco::Candidate& muN1, reco::Candidate& muP2, reco::Candidate muN2,
-                                        reco::Candidate& elP1, reco::Candidate& elN1, reco::Candidate& elP2, reco::Candidate elN2, int& decay){
+bool jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, reco::Candidate& muP1, reco::Candidate& muN1, reco::Candidate& muP2, reco::Candidate& muN2,
+                                        reco::Candidate& elP1, reco::Candidate& elN1, reco::Candidate& elP2, reco::Candidate& elN2, int& decay){
     if (mother == NULL){
          std::cout << "end tree" << std::endl;
          return;
