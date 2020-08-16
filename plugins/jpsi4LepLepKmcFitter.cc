@@ -85,6 +85,9 @@ class jpsi4LepLepKmcFitter : public edm::stream::EDProducer<> {
       double getIso(const pat::Muon& mu);
    private:
       void printMCtree(const reco::Candidate *, int);
+      //recursive function to analyze a decay and match values to any of the 2-4 muon electrons and return the kind of decay channel
+      bool analyzeDecay(const reco::Candidate *, reco::Candidate&, reco::Candidate&, reco::Candidate&, reco::Candidate,
+                                                 reco::Candidate&, reco::Candidate&, reco::Candidate&, reco::Candidate, int&);
       std::string printName(int);
       bool    isAncestor(const reco::Candidate*, const reco::Candidate*);
       bool    isAncestor(int, const reco::Candidate*);
@@ -229,6 +232,14 @@ void jpsi4LepLepKmcFitter::printMCtree(const reco::Candidate* mother, int indent
         if (daughter->numberOfDaughters()) printMCtree(daughter, indent+extraIndent);
     }
 }
+bool jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, reco::Candidate& muP1, reco::Candidate& muN1, reco::Candidate& muP2, reco::Candidate muN2,
+                                        reco::Candidate& elP1, reco::Candidate& elN1, reco::Candidate& elP2, reco::Candidate elN2, int& decay){
+    if (mother == NULL){
+         std::cout << "end tree" << std::endl;
+         return;
+    }
+
+}
 //recursively check is a given particle is ancestor
 bool jpsi4LepLepKmcFitter::isAncestor(const reco::Candidate* ancestor, const reco::Candidate * particle) {
     if (ancestor == particle ) return true;
@@ -319,9 +330,38 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
     gen_jpsi_vtx.SetXYZ(0.,0.,0.);
     int n_Z_dau = 0;
     int Event_Cand = 1;
+    //NEW NEW NEW MC ALV CSPM
+    if (pruned.isValid()){
+        TLorentzVector temp_mu1P, temp_mu1N, temp_mu2P, temp_mu2N, temp_el1P, temp_el1N, temp_el2P, temp_el2N;
+        int decaychannel = 0;
+        for(size_t i=0; i<pruned->size(); i++){
+            const reco::Candidate *mom = &(*pruned)[i];
+            if (std::isnan(mom->mass())) continue;
+            if(abs(mom->pdgId()) == 23){ // if generated is Z boson
+                temp_mu1P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0)
+                temp_mu1N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0)
+                temp_mu2P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0)
+                temp_mu2N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0)
+                temp_el1P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0)
+                temp_el1N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0)
+                temp_el2P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0)
+                temp_el2N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0)
+                std::cout << "<------------------------------------ PRINT TREE----------------------------------------->" << std::endl;
+                printMCtree(mom, 0);
+                std::cout << "<------------------------------------ PRINT DECAY----------------------------------------->" << std::endl;
+                if (analyzeDecay(mom, temp_mu1P, temp_mu1N, temp_mu2P, temp_mu2N,
+                                 temp_el1P, temp_el1N, temp_el2P, temp_el2N, decaychannel)){
+                    std::cout << "good decay" << std::endl;
+                }//end if good decay chain
+
+            }//end if Z boson
+        }//end loop over pruned
+        //match with final states
+    }//end if pruned
     //NEW MC ALV
     int tst = 0;
     int z_gen = 0;
+    /*
     if (pruned.isValid()){ //if mc exist
     //std::cout<< "Valid pruned container" << std::endl;
         for(size_t i=0; i<pruned->size(); i++){ // loop over generated events        
@@ -342,7 +382,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                     if (mom->daughter(0)->pdgId() == 23) zfromZ++; 
                 }
                 printMCtree(mom, 0);
-                /*
+                
                 if (zfromZ) continue;
                 for(size_t k=0; k<packed->size(); k++){
                     const reco::Candidate * stable_dau = &(*packed)[k];
@@ -446,10 +486,11 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 
                     }
                 }// end if generated 4 muons
-             */
+             
             }//end if generated is Z
         }//end loop over pruned 
     }//end if pruned
+    */
     if (tst) std::cout << "x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x NEW EVENT -x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x" << std::endl;
     /*
     if (pruned.isValid() ){ // if mc collection exists
