@@ -341,6 +341,8 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                 if (mom->numberOfDaughters() == 1){
                     if (mom->daughter(0)->pdgId() == 23) zfromZ++; 
                 }
+                printMCtree(mom, 0);
+                /*
                 if (zfromZ) continue;
                 for(size_t k=0; k<packed->size(); k++){
                     const reco::Candidate * stable_dau = &(*packed)[k];
@@ -443,7 +445,8 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                        std::cout << "dilep & dimuon: " << gen_dilep.M() << " & " << gen_dimun.M() << std::endl; 
 
                     }
-                }// end if generated 4 muons     
+                }// end if generated 4 muons
+             */
             }//end if generated is Z
         }//end loop over pruned 
     }//end if pruned
