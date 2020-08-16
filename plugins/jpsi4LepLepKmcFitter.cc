@@ -236,9 +236,8 @@ bool jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzV
                                         TLorentzVector& elP1, TLorentzVector& elN1, TLorentzVector& elP2, TLorentzVector& elN2, int& decay){
     if (mother == NULL){
          std::cout << "end tree" << std::endl;
-         return;
     }
-
+    return true;
 }
 //recursively check is a given particle is ancestor
 bool jpsi4LepLepKmcFitter::isAncestor(const reco::Candidate* ancestor, const reco::Candidate * particle) {
