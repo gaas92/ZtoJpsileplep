@@ -86,8 +86,8 @@ class jpsi4LepLepKmcFitter : public edm::stream::EDProducer<> {
    private:
       void printMCtree(const reco::Candidate *, int);
       //recursive function to analyze a decay and match values to any of the 2-4 muon electrons and return the kind of decay channel
-      bool analyzeDecay(const reco::Candidate *, reco::Candidate&, reco::Candidate&, reco::Candidate&, reco::Candidate,
-                                                 reco::Candidate&, reco::Candidate&, reco::Candidate&, reco::Candidate, int&);
+      bool analyzeDecay(const reco::Candidate *, reco::Candidate&, reco::Candidate&, reco::Candidate&,
+                        reco::Candidate, reco::Candidate&, reco::Candidate&, reco::Candidate&, reco::Candidate&, int&);
       std::string printName(int);
       bool    isAncestor(const reco::Candidate*, const reco::Candidate*);
       bool    isAncestor(int, const reco::Candidate*);
