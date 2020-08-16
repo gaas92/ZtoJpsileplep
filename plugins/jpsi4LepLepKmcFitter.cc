@@ -87,7 +87,7 @@ class jpsi4LepLepKmcFitter : public edm::stream::EDProducer<> {
       void printMCtree(const reco::Candidate *, int);
       //recursive function to analyze a decay and match values to any of the 2-4 muon electrons and return the kind of decay channel
       bool analyzeDecay(const reco::Candidate *, reco::Candidate&, reco::Candidate&, reco::Candidate&,
-                        reco::Candidate, reco::Candidate&, reco::Candidate&, reco::Candidate&, reco::Candidate&, int&);
+                        reco::Candidate&, reco::Candidate&, reco::Candidate&, reco::Candidate&, reco::Candidate&, int&);
       std::string printName(int);
       bool    isAncestor(const reco::Candidate*, const reco::Candidate*);
       bool    isAncestor(int, const reco::Candidate*);
@@ -338,14 +338,14 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
             const reco::Candidate *mom = &(*pruned)[i];
             if (std::isnan(mom->mass())) continue;
             if(abs(mom->pdgId()) == 23){ // if generated is Z boson
-                temp_mu1P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0)
-                temp_mu1N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0)
-                temp_mu2P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0)
-                temp_mu2N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0)
-                temp_el1P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0)
-                temp_el1N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0)
-                temp_el2P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0)
-                temp_el2N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0)
+                temp_mu1P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_mu1N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_mu2P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_mu2N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_el1P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_el1N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_el2P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_el2N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
                 std::cout << "<------------------------------------ PRINT TREE----------------------------------------->" << std::endl;
                 printMCtree(mom, 0);
                 std::cout << "<------------------------------------ PRINT DECAY----------------------------------------->" << std::endl;
