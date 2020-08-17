@@ -212,7 +212,7 @@ void jpsi4LepLepKmcFitter::printMCtree(const reco::Candidate* mother, int indent
          std::cout << "end tree" << std::endl;
          return;
     }
-    if (mother->numberOfDaughters() > 1){   
+    if (mother->numberOfDaughters() > 1){
         if(indent){
                 std::cout << std::setw(indent) << " ";
         }  
@@ -239,7 +239,7 @@ void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzV
          std::cout << "end tree" << std::endl;
          return;
     }
-    if (mother->numberOfDaughters() > 0){
+    if (mother->numberOfDaughters() > 1){
         if(indent){
                 std::cout << std::setw(indent) << " ";
         }
@@ -248,7 +248,7 @@ void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzV
     int extraIndent = 0;
     for (size_t i=0; i< mother->numberOfDaughters(); i++){
         const reco::Candidate * daughter = mother->daughter(i);
-        if (mother->numberOfDaughters() > 0){
+        if (mother->numberOfDaughters() > 1){
             if(indent){
                 std::cout << std::setw(indent) << " ";
             }
