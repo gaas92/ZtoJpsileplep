@@ -455,6 +455,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                      }
                  }
                 if (tfromZ) break;
+                if (efromZ + mfromZ < 3) break;
                 std::cout << "<------------------------------------ PRINT DECAY----------------------------------------->" << std::endl;
                 analyzeDecay(mom, temp_mu1P, temp_mu1N, temp_mu2P, temp_mu2N,temp_el1P, temp_el1N, temp_el2P, temp_el2N, decaychannel, 0);
                 if(decaychannel){
