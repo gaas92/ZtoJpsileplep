@@ -268,48 +268,56 @@ void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzV
             // decay 9  Z--> 2el->2mu via gamma
             // decay 10 Z--> 2el->2mi via Z*
             // decay 11 Z--> any with tau
-            std::cout<< "final state "<<std::endl;
+            //std::cout<< "final state "<<std::endl;
             if (dauID == 11 and elN1.M() == 0){
-                std::cout<< "saving electron 1 ... "<<std::endl;
+              //  std::cout<< "saving electron 1 ... "<<std::endl;
                 elN1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
             }
             else if (dauID == -11 and elP1.M() == 0){
-                std::cout<< "saving positron 1 ... "<<std::endl;
+                //std::cout<< "saving positron 1 ... "<<std::endl;
                 elP1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
             }
             else if (dauID == 13 and muN1.M() == 0){
-                std::cout<< "saving muon 1 ... "<<std::endl;
+                //std::cout<< "saving muon 1 ... "<<std::endl;
                 muN1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
             }
             else if (dauID == -13 and muP1.M() == 0){
-                std::cout<< "saving anti-muon 1 ... "<<std::endl;
+                //std::cout<< "saving anti-muon 1 ... "<<std::endl;
                 muP1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
             }
             //// lepton 2
             else if (dauID == 11 and elN2.M() == 0){
-                std::cout<< "saving electron 2 ... "<< std::endl;
+                //std::cout<< "saving electron 2 ... "<< std::endl;
                 elN2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
             }
             else if (dauID == -11 and elP2.M() == 0){
-                std::cout<< "saving positron 2 ... "<< std::endl;
+                //std::cout<< "saving positron 2 ... "<< std::endl;
                 elP2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
             }
             else if (dauID == 13 and muN2.M() == 0){
-                std::cout<< "saving muon 2 ... "<< std::endl;
+                //std::cout<< "saving muon 2 ... "<< std::endl;
                 muN2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
             }
             else if (dauID == -13 and muP2.M() == 0){
-                std::cout<< "saving anti-muon 2 ... "<< std::endl;
+                //std::cout<< "saving anti-muon 2 ... "<< std::endl;
                 muP2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
             }
-            if(elN1.M() != 0 && elP1.M() != 0 && muN1.M() == 0 && muP1.M() == 0 && elN2.M() == 0 && elP2.M() == 0 && muN2.M() == 0 && muP2.M() == 0){
-                decay = 2;
-                std::cout<< "is Z --> 2 el"<< std::endl;
-            }
-            else if(elN1.M() == 0 && elP1.M() == 0 && muN1.M() != 0 && muP1.M() != 0 && elN2.M() == 0 && elP2.M() == 0 && muN2.M() == 0 && muP2.M() == 0){
+            if(elN1.M() == 0 && elP1.M() == 0 && muN1.M() != 0 && muP1.M() != 0 && elN2.M() == 0 && elP2.M() == 0 && muN2.M() == 0 && muP2.M() == 0){
                 decay = 1;
-                std::cout<< "is Z --> 2 mu"<< std::endl;
+                //std::cout<< "is Z --> 2 mu"<< std::endl;
             }
+            else if(elN1.M() != 0 && elP1.M() != 0 && muN1.M() == 0 && muP1.M() == 0 && elN2.M() == 0 && elP2.M() == 0 && muN2.M() == 0 && muP2.M() == 0){
+                decay = 2;
+                //std::cout<< "is Z --> 2 el"<< std::endl;
+            }
+            else if(elN1.M() == 0 && elP1.M() == 0 && muN1.M() != 0 && muP1.M() != 0 && elN2.M() == 0 && elP2.M() == 0 && muN2.M() != 0 && muP2.M() != 0){
+                decay = 3;
+                std::cout << "erwiofeornvoirenoiewndiopnsWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+++++++++"<<std::endl;
+                std::cout<< "is Z --> 4mu via ??? "<< std::endl;
+                if (momID == 23) std::cout << "via Z" << std::endl;
+                else if (momID == 22) std::cout << "via Gamma" std::endl;
+            }
+
             else{
                 std::cout<<"DECAY NOT IDENTIFIED !!" << std::endl;
             }
