@@ -87,7 +87,7 @@ class jpsi4LepLepKmcFitter : public edm::stream::EDProducer<> {
       void printMCtree(const reco::Candidate *, int);
       //recursive function to analyze a decay and match values to any of the 2-4 muon electrons and return the kind of decay channel
       void analyzeDecay(const reco::Candidate*, TLorentzVector&, TLorentzVector&, TLorentzVector&,
-                        TLorentzVector&, TLorentzVector&, TLorentzVector&, TLorentzVector&, TLorentzVector&, int&);
+                        TLorentzVector&, TLorentzVector&, TLorentzVector&, TLorentzVector&, TLorentzVector&, int&, int);
       std::string printName(int);
       bool    isAncestor(const reco::Candidate*, const reco::Candidate*);
       bool    isAncestor(int, const reco::Candidate*);
@@ -233,13 +233,31 @@ void jpsi4LepLepKmcFitter::printMCtree(const reco::Candidate* mother, int indent
     }
 }
 void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzVector& muP1, TLorentzVector& muN1, TLorentzVector& muP2, TLorentzVector& muN2,
-                                        TLorentzVector& elP1, TLorentzVector& elN1, TLorentzVector& elP2, TLorentzVector& elN2, int& decay){
+                                        TLorentzVector& elP1, TLorentzVector& elN1, TLorentzVector& elP2, TLorentzVector& elN2, int& decay, int indent = 0){
+    decay = 4;
     if (mother == NULL){
          std::cout << "end tree" << std::endl;
          return;
     }
-    decay = 4;
-    return;
+    if (mother->numberOfDaughters() > 0){
+        if(indent){
+                std::cout << std::setw(indent) << " ";
+        }
+        std::cout << printName(mother->pdgId()) <<" has "<< mother->numberOfDaughters() <<" daughters " <<std::endl;
+    }
+    int extraIndent = 0;
+    for (size_t i=0; i< mother->numberOfDaughters(); i++){
+        const reco::Candidate * daughter = mother->daughter(i);
+        if (mother->numberOfDaughters() > 0){
+            if(indent){
+                std::cout << std::setw(indent) << " ";
+            }
+            std::cout << " daugter "<< i+1 <<": "<<  printName(daughter->pdgId()) << " with Pt: ";
+            std::cout << daughter->pt() << " | Eta: "<< daughter->eta() << " | Phi: "<< daughter->phi() << " | mass: "<< daughter->mass() << std::endl;
+            extraIndent+=4;
+        }
+        if (daughter->numberOfDaughters()) analyzeDecay(daughter, muP1, muN1, muP2, muN2, elP1, elN1, elP2, elN2, decay, indent+extraIndent);
+    }
 }
 //recursively check is a given particle is ancestor
 bool jpsi4LepLepKmcFitter::isAncestor(const reco::Candidate* ancestor, const reco::Candidate * particle) {
@@ -332,6 +350,8 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
     int n_Z_dau = 0;
     int Event_Cand = 1;
     //NEW NEW NEW MC ALV CSPM
+    std::cout << "<------------------------------------ NEW EVENT----------------------------------------->" << std::endl;
+
     if (pruned.isValid()){
         TLorentzVector temp_mu1P, temp_mu1N, temp_mu2P, temp_mu2N, temp_el1P, temp_el1N, temp_el2P, temp_el2N;
         int decaychannel = 0;
@@ -347,12 +367,13 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                 temp_el1N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
                 temp_el2P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
                 temp_el2N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
-                std::cout << "<------------------------------------ PRINT TREE----------------------------------------->" << std::endl;
-                printMCtree(mom, 0);
+                //std::cout << "<------------------------------------ PRINT TREE----------------------------------------->" << std::endl;
+                //printMCtree(mom, 0);
                 std::cout << "<------------------------------------ PRINT DECAY----------------------------------------->" << std::endl;
-                analyzeDecay(mom, temp_mu1P, temp_mu1N, temp_mu2P, temp_mu2N,temp_el1P, temp_el1N, temp_el2P, temp_el2N, decaychannel);
+                analyzeDecay(mom, temp_mu1P, temp_mu1N, temp_mu2P, temp_mu2N,temp_el1P, temp_el1N, temp_el2P, temp_el2N, decaychannel, 0);
                 if(decaychannel){
                     std::cout << "good decay" << std::endl;
+                    break;
                 }//end if good decay chain
 
             }//end if Z boson
