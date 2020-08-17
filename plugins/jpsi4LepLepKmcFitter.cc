@@ -416,7 +416,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                 temp_el2N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
                 int efromZ = 0;
                 int tfromZ = 0;
-                int zfromZ = 0;
+                int mfromZ = 0;
                 for(size_t k=0; k<packed->size(); k++){
                      const reco::Candidate * stable_dau = &(*packed)[k];
                      int stable_id = (*packed)[k].pdgId();
