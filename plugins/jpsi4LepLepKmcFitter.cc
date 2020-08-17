@@ -260,15 +260,16 @@ void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzV
             // decay 1  Z--> 2mu
             // decay 2  Z--> 2el
             // decay 3  Z--> 4mu via gamma
-            // decay 4  Z--> 4mu via Z*
-            // decay 5  Z--> 4el via gamma
-            // decay 6  Z--> 4el via Z*
-            // decay 7  Z--> 2mu->2el via gamma
-            // decay 8  Z--> 2mu->2el via Z*
-            // decay 9  Z--> 2el->2mu via gamma
-            // decay 10 Z--> 2el->2mi via Z*
+            // decay 3  Z--> 4mu via Z*
+            // decay 4  Z--> 4el via gamma
+            // decay 4  Z--> 4el via Z*
+            // decay 5  Z--> 2mu->2el via gamma
+            // decay 5  Z--> 2mu->2el via Z*
+            // decay 6  Z--> 2el->2mu via gamma
+            // decay 6  Z--> 2el->2mi via Z*
             // decay 11 Z--> any with tau
             //std::cout<< "final state "<<std::endl;
+            if (dauID == 22) continue;
             if (dauID == 11 and elN1.M() == 0){
               //  std::cout<< "saving electron 1 ... "<<std::endl;
                 elN1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
@@ -318,18 +319,27 @@ void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzV
                 else if (momID == 22) std::cout << "via Gamma"<<std::endl;
             }
             else if(elN1.M() != 0 && elP1.M() != 0 && muN1.M() == 0 && muP1.M() == 0 && elN2.M() != 0 && elP2.M() != 0 && muN2.M() == 0 && muP2.M() == 0){
-                decay = 5; //or 6
+                decay = 4; //or 6
                 std::cout << "erwiofeornvoirenoiewndiopnsWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+++++++++"<<std::endl;
                 std::cout<< "is Z --> 4el via ??? "<< std::endl;
-                if (momID == 23) std::cout << "via Z" << std::endl;
-                else if (momID == 22) std::cout << "via Gamma"<<std::endl;
+                //if (momID == 23) std::cout << "via Z" << std::endl;
+                //else if (momID == 22) std::cout << "via Gamma"<<std::endl;
             }
             else if(elN1.M() != 0 && elP1.M() != 0 && muN1.M() != 0 && muP1.M() != 0 && elN2.M() == 0 && elP2.M() == 0 && muN2.M() == 0 && muP2.M() == 0){
-                decay = 7; //or 8 9 10 2mu->2el
+                //decay = 5; //or 8 9 10 2mu->2el
                 std::cout << "erwiofeornvoirenoiewndiopnsWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+++++++++"<<std::endl;
-                std::cout<< "is Z --> 2mu 2 el via ??? "<< std::endl;
-                if (momID == 23) std::cout << "via Z" << std::endl;
-                else if (momID == 22) std::cout << "via Gamma"<<std::endl;
+                std::cout<< "is Z --> 2mu 2el or 2el 2mu ??? "<< std::endl;
+                //if (momID == 23) std::cout << "via Z" << std::endl;
+                //else if (momID == 22) std::cout << "via Gamma"<<std::endl;
+                if (isAncestor(11, daughter) || isAncestor(-11, daughter)){
+                    std::cout<< "Z-> 2el -> 2mu"
+                    decay = 5;
+                }
+                else if (isAncestor(13, daughter) || isAncestor(-13, daughter)){
+                    std::cout<< "Z-> 2mu -> 2el"
+                    decay = 6;
+                }
+                else std::cout<< "cant identify ..."<< std::endl;
             }
             else{
                 std::cout<<"DECAY NOT IDENTIFIED !!" << std::endl;
@@ -469,7 +479,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                  }
                 if (tfromZ) break;
                 if (efromZ + mfromZ < 3) break;
-                std::cout << "<------------------------------------ PRINT DECAY----------------------------------------->" << std::endl;
+                //std::cout << "<------------------------------------ PRINT DECAY----------------------------------------->" << std::endl;
                 analyzeDecay(mom, temp_mu1P, temp_mu1N, temp_mu2P, temp_mu2N,temp_el1P, temp_el1N, temp_el2P, temp_el2N, decaychannel, 0);
                 if(decaychannel){
                     //std::cout << "good decay" << std::endl;
