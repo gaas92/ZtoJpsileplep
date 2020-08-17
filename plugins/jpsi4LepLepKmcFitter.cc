@@ -235,7 +235,7 @@ void jpsi4LepLepKmcFitter::printMCtree(const reco::Candidate* mother, int indent
 void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzVector& muP1, TLorentzVector& muN1, TLorentzVector& muP2, TLorentzVector& muN2,
                                         TLorentzVector& elP1, TLorentzVector& elN1, TLorentzVector& elP2, TLorentzVector& elN2, int& decay, int indent = 0){
 
-    decay = 4;
+    int momID = mother->pdgId();
     if (mother == NULL){
          std::cout << "end tree" << std::endl;
          return;
@@ -249,10 +249,11 @@ void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzV
     int extraIndent = 0;
     for (size_t i=0; i< mother->numberOfDaughters(); i++){
         const reco::Candidate * daughter = mother->daughter(i);
+        int dauID = daughter->pdgId();
         if(indent){
             std::cout << std::setw(indent) << " ";
         }
-        std::cout << " daugter "<< i+1 <<": "<<  printName(daughter->pdgId()) << " with Pt: ";
+        std::cout << " daugter "<< i+1 <<": "<<  printName(dauID) << " with Pt: ";
         std::cout << daughter->pt() << " | Eta: "<< daughter->eta() << " | Phi: "<< daughter->phi() << " | mass: "<< daughter->mass() << std::endl;
         extraIndent+=4;
         if (daughter->numberOfDaughters() == 0) {
@@ -267,39 +268,52 @@ void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzV
             // decay 9  Z--> 2el->2mu via gamma
             // decay 10 Z--> 2el->2mi via Z*
             // decay 11 Z--> any with tau
-            if (daughter->pdgId() == 11 and elN1.M() == 0){
-                std::cout<< "final state saving electron 1 ... "<< std::endl;
+            std::cout<< "final state "
+            if (dauID == 11 and elN1.M() == 0){
+                std::cout<< "saving electron 1 ... "<< std::endl;
                 elN1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
             }
-            else if (daughter->pdgId() == -11 and elP1.M() == 0){
-                std::cout<< "final state saving positron 1 ... "<< std::endl;
+            else if (dauID == -11 and elP1.M() == 0){
+                std::cout<< "saving positron 1 ... "<< std::endl;
                 elP1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
             }
-            else if (daughter->pdgId() == 13 and muN1.M() == 0){
-                std::cout<< "final state saving muon 1 ... "<< std::endl;
+            else if (dauID == 13 and muN1.M() == 0){
+                std::cout<< "saving muon 1 ... "<< std::endl;
                 muN1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
             }
-            else if (daughter->pdgId() == -13 and muP1.M() == 0){
-                std::cout<< "final state saving anti-muon 1 ... "<< std::endl;
+            else if (dauID == -13 and muP1.M() == 0){
+                std::cout<< "saving anti-muon 1 ... "<< std::endl;
                 muP1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
             }
             //// lepton 2
-            else if (daughter->pdgId() == 11 and elN2.M() == 0){
-                std::cout<< "final state saving electron 2 ... "<< std::endl;
+            else if (dauID == 11 and elN2.M() == 0){
+                std::cout<< "saving electron 2 ... "<< std::endl;
                 elN2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
             }
-            else if (daughter->pdgId() == -11 and elP2.M() == 0){
-                std::cout<< "final state saving positron 2 ... "<< std::endl;
+            else if (dauID == -11 and elP2.M() == 0){
+                std::cout<< "saving positron 2 ... "<< std::endl;
                 elP2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
             }
-            else if (daughter->pdgId() == 13 and muN2.M() == 0){
-                std::cout<< "final state saving muon 2 ... "<< std::endl;
+            else if (dauID == 13 and muN2.M() == 0){
+                std::cout<< "saving muon 2 ... "<< std::endl;
                 muN2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
             }
-            else if (daughter->pdgId() == -13 and muP2.M() == 0){
-                std::cout<< "final state saving anti-muon 2 ... "<< std::endl;
+            else if (dauID == -13 and muP2.M() == 0){
+                std::cout<< "saving anti-muon 2 ... "<< std::endl;
                 muP2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
             }
+            if(elN1.M() != 0 && elP1.M() != 0 && muN1.M() == 0 && muP1.M() == 0 && elN2.M() == 0 && elP2.M() == 0 && muN2.M() == 0 && muP2.M() == 0){
+                decay == 2;
+                std::cout<< "is Z --> 2 el"<< std::endl;
+            }
+            else if(elN1.M() == 0 && elP1.M() == 0 && muN1.M() != 0 && muP1.M() != 0 && elN2.M() == 0 && elP2.M() == 0 && muN2.M() == 0 && muP2.M() == 0){
+                decay == 1;
+                std::cout<< "is Z --> 2 mu"<< std::endl;
+            }
+            else{
+                std::cout"DECAY NOT IDENTIFIED !!" << std::endl;
+            }
+            
         }
         else{
             analyzeDecay(daughter, muP1, muN1, muP2, muN2, elP1, elN1, elP2, elN2, decay, indent+extraIndent);
