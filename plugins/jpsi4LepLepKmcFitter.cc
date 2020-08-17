@@ -332,11 +332,11 @@ void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzV
                 //if (momID == 23) std::cout << "via Z" << std::endl;
                 //else if (momID == 22) std::cout << "via Gamma"<<std::endl;
                 if (isAncestor(11, daughter) || isAncestor(-11, daughter)){
-                    std::cout<< "Z-> 2el -> 2mu"
+                    std::cout<< "Z-> 2el -> 2mu"<<std::endl;
                     decay = 5;
                 }
                 else if (isAncestor(13, daughter) || isAncestor(-13, daughter)){
-                    std::cout<< "Z-> 2mu -> 2el"
+                    std::cout<< "Z-> 2mu -> 2el"<<std::endl;
                     decay = 6;
                 }
                 else std::cout<< "cant identify ..."<< std::endl;
