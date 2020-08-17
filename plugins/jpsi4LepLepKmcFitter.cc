@@ -425,7 +425,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
    }
 */
     
-    TLorentzVector gen_mu1P, gen_mu1N, gen_mu2P, gen_mu2N, gen_el1P, gen_el1N, gen_el2P, gen_el2N;
+    TLorentzVector gen_z_p4, gen_jpsi_p4, gen_mu1P, gen_mu1N, gen_mu2P, gen_mu2N, gen_el1P, gen_el1N, gen_el2P, gen_el2N;
     TVector3       gen_z_vtx,gen_jpsi_vtx;
 
     gen_z_p4.SetPtEtaPhiM(0.,0.,0.,0.);
