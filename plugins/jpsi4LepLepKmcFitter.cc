@@ -267,9 +267,43 @@ void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzV
             // decay 9  Z--> 2el->2mu via gamma
             // decay 10 Z--> 2el->2mi via Z*
             // decay 11 Z--> any with tau
-            std::cout<< "final state"<< std::endl;
+            if (daughter->pdgId() == 11 and elN1.M() == 0){
+                std::cout<< "final state saving electron 1 ... "<< std::endl;
+                elN1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
+            }
+            else if (daughter->pdgId() == -11 and elP1.M() == 0){
+                std::cout<< "final state saving positron 1 ... "<< std::endl;
+                elP1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
+            }
+            else if (daughter->pdgId() == 13 and muN1.M() == 0){
+                std::cout<< "final state saving muon 1 ... "<< std::endl;
+                muN1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
+            }
+            else if (daughter->pdgId() == -13 and muP1.M() == 0){
+                std::cout<< "final state saving anti-muon 1 ... "<< std::endl;
+                muP1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
+            }
+            //// lepton 2
+            else if (daughter->pdgId() == 11 and elN2.M() == 0){
+                std::cout<< "final state saving electron 2 ... "<< std::endl;
+                elN2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
+            }
+            else if (daughter->pdgId() == -11 and elP2.M() == 0){
+                std::cout<< "final state saving positron 2 ... "<< std::endl;
+                elP2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
+            }
+            else if (daughter->pdgId() == 13 and muN2.M() == 0){
+                std::cout<< "final state saving muon 2 ... "<< std::endl;
+                muN2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
+            }
+            else if (daughter->pdgId() == -13 and muP2.M() == 0){
+                std::cout<< "final state saving anti-muon 1 ... "<< std::endl;
+                muP2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
+            }
         }
-        if (daughter->numberOfDaughters()) analyzeDecay(daughter, muP1, muN1, muP2, muN2, elP1, elN1, elP2, elN2, decay, indent+extraIndent);
+        else{
+            analyzeDecay(daughter, muP1, muN1, muP2, muN2, elP1, elN1, elP2, elN2, decay, indent+extraIndent);
+        }
     }
 }
 //recursively check is a given particle is ancestor
