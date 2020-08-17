@@ -255,6 +255,7 @@ void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzV
             std::cout << " daugter "<< i+1 <<": "<<  printName(daughter->pdgId()) << " with Pt: ";
             std::cout << daughter->pt() << " | Eta: "<< daughter->eta() << " | Phi: "<< daughter->phi() << " | mass: "<< daughter->mass() << std::endl;
             extraIndent+=4;
+            if (daughter->numberOfDaughters() == 0) std::cout<< "final state"<< std::endl;
         }
         if (daughter->numberOfDaughters()) analyzeDecay(daughter, muP1, muN1, muP2, muN2, elP1, elN1, elP2, elN2, decay, indent+extraIndent);
     }
