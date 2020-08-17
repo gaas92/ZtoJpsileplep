@@ -311,13 +311,26 @@ void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzV
                 //std::cout<< "is Z --> 2 el"<< std::endl;
             }
             else if(elN1.M() == 0 && elP1.M() == 0 && muN1.M() != 0 && muP1.M() != 0 && elN2.M() == 0 && elP2.M() == 0 && muN2.M() != 0 && muP2.M() != 0){
-                decay = 3;
+                decay = 3;// or 4
                 std::cout << "erwiofeornvoirenoiewndiopnsWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+++++++++"<<std::endl;
                 std::cout<< "is Z --> 4mu via ??? "<< std::endl;
                 if (momID == 23) std::cout << "via Z" << std::endl;
                 else if (momID == 22) std::cout << "via Gamma"<<std::endl;
             }
-
+            else if(elN1.M() != 0 && elP1.M() != 0 && muN1.M() == 0 && muP1.M() == 0 && elN2.M() != 0 && elP2.M() != 0 && muN2.M() == 0 && muP2.M() == 0){
+                decay = 5; //or 6
+                std::cout << "erwiofeornvoirenoiewndiopnsWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+++++++++"<<std::endl;
+                std::cout<< "is Z --> 4el via ??? "<< std::endl;
+                if (momID == 23) std::cout << "via Z" << std::endl;
+                else if (momID == 22) std::cout << "via Gamma"<<std::endl;
+            }
+            else if(elN1.M() != 0 && elP1.M() != 0 && muN1.M() != 0 && muP1.M() != 0 && elN2.M() == 0 && elP2.M() == 0 && muN2.M() == 0 && muP2.M() == 0){
+                decay = 7; //or 8 9 10 2mu->2el
+                std::cout << "erwiofeornvoirenoiewndiopnsWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+++++++++"<<std::endl;
+                std::cout<< "is Z --> 2mu 2 el via ??? "<< std::endl;
+                if (momID == 23) std::cout << "via Z" << std::endl;
+                else if (momID == 22) std::cout << "via Gamma"<<std::endl;
+            }
             else{
                 std::cout<<"DECAY NOT IDENTIFIED !!" << std::endl;
             }
@@ -456,10 +469,10 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                  }
                 if (tfromZ) break;
                 if (efromZ + mfromZ < 3) break;
-                std::cout << "<------------------------------------ PRINT DECAY----------------------------------------->" << std::endl;
+                //std::cout << "<------------------------------------ PRINT DECAY----------------------------------------->" << std::endl;
                 analyzeDecay(mom, temp_mu1P, temp_mu1N, temp_mu2P, temp_mu2N,temp_el1P, temp_el1N, temp_el2P, temp_el2N, decaychannel, 0);
                 if(decaychannel){
-                    std::cout << "good decay" << std::endl;
+                    //std::cout << "good decay" << std::endl;
                     break;
                 }//end if good decay chain
 
@@ -600,7 +613,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
         }//end loop over pruned 
     }//end if pruned
     */
-    if (tst) std::cout << "x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x NEW EVENT -x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x" << std::endl;
+    //if (tst) std::cout << "x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x NEW EVENT -x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x" << std::endl;
     /*
     if (pruned.isValid() ){ // if mc collection exists
         for(size_t i=0; i<pruned->size(); i++){ // loop over generated events
@@ -678,11 +691,11 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
    //int breaker = 0;
    // We Cycle over dileptons for the Kfit
    //if (gen_z_p4.M() != 0){   //only for mc
-   if(1){
+   if(0){
     //if ((nonia && nmuons) || gen_z_p4.M() !=0 ){
-    std::cout<< "+X+X+X+X+X+X+X+X+X+X+X+X+X+X START READING DATA X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X" << std::endl;
-    std::cout<< "dimuon length: " << nonia << std::endl;
-    std::cout<< "dilepton length:  " << nmuons << std::endl;
+    //std::cout<< "+X+X+X+X+X+X+X+X+X+X+X+X+X+X START READING DATA X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X" << std::endl;
+    //std::cout<< "dimuon length: " << nonia << std::endl;
+    //std::cout<< "dilepton length:  " << nmuons << std::endl;
     for (pat::CompositeCandidateCollection::const_iterator dilepton = dileptons->begin(); dilepton != dileptons->end() /*test && breaker < 10*/; ++dilepton){
     //std::cout << " enters dilepton " << std::endl;    
     for (pat::CompositeCandidateCollection::const_iterator dimuon = dimuons->begin(); dimuon != dimuons->end() /*test && breaker < 10*/; ++dimuon){
