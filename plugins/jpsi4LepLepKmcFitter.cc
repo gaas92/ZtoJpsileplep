@@ -315,7 +315,7 @@ void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzV
                 std::cout << "erwiofeornvoirenoiewndiopnsWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+++++++++"<<std::endl;
                 std::cout<< "is Z --> 4mu via ??? "<< std::endl;
                 if (momID == 23) std::cout << "via Z" << std::endl;
-                else if (momID == 22) std::cout << "via Gamma" std::endl;
+                else if (momID == 22) std::cout << "via Gamma"<<std::endl;
             }
 
             else{
