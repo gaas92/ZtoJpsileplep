@@ -350,7 +350,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                 std::cout << "<------------------------------------ PRINT TREE----------------------------------------->" << std::endl;
                 printMCtree(mom, 0);
                 std::cout << "<------------------------------------ PRINT DECAY----------------------------------------->" << std::endl;
-                analyzeDecay(mom, temp_mu1P, temp_mu1N, temp_mu2P, temp_mu2N,temp_el1P, temp_el1N, temp_el2P, temp_el2N, decaychannel))
+                analyzeDecay(mom, temp_mu1P, temp_mu1N, temp_mu2P, temp_mu2N,temp_el1P, temp_el1N, temp_el2P, temp_el2N, decaychannel);
                 if(decaychannel){
                     std::cout << "good decay" << std::endl;
                 }//end if good decay chain
