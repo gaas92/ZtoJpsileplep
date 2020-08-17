@@ -234,6 +234,7 @@ void jpsi4LepLepKmcFitter::printMCtree(const reco::Candidate* mother, int indent
 }
 void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzVector& muP1, TLorentzVector& muN1, TLorentzVector& muP2, TLorentzVector& muN2,
                                         TLorentzVector& elP1, TLorentzVector& elN1, TLorentzVector& elP2, TLorentzVector& elN2, int& decay, int indent = 0){
+
     decay = 4;
     if (mother == NULL){
          std::cout << "end tree" << std::endl;
@@ -248,17 +249,25 @@ void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzV
     int extraIndent = 0;
     for (size_t i=0; i< mother->numberOfDaughters(); i++){
         const reco::Candidate * daughter = mother->daughter(i);
-        if (mother->numberOfDaughters() > 1){
-            if(indent){
-                std::cout << std::setw(indent) << " ";
-            }
-            std::cout << " daugter "<< i+1 <<": "<<  printName(daughter->pdgId()) << " with Pt: ";
-            std::cout << daughter->pt() << " | Eta: "<< daughter->eta() << " | Phi: "<< daughter->phi() << " | mass: "<< daughter->mass() << std::endl;
-            extraIndent+=4;
-            if (daughter->numberOfDaughters() == 0) {
-                std::cout<< "final state"<< std::endl;
-                
-            }
+        if(indent){
+            std::cout << std::setw(indent) << " ";
+        }
+        std::cout << " daugter "<< i+1 <<": "<<  printName(daughter->pdgId()) << " with Pt: ";
+        std::cout << daughter->pt() << " | Eta: "<< daughter->eta() << " | Phi: "<< daughter->phi() << " | mass: "<< daughter->mass() << std::endl;
+        extraIndent+=4;
+        if (daughter->numberOfDaughters() == 0) {
+            // decay 1  Z--> 2mu
+            // decay 2  Z--> 2el
+            // decay 3  Z--> 4mu via gamma
+            // decay 4  Z--> 4mu via Z*
+            // decay 5  Z--> 4el via gamma
+            // decay 6  Z--> 4el via Z*
+            // decay 7  Z--> 2mu->2el via gamma
+            // decay 8  Z--> 2mu->2el via Z*
+            // decay 9  Z--> 2el->2mu via gamma
+            // decay 10 Z--> 2el->2mi via Z*
+            // decay 11 Z--> any with tau
+            std::cout<< "final state"<< std::endl;
         }
         if (daughter->numberOfDaughters()) analyzeDecay(daughter, muP1, muN1, muP2, muN2, elP1, elN1, elP2, elN2, decay, indent+extraIndent);
     }
