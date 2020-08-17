@@ -86,7 +86,7 @@ class jpsi4LepLepKmcFitter : public edm::stream::EDProducer<> {
    private:
       void printMCtree(const reco::Candidate *, int);
       //recursive function to analyze a decay and match values to any of the 2-4 muon electrons and return the kind of decay channel
-      bool analyzeDecay(const reco::Candidate*, TLorentzVector&, TLorentzVector&, TLorentzVector&,
+      void analyzeDecay(const reco::Candidate*, TLorentzVector&, TLorentzVector&, TLorentzVector&,
                         TLorentzVector&, TLorentzVector&, TLorentzVector&, TLorentzVector&, TLorentzVector&, int&);
       std::string printName(int);
       bool    isAncestor(const reco::Candidate*, const reco::Candidate*);
@@ -232,12 +232,14 @@ void jpsi4LepLepKmcFitter::printMCtree(const reco::Candidate* mother, int indent
         if (daughter->numberOfDaughters()) printMCtree(daughter, indent+extraIndent);
     }
 }
-bool jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzVector& muP1, TLorentzVector& muN1, TLorentzVector& muP2, TLorentzVector& muN2,
+void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzVector& muP1, TLorentzVector& muN1, TLorentzVector& muP2, TLorentzVector& muN2,
                                         TLorentzVector& elP1, TLorentzVector& elN1, TLorentzVector& elP2, TLorentzVector& elN2, int& decay){
     if (mother == NULL){
          std::cout << "end tree" << std::endl;
+         return;
     }
-    return true;
+    decay = 4;
+    return;
 }
 //recursively check is a given particle is ancestor
 bool jpsi4LepLepKmcFitter::isAncestor(const reco::Candidate* ancestor, const reco::Candidate * particle) {
@@ -348,8 +350,8 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                 std::cout << "<------------------------------------ PRINT TREE----------------------------------------->" << std::endl;
                 printMCtree(mom, 0);
                 std::cout << "<------------------------------------ PRINT DECAY----------------------------------------->" << std::endl;
-                if (analyzeDecay(mom, temp_mu1P, temp_mu1N, temp_mu2P, temp_mu2N,
-                                 temp_el1P, temp_el1N, temp_el2P, temp_el2N, decaychannel)){
+                analyzeDecay(mom, temp_mu1P, temp_mu1N, temp_mu2P, temp_mu2N,temp_el1P, temp_el1N, temp_el2P, temp_el2N, decaychannel))
+                if(decaychannel){
                     std::cout << "good decay" << std::endl;
                 }//end if good decay chain
 
