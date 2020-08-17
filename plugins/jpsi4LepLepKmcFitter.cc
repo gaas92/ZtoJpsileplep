@@ -268,7 +268,7 @@ void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzV
             // decay 9  Z--> 2el->2mu via gamma
             // decay 10 Z--> 2el->2mi via Z*
             // decay 11 Z--> any with tau
-            std::cout<< "final state "
+            std::cout<< "final state " std::endl;
             if (dauID == 11 and elN1.M() == 0){
                 std::cout<< "saving electron 1 ... "<< std::endl;
                 elN1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
