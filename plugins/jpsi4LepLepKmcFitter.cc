@@ -297,7 +297,7 @@ void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzV
                 muN2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
             }
             else if (daughter->pdgId() == -13 and muP2.M() == 0){
-                std::cout<< "final state saving anti-muon 1 ... "<< std::endl;
+                std::cout<< "final state saving anti-muon 2 ... "<< std::endl;
                 muP2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
             }
         }
@@ -414,8 +414,25 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                 temp_el1N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
                 temp_el2P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
                 temp_el2N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
-                //std::cout << "<------------------------------------ PRINT TREE----------------------------------------->" << std::endl;
-                //printMCtree(mom, 0);
+                int efromZ = 0;
+                int tfromZ = 0;
+                int zfromZ = 0;
+                for(size_t k=0; k<packed->size(); k++){
+                     const reco::Candidate * stable_dau = &(*packed)[k];
+                     int stable_id = (*packed)[k].pdgId();
+                     if (stable_dau != nullptr && isAncestor(mom,stable_dau)) {
+                         if (stable_id == 13 || stable_id == -13) { //electros 11 muons 13 as final states
+                             mfromZ++;
+                         }
+                         else if (stable_id == 11 || stable_id == -11){
+                             efromZ++;
+                         }
+                         else if (stable_id == 16 || stable_id == -16){
+                             tfromZ++;
+                         }
+                     }
+                 }
+                if (tfromZ) break;
                 std::cout << "<------------------------------------ PRINT DECAY----------------------------------------->" << std::endl;
                 analyzeDecay(mom, temp_mu1P, temp_mu1N, temp_mu2P, temp_mu2N,temp_el1P, temp_el1N, temp_el2P, temp_el2N, decaychannel, 0);
                 if(decaychannel){
