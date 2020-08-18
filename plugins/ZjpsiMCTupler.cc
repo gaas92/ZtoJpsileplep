@@ -606,7 +606,7 @@ ZjpsiMCTupler::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
            ZvtxP = z_Cand.userFloat("vProb") ;
            ZvtxC2 = z_Cand.userFloat("vChi2") ;
            tst = z_Cand.userInt("tst_");
-           decaychannel = z_Cand.userInt("decaychannel");
+           decaychannel = z_Cand.userInt("decay_");
            z_gen = z_Cand.userInt("z_gen_");
            Zvtx.SetXYZ(z_Cand.userFloat("ZvtxX") ,z_Cand.userFloat("ZvtxY"),z_Cand.userFloat("ZvtxZ")) ;
            psiVtxP = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("psi")))->userFloat("vProb");
