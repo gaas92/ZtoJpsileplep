@@ -68,7 +68,7 @@ def main():
 
         config.General.requestName = None
         #config.General.workArea = 'ZMuondecay'
-        config.General.workArea = '2016MC_4l_mm_v2'
+        config.General.workArea = '2016MC_4l_mm_v3'
 	config.General.transferOutputs = True
 	config.General.transferLogs = False
 
@@ -86,7 +86,7 @@ def main():
 	#config.Data.lumiMask = '' #has nosence in Mc
 	config.Data.publication = True
         config.Data.outputDatasetTag = None
-	config.Data.outLFNDirBase = '/store/user/%s/Z4l_MC_v2/' % ("gayalasa")
+	config.Data.outLFNDirBase = '/store/user/%s/Z4l_MC_v3/' % ("gayalasa")
 	config.Site.storageSite = 'T3_US_FNALLPC'
         #config.Site.storageSite = None # Choose your site. 
         #--------------------------------------------------------
