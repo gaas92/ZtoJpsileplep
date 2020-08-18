@@ -439,6 +439,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
     int n_Z_dau = 0;
     int decaychannel = 0;
     int Event_Cand = 1;
+    int tst = 0;
     //NEW NEW NEW MC ALV CSPM
     //std::cout << "<------------------------------------ NEW EVENT----------------------------------------->" << std::endl;
 
@@ -481,6 +482,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
                 if(decaychannel){
                     //std::cout << "good decay" << std::endl;
                     gen_z_p4.SetPtEtaPhiM(mom->pt(), mom->eta(), mom->phi(), mom->mass());
+                    tst++;
                     break;
                 }//end if good decay chain
 
@@ -592,7 +594,6 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
         gen_jpsi_p4 = gen_muon1_p4 + gen_muon2_p4;
     }//end if pruned
     //NEW MC ALV
-    int tst = 0;
     int z_gen = 0;
     /*
     if (pruned.isValid()){ //if mc exist
@@ -1139,6 +1140,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
        patZ.addUserInt("nmuons_",nmuons);
        patZ.addUserInt("nPV_",   nPV   );
        patZ.addUserInt("tst_", tst);
+       patZ.addUserInt("decay_", decaychannel);
        patZ.addUserInt("z_gen_", z_gen);
                  
        patZ.addUserFloat("vProb",ZVtxP_fit);

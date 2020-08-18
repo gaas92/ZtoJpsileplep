@@ -137,6 +137,7 @@ class ZjpsiMCTupler : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
       Float_t ZvtxP;
       Float_t ZvtxC2;
       UInt_t tst;
+      UInt_t decaychannel;
       UInt_t z_gen;
 
       Float_t psiVtxP;
@@ -313,6 +314,7 @@ ZjpsiMCTupler::ZjpsiMCTupler(const edm::ParameterSet& iConfig):
     Z_tree->Branch("ZvtxP", &ZvtxP, "ZvtxP/F");
     Z_tree->Branch("ZvtxC2", &ZvtxC2, "ZvtxC2/F");
     Z_tree->Branch("tst", &tst, "tst/F");
+    Z_tree->Branch("decaychannel", &decaychannel, "decaychannel/F");
     Z_tree->Branch("z_gen", &z_gen, "z_gen/F");
 
     Z_tree->Branch("psiVtxP", &psiVtxP, "psiVtxP/F");
@@ -604,6 +606,7 @@ ZjpsiMCTupler::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
            ZvtxP = z_Cand.userFloat("vProb") ;
            ZvtxC2 = z_Cand.userFloat("vChi2") ;
            tst = z_Cand.userInt("tst_");
+           decaychannel = z_Cand.userInt("decaychannel");
            z_gen = z_Cand.userInt("z_gen_");
            Zvtx.SetXYZ(z_Cand.userFloat("ZvtxX") ,z_Cand.userFloat("ZvtxY"),z_Cand.userFloat("ZvtxZ")) ;
            psiVtxP = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("psi")))->userFloat("vProb");
