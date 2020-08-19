@@ -440,6 +440,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
     int decaychannel = 0;
     int Event_Cand = 1;
     int tst = 0;
+    int pass_match = 0;
     //NEW NEW NEW MC ALV CSPM
     //std::cout << "<------------------------------------ NEW EVENT----------------------------------------->" << std::endl;
 
@@ -501,93 +502,117 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
             if (decaychannel == 1){
                 if (stable_id == 13 && deltaR(temp_mu1N.Eta(), temp_mu1N.Phi(), stable_dau->eta(), stable_dau->phi()) < 0.05){
                     gen_lepton1_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
-                    std::cout << "matched mu N in Z->2mu"<<std::endl;
+                    pass_match = pass_match + 2;
+                    //std::cout << "matched mu N in Z->2mu"<<std::endl;
                 }
                 if (stable_id == -13 && deltaR(temp_mu1P.Eta(), temp_mu1P.Phi(), stable_dau->eta(), stable_dau->phi()) < 0.05){
                     gen_lepton2_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
-                    std::cout << "matched mu P in Z->2mu"<<std::endl;
+                    //std::cout << "matched mu P in Z->2mu"<<std::endl;
+                    pass_match = pass_match + 2;
+
                 }
             }
             if (decaychannel == 2){
                 if (stable_id == 11 && deltaR(temp_el1N.Eta(), temp_el1N.Phi(), stable_dau->eta(), stable_dau->phi()) < 0.05){
                     gen_lepton1_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
-                    std::cout << "matched el N in Z->2el"<<std::endl;
+                    //std::cout << "matched el N in Z->2el"<<std::endl;
+                    pass_match = pass_match + 2;
+
                 }
                 if (stable_id == -11 && deltaR(temp_el1P.Eta(), temp_el1P.Phi(), stable_dau->eta(), stable_dau->phi()) < 0.05){
                     gen_lepton2_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
-                    std::cout << "matched el P in Z->2el"<<std::endl;
+                    //std::cout << "matched el P in Z->2el"<<std::endl;
+                    pass_match = pass_match + 2;
+
                 }
             }
             if (decaychannel == 3){
                 if (stable_id == 13 && deltaR(temp_mu1N.Eta(), temp_mu1N.Phi(), stable_dau->eta(), stable_dau->phi()) < 0.05){
                     gen_lepton1_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
-                    std::cout << "matched mu 1 N in Z->4mu"<<std::endl;
+                    //std::cout << "matched mu 1 N in Z->4mu"<<std::endl;
+                    pass_match++;
+
                 }
                 if (stable_id == -13 && deltaR(temp_mu1P.Eta(), temp_mu1P.Phi(), stable_dau->eta(), stable_dau->phi()) < 0.05){
                     gen_lepton2_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
-                    std::cout << "matched mu 1 P in Z->4mu"<<std::endl;
+                    //std::cout << "matched mu 1 P in Z->4mu"<<std::endl;
+                    pass_match++;
                 }
                 if (stable_id == 13 && deltaR(temp_mu2N.Eta(), temp_mu2N.Phi(), stable_dau->eta(), stable_dau->phi()) < 0.05){
                     gen_muon1_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
-                    std::cout << "matched mu 2 N in Z->4mu"<<std::endl;
+                    //std::cout << "matched mu 2 N in Z->4mu"<<std::endl;
+                    pass_match++;
                 }
                 if (stable_id == -13 && deltaR(temp_mu2P.Eta(), temp_mu2P.Phi(), stable_dau->eta(), stable_dau->phi()) < 0.05){
                     gen_muon2_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
-                    std::cout << "matched mu 2 P in Z->4mu"<<std::endl;
+                    //std::cout << "matched mu 2 P in Z->4mu"<<std::endl;
+                    pass_match++;
                 }
             }
             if (decaychannel == 4){
                 if (stable_id == 11 && deltaR(temp_el1N.Eta(), temp_el1N.Phi(), stable_dau->eta(), stable_dau->phi()) < 0.05){
                     gen_lepton1_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
-                    std::cout << "matched el 1 N in Z->4el"<<std::endl;
+                    //std::cout << "matched el 1 N in Z->4el"<<std::endl;
+                    pass_match++;
                 }
                 if (stable_id == -11 && deltaR(temp_el1P.Eta(), temp_el1P.Phi(), stable_dau->eta(), stable_dau->phi()) < 0.05){
                     gen_lepton2_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
-                    std::cout << "matched el 1 P in Z->4el"<<std::endl;
+                    //std::cout << "matched el 1 P in Z->4el"<<std::endl;
+                    pass_match++;
                 }
                 if (stable_id == 11 && deltaR(temp_el2N.Eta(), temp_el2N.Phi(), stable_dau->eta(), stable_dau->phi()) < 0.05){
                     //gen_el2N.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
-                    std::cout << "matched el 2 N in Z->4el"<<std::endl;
+                    //std::cout << "matched el 2 N in Z->4el"<<std::endl;
+                    pass_match++;
                 }
                 if (stable_id == -11 && deltaR(temp_el2P.Eta(), temp_el2P.Phi(), stable_dau->eta(), stable_dau->phi()) < 0.05){
                     //gen_el2P.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
-                    std::cout << "matched el 2 P in Z->4el"<<std::endl;
+                    //std::cout << "matched el 2 P in Z->4el"<<std::endl;
+                    pass_match++;
                 }
             }
             if (decaychannel == 5){
                 if (stable_id == 13 && deltaR(temp_mu1N.Eta(), temp_mu1N.Phi(), stable_dau->eta(), stable_dau->phi()) < 0.05){
                     gen_muon1_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
-                    std::cout << "matched mu 1 N in Z->2mu 2el"<<std::endl;
+                    //std::cout << "matched mu 1 N in Z->2mu 2el"<<std::endl;
+                    pass_match++;
                 }
                 if (stable_id == -13 && deltaR(temp_mu1P.Eta(), temp_mu1P.Phi(), stable_dau->eta(), stable_dau->phi()) < 0.05){
                     gen_muon2_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
-                    std::cout << "matched mu 1 P in Z->2mu 2el"<<std::endl;
+                    //std::cout << "matched mu 1 P in Z->2mu 2el"<<std::endl;
+                    pass_match++;
                 }
                 if (stable_id == 11 && deltaR(temp_el1N.Eta(), temp_el1N.Phi(), stable_dau->eta(), stable_dau->phi()) < 0.05){
                     gen_lepton1_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
-                    std::cout << "matched el 2 N in Z->2mu 2el"<<std::endl;
+                    //std::cout << "matched el 2 N in Z->2mu 2el"<<std::endl;
+                    pass_match++;
                 }
                 if (stable_id == -11 && deltaR(temp_el1P.Eta(), temp_el1P.Phi(), stable_dau->eta(), stable_dau->phi()) < 0.05){
                     gen_lepton2_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
-                    std::cout << "matched el 2 P in Z->2mu 2el"<<std::endl;
+                    //std::cout << "matched el 2 P in Z->2mu 2el"<<std::endl;
+                    pass_match++;
                 }
             }
             if (decaychannel == 6){
                 if (stable_id == 13 && deltaR(temp_mu1N.Eta(), temp_mu1N.Phi(), stable_dau->eta(), stable_dau->phi()) < 0.05){
                     gen_muon1_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
-                    std::cout << "matched mu 2 N in Z->2el 2mu"<<std::endl;
+                    //std::cout << "matched mu 2 N in Z->2el 2mu"<<std::endl;
+                    pass_match++;
                 }
                 if (stable_id == -13 && deltaR(temp_mu1P.Eta(), temp_mu1P.Phi(), stable_dau->eta(), stable_dau->phi()) < 0.05){
                     gen_muon2_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
-                    std::cout << "matched mu 2 P in Z->2el 2mu"<<std::endl;
+                    //std::cout << "matched mu 2 P in Z->2el 2mu"<<std::endl;
+                    pass_match++;
                 }
                 if (stable_id == 11 && deltaR(temp_el1N.Eta(), temp_el1N.Phi(), stable_dau->eta(), stable_dau->phi()) < 0.05){
                     gen_lepton1_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
-                    std::cout << "matched el 1 N in Z->2el 2mu"<<std::endl;
+                    //std::cout << "matched el 1 N in Z->2el 2mu"<<std::endl;
+                    pass_match++;
                 }
                 if (stable_id == -11 && deltaR(temp_el1P.Eta(), temp_el1P.Phi(), stable_dau->eta(), stable_dau->phi()) < 0.05){
                     gen_lepton2_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
-                    std::cout << "matched el 1 P in Z->2el 2mu"<<std::endl;
+                    //std::cout << "matched el 1 P in Z->2el 2mu"<<std::endl;
+                    pass_match++;
                 }
             }
         }// end packed
@@ -1446,7 +1471,9 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
     }//end loop for dilepton
 
    iEvent.put(std::move(ZCandColl),"ZCandidates");
-   std::cout<< "+X+X+X+X+X+X+X+X+X+X+X+X+X+X END READING DATA X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X" << std::endl;
+   std::cout<< "decay channel : " << decaychannel << std::endl;
+   std::cout<< "pass match must be 4 is : " << pass_match << std::endl;
+   //std::cout<< "+X+X+X+X+X+X+X+X+X+X+X+X+X+X END READING DATA X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X" << std::endl;
    }//end if gen only MC
 }//end produce 
 
