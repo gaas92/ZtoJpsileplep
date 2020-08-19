@@ -237,12 +237,12 @@ void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzV
 
     int momID = mother->pdgId();
     if (mother == NULL){
-         std::cout << "end tree" << std::endl;
+         //std::cout << "end tree" << std::endl;
          return;
     }
     if (mother->numberOfDaughters() > 1){
         if(indent){
-                std::cout << std::setw(indent) << " ";
+                //std::cout << std::setw(indent) << " ";
         }
         //std::cout << printName(mother->pdgId()) <<" has "<< mother->numberOfDaughters() <<" daughters " <<std::endl;
     }
@@ -251,7 +251,7 @@ void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzV
         const reco::Candidate * daughter = mother->daughter(i);
         int dauID = daughter->pdgId();
         if(indent){
-            std::cout << std::setw(indent) << " ";
+            //std::cout << std::setw(indent) << " ";
         }
         //std::cout << " daugter "<< i+1 <<": "<<  printName(dauID) << " with Pt: ";
         //std::cout << daughter->pt() << " | Eta: "<< daughter->eta() << " | Phi: "<< daughter->phi() << " | mass: "<< daughter->mass() << std::endl;
@@ -1450,11 +1450,11 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
         Event_Cand++;
 
         ZCandColl->push_back(patZ);
-        std::cout << "Zcand OK " << gen_z_p4.M() << " vs " << ZM_fit <<std::endl;
-        std::cout << "Lep 1 Pt "  << gen_lepton1_p4.Pt()  << " vs " << patL1.pt() << std::endl;
-        std::cout << "Lep 2 Pt "  << gen_lepton2_p4.Pt()  << " vs " << patL2.pt() << std::endl;
-        std::cout << "Muon 1 Pt " << gen_muon1_p4.Pt()    << " vs " << patM1.pt() << std::endl;
-        std::cout << "Muon 2 Pt " << gen_muon2_p4.Pt()    << " vs " << patM2.pt() << std::endl;
+        //std::cout << "Zcand OK " << gen_z_p4.M() << " vs " << ZM_fit <<std::endl;
+        //std::cout << "Lep 1 Pt "  << gen_lepton1_p4.Pt()  << " vs " << patL1.pt() << std::endl;
+        //std::cout << "Lep 2 Pt "  << gen_lepton2_p4.Pt()  << " vs " << patL2.pt() << std::endl;
+        //std::cout << "Muon 1 Pt " << gen_muon1_p4.Pt()    << " vs " << patM1.pt() << std::endl;
+        //std::cout << "Muon 2 Pt " << gen_muon2_p4.Pt()    << " vs " << patM2.pt() << std::endl;
 
 /*test
         ZCandColl->push_back(patZ);
@@ -1473,7 +1473,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
    iEvent.put(std::move(ZCandColl),"ZCandidates");
    std::cout<< "decay channel : " << decaychannel << std::endl;
    std::cout<< "pass match must be 4 is : " << pass_match << std::endl;
-   //std::cout<< "+X+X+X+X+X+X+X+X+X+X+X+X+X+X END READING DATA X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X" << std::endl;
+   std::cout<< "+X+X+X+X+X+X+X+X+X+X+X+X+X+X END READING DATA X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X" << std::endl;
    }//end if gen only MC
 }//end produce 
 
