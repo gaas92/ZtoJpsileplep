@@ -1166,6 +1166,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
        patZ.addUserInt("nPV_",   nPV   );
        patZ.addUserInt("tst_", tst);
        patZ.addUserInt("decay_", decaychannel);
+       patZ.addUserInt("pass_match_", pass_match);
        patZ.addUserInt("z_gen_", z_gen);
                  
        patZ.addUserFloat("vProb",ZVtxP_fit);
@@ -1471,9 +1472,9 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
     }//end loop for dilepton
 
    iEvent.put(std::move(ZCandColl),"ZCandidates");
-   std::cout<< "decay channel : " << decaychannel << std::endl;
-   std::cout<< "pass match must be 4 is : " << pass_match << std::endl;
-   std::cout<< "+X+X+X+X+X+X+X+X+X+X+X+X+X+X END READING DATA X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X" << std::endl;
+   //std::cout<< "decay channel : " << decaychannel << std::endl;
+   //std::cout<< "pass match must be 4 is : " << pass_match << std::endl;
+   //std::cout<< "+X+X+X+X+X+X+X+X+X+X+X+X+X+X END READING DATA X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X+X" << std::endl;
    }//end if gen only MC
 }//end produce 
 

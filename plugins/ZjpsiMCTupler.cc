@@ -138,6 +138,7 @@ class ZjpsiMCTupler : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
       Float_t ZvtxC2;
       UInt_t tst;
       UInt_t decaychannel;
+      UInt_t pass_match;
       UInt_t z_gen;
 
       Float_t psiVtxP;
@@ -315,6 +316,7 @@ ZjpsiMCTupler::ZjpsiMCTupler(const edm::ParameterSet& iConfig):
     Z_tree->Branch("ZvtxC2", &ZvtxC2, "ZvtxC2/F");
     Z_tree->Branch("tst", &tst, "tst/F");
     Z_tree->Branch("decaychannel", &decaychannel, "decaychannel/F");
+    Z_tree->Branch("pass_match", &pass_match, "pass_match/F");
     Z_tree->Branch("z_gen", &z_gen, "z_gen/F");
 
     Z_tree->Branch("psiVtxP", &psiVtxP, "psiVtxP/F");
@@ -607,6 +609,10 @@ ZjpsiMCTupler::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
            ZvtxC2 = z_Cand.userFloat("vChi2") ;
            tst = z_Cand.userInt("tst_");
            decaychannel = z_Cand.userInt("decay_");
+           pass_match = z_Cand.userInt("pass_match_");
+             std::cout << "testing shit -z-z-z-z-z-z-z-z-z-z-z-z-z-z-z-z-z-z-z-z-z-z-z-z in tupler" << std::endl;
+             std::cout << "decay channel is : " << decaychannel << std::endl;
+             std::cout << "pass match is : " << pass_match << std::endl;
            z_gen = z_Cand.userInt("z_gen_");
            Zvtx.SetXYZ(z_Cand.userFloat("ZvtxX") ,z_Cand.userFloat("ZvtxY"),z_Cand.userFloat("ZvtxZ")) ;
            psiVtxP = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("psi")))->userFloat("vProb");
