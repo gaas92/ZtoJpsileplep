@@ -136,10 +136,10 @@ class ZjpsiMCTupler : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
       TVector3 Zvtx;
       Float_t ZvtxP;
       Float_t ZvtxC2;
-      UInt_t tst;
-      UInt_t decaychannel;
-      UInt_t pass_match;
-      UInt_t z_gen;
+      int tst;
+      int decaychannel;
+      int pass_match;
+      int z_gen;
 
       Float_t psiVtxP;
       Float_t psiVtxC2;
@@ -314,10 +314,10 @@ ZjpsiMCTupler::ZjpsiMCTupler(const edm::ParameterSet& iConfig):
     Z_tree->Branch("Zvtx", "TVector3", &Zvtx);
     Z_tree->Branch("ZvtxP", &ZvtxP, "ZvtxP/F");
     Z_tree->Branch("ZvtxC2", &ZvtxC2, "ZvtxC2/F");
-    Z_tree->Branch("tst", &tst, "tst/F");
-    Z_tree->Branch("decaychannel", &decaychannel, "decaychannel/F");
-    Z_tree->Branch("pass_match", &pass_match, "pass_match/F");
-    Z_tree->Branch("z_gen", &z_gen, "z_gen/F");
+    Z_tree->Branch("tst", &tst, "tst/i");
+    Z_tree->Branch("decaychannel", &decaychannel, "decaychannel/i");
+    Z_tree->Branch("pass_match", &pass_match, "pass_match/i");
+    Z_tree->Branch("z_gen", &z_gen, "z_gen/i");
 
     Z_tree->Branch("psiVtxP", &psiVtxP, "psiVtxP/F");
     Z_tree->Branch("psiVtxC2", &psiVtxC2, "psiVtxC2/F");
