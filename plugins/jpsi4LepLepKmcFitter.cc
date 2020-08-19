@@ -244,7 +244,7 @@ void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzV
         if(indent){
                 std::cout << std::setw(indent) << " ";
         }
-        std::cout << printName(mother->pdgId()) <<" has "<< mother->numberOfDaughters() <<" daughters " <<std::endl;
+        //std::cout << printName(mother->pdgId()) <<" has "<< mother->numberOfDaughters() <<" daughters " <<std::endl;
     }
     int extraIndent = 0;
     for (size_t i=0; i< mother->numberOfDaughters(); i++){
@@ -253,8 +253,8 @@ void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzV
         if(indent){
             std::cout << std::setw(indent) << " ";
         }
-        std::cout << " daugter "<< i+1 <<": "<<  printName(dauID) << " with Pt: ";
-        std::cout << daughter->pt() << " | Eta: "<< daughter->eta() << " | Phi: "<< daughter->phi() << " | mass: "<< daughter->mass() << std::endl;
+        //std::cout << " daugter "<< i+1 <<": "<<  printName(dauID) << " with Pt: ";
+        //std::cout << daughter->pt() << " | Eta: "<< daughter->eta() << " | Phi: "<< daughter->phi() << " | mass: "<< daughter->mass() << std::endl;
         extraIndent+=4;
         if (daughter->numberOfDaughters() == 0) {
             // decay 1  Z--> 2mu
@@ -313,33 +313,33 @@ void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzV
             }
             else if(elN1.M() == 0 && elP1.M() == 0 && muN1.M() != 0 && muP1.M() != 0 && elN2.M() == 0 && elP2.M() == 0 && muN2.M() != 0 && muP2.M() != 0){
                 decay = 3;// or 4
-                std::cout<< "is Z --> 4mu via ??? "<< std::endl;
-                if (momID == 23) std::cout << "via Z" << std::endl;
-                else if (momID == 22) std::cout << "via Gamma"<<std::endl;
+                //std::cout<< "is Z --> 4mu via ??? "<< std::endl;
+                //if (momID == 23) std::cout << "via Z" << std::endl;
+                //else if (momID == 22) std::cout << "via Gamma"<<std::endl;
             }
             else if(elN1.M() != 0 && elP1.M() != 0 && muN1.M() == 0 && muP1.M() == 0 && elN2.M() != 0 && elP2.M() != 0 && muN2.M() == 0 && muP2.M() == 0){
                 decay = 4; //or 6
-                std::cout<< "is Z --> 4el via ??? "<< std::endl;
+                //std::cout<< "is Z --> 4el via ??? "<< std::endl;
                 //if (momID == 23) std::cout << "via Z" << std::endl;
                 //else if (momID == 22) std::cout << "via Gamma"<<std::endl;
             }
             else if(elN1.M() != 0 && elP1.M() != 0 && muN1.M() != 0 && muP1.M() != 0 && elN2.M() == 0 && elP2.M() == 0 && muN2.M() == 0 && muP2.M() == 0){
                 //decay = 5; //or 8 9 10 2mu->2el
-                std::cout<< "is Z --> 2mu 2el or 2el 2mu ??? "<< std::endl;
+                //std::cout<< "is Z --> 2mu 2el or 2el 2mu ??? "<< std::endl;
                 //if (momID == 23) std::cout << "via Z" << std::endl;
                 //else if (momID == 22) std::cout << "via Gamma"<<std::endl;
                 if (isAncestor(11, daughter) || isAncestor(-11, daughter)){
-                    std::cout<< "Z-> 2el -> 2mu"<<std::endl;
+                    //std::cout<< "Z-> 2el -> 2mu"<<std::endl;
                     decay = 5;
                 }
                 else if (isAncestor(13, daughter) || isAncestor(-13, daughter)){
-                    std::cout<< "Z-> 2mu -> 2el"<<std::endl;
+                    //std::cout<< "Z-> 2mu -> 2el"<<std::endl;
                     decay = 6;
                 }
-                else std::cout<< "cant identify ..."<< std::endl;
+                //else std::cout<< "cant identify ..."<< std::endl;
             }
             else{
-                std::cout<<"DECAY NOT IDENTIFIED !!" << std::endl;
+                //std::cout<<"DECAY NOT IDENTIFIED !!" << std::endl;
             }
             
         }
