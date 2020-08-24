@@ -256,6 +256,7 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 std::cout << "muons from Z:     " << mfromZ << std::endl;
                 std::cout << "electrons from Z: " << efromZ << std::endl;
                 std::cout << "masa invariante en suma rancia de " << mfromZ << " muones es: " << suma_rancia.M() << std::endl;
+                std::cout << "carga total es : " << add_charge << std::endl;
                 //if ((efromZ == 2 && mfromZ == 2) || mfromZ == 4) {
                 //if (mfromZ > 2 && tfromZ == 0){
                 if(tfromZ == 0){
