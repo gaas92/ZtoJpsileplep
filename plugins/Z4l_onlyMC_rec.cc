@@ -225,12 +225,17 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                     if (mom->daughter(0)->pdgId() == 23) zfromZ++;
                 }
                 if (zfromZ) continue;
+                TLorentzVector suma_rancia;
+                suma_rancia.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
                 for(size_t k=0; k<packed->size(); k++){
                     const reco::Candidate * stable_dau = &(*packed)[k];
                     int stable_id = (*packed)[k].pdgId();
-                    if (stable_dau != nullptr /*&& isAncestor(mom,stable_dau)*/) {
+                    if (stable_dau != nullptr && !isAncestor(mom,stable_dau)*/) {
                         if (stable_id == 13 || stable_id == -13) { //electros 11 muons 13 as final states
                             mfromZ++;
+                            TLorentzVector muon_pedorro;
+                            muon_pedorro.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
+                            suma_rancia = suma_rancia + muon_pedorro;
                         }
                         else if (stable_id == 11 || stable_id == -11){
                             efromZ++;
@@ -241,9 +246,11 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                     }
                 }
                 if(tfromZ) continue;
+                if(mfromZ < 3) continue;
                 std::cout << "taus from Z:      " << tfromZ << std::endl;
                 std::cout << "muons from Z:     " << mfromZ << std::endl;
                 std::cout << "electrons from Z: " << efromZ << std::endl;
+                std::cout << "masa invariante en suma rancia de " << mfromZ " muones es: " << suma_rancia.M() << std::endl;
                 //if ((efromZ == 2 && mfromZ == 2) || mfromZ == 4) {
                 //if (mfromZ > 2 && tfromZ == 0){
                 if(tfromZ == 0){
