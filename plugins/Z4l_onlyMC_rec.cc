@@ -237,7 +237,7 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                             TLorentzVector muon_pedorro;
                             muon_pedorro.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
                             suma_rancia = suma_rancia + muon_pedorro;
-                            std::cout"print pa riba ..." << std::endl;
+                            std::cout << "print pa riba ..." << std::endl;
                             printMCtreeUP(stable_dau);
                         }
                         else if (stable_id == 11 || stable_id == -11){
@@ -439,7 +439,7 @@ void Z4l_onlyMC_rec::printMCtreeUP(const reco::Candidate* daughter, int indent =
             std::cout << std::setw(indent) << " ";
         }
         std::cout<< "mother "<< i+1 << ": "<<printName(mother->pdgId()) << std::endl;
-        extraIndent+=4
+        extraIndent+=4;
         if (mother->numberOfMothers()) printMCtreeUP(daughter, indent+extraIndent);
     }
 }
