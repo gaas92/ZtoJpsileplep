@@ -231,14 +231,14 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 for(size_t k=0; k<packed->size(); k++){
                     const reco::Candidate * stable_dau = &(*packed)[k];
                     int stable_id = (*packed)[k].pdgId();
-                    if (stable_dau != nullptr /*&& isAncestor(mom,stable_dau)*/) {
+                    if (stable_dau != nullptr && isAncestor(23,stable_dau)) {
                         if (stable_id == 13 || stable_id == -13) { //electros 11 muons 13 as final states
                             mfromZ++;
                             TLorentzVector muon_pedorro;
                             muon_pedorro.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
                             suma_rancia = suma_rancia + muon_pedorro;
-                            int isAnc = isAncestor(23, stable_dau) ? 1 : 0;
-                            std::cout << "comes from Z? " << isAnc << std::endl;
+                            //int isAnc = isAncestor(23, stable_dau) ? 1 : 0;
+                            //std::cout << "comes from Z? " << isAnc << std::endl;
                         }
                         else if (stable_id == 11 || stable_id == -11){
                             efromZ++;
@@ -318,6 +318,7 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                        }
                     }
                     tst++;
+                    break;
                 }
 
                 if (goodelecs > 1 || goodmuons > 1){ //if leptons have been found
