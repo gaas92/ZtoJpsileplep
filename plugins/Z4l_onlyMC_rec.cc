@@ -237,7 +237,8 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                             TLorentzVector muon_pedorro;
                             muon_pedorro.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
                             suma_rancia = suma_rancia + muon_pedorro;
-                            std::cout << "comes from Z? " << isAncestor(23, stable_dau) <<std::cout;
+                            int isAnc = isAncestor(23, stable_dau) ? 1 : 0;
+                            std::cout << "comes from Z? " << isAnc <<std::cout;
                         }
                         else if (stable_id == 11 || stable_id == -11){
                             efromZ++;
