@@ -240,6 +240,7 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                         }
                     }
                 }
+                if(tfromZ) continue;
                 std::cout << "taus from Z:      " << tfromZ << std::endl;
                 std::cout << "muons from Z:     " << mfromZ << std::endl;
                 std::cout << "electrons from Z: " << efromZ << std::endl;
@@ -324,8 +325,8 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                           gen_elec2P = temp_el2P;
 
                           Z_tree->Fill();
-                          std::cout << " good gen muons: "<< goodmuons << std::endl;
-                          std::cout << " good gen elecs: "<< goodelecs << std::endl;
+                          //std::cout << " good gen muons: "<< goodmuons << std::endl;
+                          //std::cout << " good gen elecs: "<< goodelecs << std::endl;
                        }
                     }
                 }// end if generated is good event
