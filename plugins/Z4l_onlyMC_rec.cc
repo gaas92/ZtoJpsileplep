@@ -228,7 +228,7 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 for(size_t k=0; k<packed->size(); k++){
                     const reco::Candidate * stable_dau = &(*packed)[k];
                     int stable_id = (*packed)[k].pdgId();
-                    if (stable_dau != nullptr && isAncestor(mom,stable_dau)) {
+                    if (stable_dau != nullptr /*&& isAncestor(mom,stable_dau)*/) {
                         if (stable_id == 13 || stable_id == -13) { //electros 11 muons 13 as final states
                             mfromZ++;
                         }
@@ -257,51 +257,51 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                        if (stable_dau != nullptr && isAncestor(mom,stable_dau)) {
                            //if (stable_id != 13 && stable_id != -13) continue;
                            if(stable_id == 13 && temp_mu1N.M() == 0){ // if muon- && not previiulsy assigned
-                                std::cout << " matched 1 "  << " with Pt: ";
-                                std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
+                               // std::cout << " matched 1 "  << " with Pt: ";
+                                //std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
                                 temp_mu1N.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                                 goodmuons++;
                             }
                             else if(stable_id == -13 && temp_mu1P.M() == 0){ // if muon+ && not previusly assigned
-                                std::cout << " matched 2 "  << " with Pt: ";
-                                std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
+                                //std::cout << " matched 2 "  << " with Pt: ";
+                                //std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
                                 temp_mu1P.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                                 goodmuons++;
                             }
                             else if(stable_id == 13 && temp_mu2N.M() == 0){ // if muon- && not previusly assigned
-                                std::cout << " matched 3 "  << " with Pt: ";
-                                std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
+                                //std::cout << " matched 3 "  << " with Pt: ";
+                                //std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
                                 temp_mu2N.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                                 goodmuons++;
                             }
                             else if(stable_id == -13 && temp_mu2P.M() == 0){ // if muon+ && not previusly assigned
-                                std::cout << " matched 4 "  << " with Pt: ";
-                                std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
+                                //std::cout << " matched 4 "  << " with Pt: ";
+                                //std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
                                 temp_mu2P.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                                 goodmuons++;
                             }
                             /////ELECTRONS
                             else if(stable_id == 11 && temp_el1N.M() == 0){ // if electron- && not previiulsy assigned
-                                std::cout << " matched 1 "  << " with Pt: ";
-                                std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
+                                //std::cout << " matched 1 "  << " with Pt: ";
+                                //std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
                                 temp_el1N.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                                 goodelecs++;
                             }
                             else if(stable_id == -11 && temp_el1P.M() == 0){ // if electron+ && not previusly assigned
-                                std::cout << " matched 2 "  << " with Pt: ";
-                                std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
+                                //std::cout << " matched 2 "  << " with Pt: ";
+                                //std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
                                 temp_el1P.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                                 goodelecs++;
                             }
                             else if(stable_id == 11 && temp_el2N.M() == 0){ // if electron- && not previusly assigned
-                                std::cout << " matched 3 "  << " with Pt: ";
-                                std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
+                                //std::cout << " matched 3 "  << " with Pt: ";
+                                //std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
                                 temp_el2N.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                                 goodelecs++;
                             }
                             else if(stable_id == -11 && temp_el2P.M() == 0){ // if electron+ && not previusly assigned
-                                std::cout << " matched 4 "  << " with Pt: ";
-                                std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
+                                //std::cout << " matched 4 "  << " with Pt: ";
+                                //std::cout << stable_dau->pt() << " | Eta: "<< stable_dau->eta() << " | Phi: "<< stable_dau->phi() << " | mass: "<< stable_dau->mass() << std::endl;
                                 temp_el2P.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                                 goodelecs++;
                             }
