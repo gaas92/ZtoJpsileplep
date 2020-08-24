@@ -240,6 +240,9 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                         }
                     }
                 }
+                std::cout << "taus from Z:      " << tfromZ << std::endl;
+                std::cout << "muons from Z:     " << mfromZ << std::endl;
+                std::cout << "electrons from Z: " << efromZ << std::endl;
                 //if ((efromZ == 2 && mfromZ == 2) || mfromZ == 4) {
                 //if (mfromZ > 2 && tfromZ == 0){
                 if(tfromZ == 0){
