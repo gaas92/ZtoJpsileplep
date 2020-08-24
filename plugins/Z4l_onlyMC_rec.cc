@@ -73,6 +73,7 @@ class Z4l_onlyMC_rec : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
 
    private:
       void printMCtree(const reco::Candidate *, int);
+      void printMCtreeUP(const reco::Candidate *, int);
       std::string printName(int);
       bool    isAncestor(const reco::Candidate*, const reco::Candidate*);
       bool    isAncestor(int, const reco::Candidate*);
@@ -236,6 +237,8 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                             TLorentzVector muon_pedorro;
                             muon_pedorro.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
                             suma_rancia = suma_rancia + muon_pedorro;
+                            std::cout"print pa riba ..." << std::endl;
+                            printMCtreeUP(stable_dau);
                         }
                         else if (stable_id == 11 || stable_id == -11){
                             efromZ++;
@@ -246,7 +249,7 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                     }
                 }
                 if(tfromZ) continue;
-                if(mfromZ < 3) continue;
+                if(mfromZ < 4) continue;
                 std::cout << "taus from Z:      " << tfromZ << std::endl;
                 std::cout << "muons from Z:     " << mfromZ << std::endl;
                 std::cout << "electrons from Z: " << efromZ << std::endl;
@@ -423,6 +426,24 @@ void Z4l_onlyMC_rec::printMCtree(const reco::Candidate* mother, int indent=0){
         if (daughter->numberOfDaughters()) printMCtree(daughter, indent+extraIndent);
     }
 }
+
+void Z4l_onlyMC_rec::printMCtreeUP(const reco::Candidate* daughter, int indent = 0){
+    if (daughter == NULL){
+        std::cout << "end tree" << std::endl;
+        return;
+    }
+    int extraIndent = 0;
+    for(size_t i = 0; i < daughter->numberOfMothers(); i++){
+        const reco::Candidate* mother = daughter->mother(i);
+        if(indent){
+            std::cout << std::setw(indent) << " ";
+        }
+        std::cout<< "mother "<< i+1 << ": "<<printName(mother->pdgId()) << std::endl;
+        extraIndent+=4
+        if (mother->numberOfMothers()) printMCtreeUP(daughter, indent+extraIndent);
+    }
+}
+
 //recursively check is a given particle is ancestor
 bool Z4l_onlyMC_rec::isAncestor(const reco::Candidate* ancestor, const reco::Candidate * particle) {
     if (ancestor == particle ) return true;
