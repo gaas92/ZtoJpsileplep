@@ -230,7 +230,7 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 for(size_t k=0; k<packed->size(); k++){
                     const reco::Candidate * stable_dau = &(*packed)[k];
                     int stable_id = (*packed)[k].pdgId();
-                    if (stable_dau != nullptr && !isAncestor(mom,stable_dau)*/) {
+                    if (stable_dau != nullptr /*&& isAncestor(mom,stable_dau)*/) {
                         if (stable_id == 13 || stable_id == -13) { //electros 11 muons 13 as final states
                             mfromZ++;
                             TLorentzVector muon_pedorro;
