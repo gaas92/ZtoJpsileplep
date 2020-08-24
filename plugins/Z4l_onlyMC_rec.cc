@@ -228,6 +228,7 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 if (zfromZ) continue;
                 TLorentzVector suma_rancia;
                 suma_rancia.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                int add_charge = 0;
                 for(size_t k=0; k<packed->size(); k++){
                     const reco::Candidate * stable_dau = &(*packed)[k];
                     int stable_id = (*packed)[k].pdgId();
@@ -237,6 +238,7 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                             TLorentzVector muon_pedorro;
                             muon_pedorro.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
                             suma_rancia = suma_rancia + muon_pedorro;
+                            add_charge = add_charge + stable_dau->charge();
                             //int isAnc = isAncestor(23, stable_dau) ? 1 : 0;
                             //std::cout << "comes from Z? " << isAnc << std::endl;
                         }
