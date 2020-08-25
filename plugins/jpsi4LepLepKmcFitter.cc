@@ -436,11 +436,11 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
     gen_lepton2_p4.SetPtEtaPhiM(0.,0.,0.,0.);
     gen_z_vtx.SetXYZ(0.,0.,0.);
     gen_jpsi_vtx.SetXYZ(0.,0.,0.);
-    int n_Z_dau = 0;
-    int decaychannel = 0;
+    //int n_Z_dau = 0;
+    //int decaychannel = 0;
     int Event_Cand = 1;
-    int tst = 0;
-    int pass_match = 0;
+    //int tst = 0;
+    //int pass_match = 0;
     //MC VERSION 24/08/2020 ALSV
     TLorentzVector temp_mu1P, temp_mu2P, temp_mu1N, temp_mu2N, temp_di1, temp_di2, temp_di3, temp_di4;
     temp_mu1P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
@@ -1221,9 +1221,9 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
        patZ.addUserInt("nonia_", nonia );
        patZ.addUserInt("nmuons_",nmuons);
        patZ.addUserInt("nPV_",   nPV   );
-       patZ.addUserInt("tst_", tst);
-       patZ.addUserInt("decay_", decaychannel);
-       patZ.addUserInt("pass_match_", pass_match);
+       //patZ.addUserInt("tst_", tst);
+       //patZ.addUserInt("decay_", decaychannel);
+       //patZ.addUserInt("pass_match_", pass_match);
                  
        patZ.addUserFloat("vProb",ZVtxP_fit);
        patZ.addUserFloat("vChi2",ZDecayVertex->chiSquared());
