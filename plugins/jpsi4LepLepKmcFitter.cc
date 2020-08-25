@@ -457,6 +457,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
             if(stable_id ==  13 && temp_mu2N.M() == 0) temp_mu2N.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
             if(stable_id == -13 && temp_mu2P.M() == 0) temp_mu2P.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
         }//end for packed
+        std::cout << temp_mu1N.Pt() << " | " << temp_mu2N.Pt() << " | " << temp_mu1P.Pt() << " | " << temp_mu2P.Pt() << std::endl;
         temp_di1 = temp_mu1P + temp_mu1N;
         temp_di2 = temp_mu2P + temp_mu2N;
         
