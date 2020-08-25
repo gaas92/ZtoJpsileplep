@@ -1224,7 +1224,6 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
        patZ.addUserInt("tst_", tst);
        patZ.addUserInt("decay_", decaychannel);
        patZ.addUserInt("pass_match_", pass_match);
-       patZ.addUserInt("z_gen_", z_gen);
                  
        patZ.addUserFloat("vProb",ZVtxP_fit);
        patZ.addUserFloat("vChi2",ZDecayVertex->chiSquared());
