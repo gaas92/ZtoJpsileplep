@@ -493,7 +493,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
         gen_z_p4 = gen_lepton1_p4 + gen_lepton2_p4 + gen_muon1_p4 + gen_muon2_p4;
         gen_jpsi_p4 = gen_muon1_p4 + gen_muon2_p4;
     }// end if packed valid
-
+    std::cout << "found Z: "<< gen_z_p4.M() << std::endl;
     
     /*
     //NEW NEW NEW MC ALV CSPM
