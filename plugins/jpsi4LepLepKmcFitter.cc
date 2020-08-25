@@ -447,7 +447,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
     temp_mu1N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
     temp_mu2P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
     temp_mu2N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
-    if (packed.isValid) {
+    if (packed.isValid()) {
         for(size_t k=0; k<packed->size(); k++){
             const reco::Candidate * dau = &(*packed)[k];
             int stable_id = (*packed)[k].pdgId();
@@ -491,7 +491,7 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
             }
         }
         gen_z_p4 = gen_lepton1_p4 + gen_lepton2_p4 + gen_muon1_p4 + gen_muon2_p4;
-        gen_dimun = gen_muon1_p4 + gen_muon2_p4;
+        gen_jpsi_p4 = gen_muon1_p4 + gen_muon2_p4;
     }// end if packed valid
 
     
