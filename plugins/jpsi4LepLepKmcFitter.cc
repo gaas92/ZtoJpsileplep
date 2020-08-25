@@ -453,9 +453,9 @@ jpsi4LepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
             int stable_id = (*packed)[k].pdgId();
             if(!isAncestor(23, dau)) continue;
             if(stable_id ==  13 && temp_mu1N.M() == 0) temp_mu1N.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
-            if(stable_id == -13 && temp_mu1P.M() == 0) temp_mu1P.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
-            if(stable_id ==  13 && temp_mu2N.M() == 0) temp_mu2N.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
-            if(stable_id == -13 && temp_mu2P.M() == 0) temp_mu2P.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
+            else if(stable_id == -13 && temp_mu1P.M() == 0) temp_mu1P.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
+            else if(stable_id ==  13 && temp_mu2N.M() == 0) temp_mu2N.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
+            else if(stable_id == -13 && temp_mu2P.M() == 0) temp_mu2P.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
         }//end for packed
         std::cout << temp_mu1N.Pt() << " | " << temp_mu2N.Pt() << " | " << temp_mu1P.Pt() << " | " << temp_mu2P.Pt() << std::endl;
         temp_di1 = temp_mu1P + temp_mu1N;
