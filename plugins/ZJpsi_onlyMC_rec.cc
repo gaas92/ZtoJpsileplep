@@ -177,17 +177,20 @@ Zjpsi_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     gen_jpsi_vtx.SetXYZ(0.,0.,0.);
     int n_Z_dau = 0;
     int Event_Cand = 1;
+    int tst;
+    int nm = 0;
+    int foundit = 0;
      //std::cout << "test" << std::endl;
      if ( pruned.isValid() ) {
        //std::cout << "MC ok " << std::endl;
 
        for (size_t i=0; i<pruned->size(); i++) {
-          foundit = 0;
+
           const reco::Candidate *dau = &(*pruned)[i];
           ///ndau = dau->numberOfDaughters();
 
           if ( (abs(dau->pdgId()) == 23) ) { //&& (dau->status() == 2) ) { //found Z
-             foundit++;
+             //foundit++;
              //const reco::Candidate * Zboson = dau;
              gen_z_p4.SetPtEtaPhiM(dau->pt(),dau->eta(),dau->phi(),dau->mass());
              gen_z_vtx.SetXYZ(dau->vx(),dau->vy(),dau->vz());
@@ -198,10 +201,9 @@ Zjpsi_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
                const reco::Candidate *gdau = dau->daughter(k);
                //std::cout << "MC Z daughter pdgID: " << gdau->pdgId() << std::endl;
                if (gdau->pdgId()==443 ) { //&& gdau->status()==2) {   //found jpsi
-                 foundit++;
+                 //foundit++;
                  gen_jpsi_vtx.SetXYZ(gdau->vx(),gdau->vy(),gdau->vz());
-                 gen_jpsi_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
-                 int nm = 0;
+                 gen_dimuon_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
                  for (size_t k=0; k<packed->size(); k++) {
                     //const reco::Candidate * dauInPrunedColl = (*packed)[k].mother(0);
                     const reco::Candidate * dauInPrunedColl = &(*packed)[k];
@@ -232,8 +234,12 @@ Zjpsi_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
                   gen_lepton2_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
               }
              }// end number of daughters
-             Z_tree->Fill();
-             break;
+             if (nm == 2 && foundit == 2){
+                 Z_tree->Fill();
+                 tst++;
+                 std::cout<<"works ..."<<std::endl;
+                 break;
+             }
           } //endif found Z
        }//end for
 
