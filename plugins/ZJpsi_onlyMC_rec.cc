@@ -76,7 +76,7 @@ class Zjpsi_onlyMC_rec : public edm::one::EDAnalyzer<edm::one::SharedResources> 
       void printMCtreeUP(const reco::Candidate *, int);
       std::string printName(int);
       void analyzeDecay(const reco::Candidate*, TLorentzVector&, TLorentzVector&, TLorentzVector&,
-      TLorentzVector&, TLorentzVector&, TLorentzVector&, TLorentzVector&, TLorentzVector&);
+      TLorentzVector&, int);
       bool    isAncestor(const reco::Candidate*, const reco::Candidate*);
       bool    isAncestor(int, const reco::Candidate*);
       //edm::EDGetTokenT<reco::BeamSpot> BSLabel_;
