@@ -75,6 +75,8 @@ class Zjpsi_onlyMC_rec : public edm::one::EDAnalyzer<edm::one::SharedResources> 
       void printMCtree(const reco::Candidate *, int);
       void printMCtreeUP(const reco::Candidate *, int);
       std::string printName(int);
+      void analyzeDecay(const reco::Candidate*, TLorentzVector&, TLorentzVector&, TLorentzVector&,
+      TLorentzVector&, TLorentzVector&, TLorentzVector&, TLorentzVector&, TLorentzVector&);
       bool    isAncestor(const reco::Candidate*, const reco::Candidate*);
       bool    isAncestor(int, const reco::Candidate*);
       //edm::EDGetTokenT<reco::BeamSpot> BSLabel_;
@@ -90,6 +92,8 @@ class Zjpsi_onlyMC_rec : public edm::one::EDAnalyzer<edm::one::SharedResources> 
       ULong64_t event;
 
       TLorentzVector gen_z_p4, gen_dimuon_p4,gen_muon1_p4,gen_muon2_p4,gen_lepton1_p4,gen_lepton2_p4, gen_dilepton_p4;
+      TLorentzVector gen_z_t, gen_dimuon_t, gen_muon1_t, gen_muon2_t, gen_lepton1_t, gen_lepton2_t, gen_dilepton_t;
+      TLorentzVector gen_z_s, gen_dimuon_s, gen_muon1_s, gen_muon2_s, gen_lepton1_s, gen_lepton2_s, gen_dilepton_s;
       TVector3       gen_z_vtx, gen_jpsi_vtx;
 };
 
@@ -120,7 +124,7 @@ Zjpsi_onlyMC_rec::Zjpsi_onlyMC_rec(const edm::ParameterSet& iConfig)
    Z_tree = fs->make < TTree > ("ZTree", "Tree of Z4leptons");
 
    Z_tree->Branch("run",      &run,      "run/i");
-   Z_tree->Branch("event",    &event,    "event/l");
+   Z_tree->Branch("event",    &event,    "event/i");
 
    Z_tree->Branch("gen_z_p4", "TLorentzVector", &gen_z_p4);
    Z_tree->Branch("gen_muon1_p4",  "TLorentzVector", &gen_muon1_p4);
@@ -130,6 +134,21 @@ Zjpsi_onlyMC_rec::Zjpsi_onlyMC_rec(const edm::ParameterSet& iConfig)
    Z_tree->Branch("gen_lepton1_p4",  "TLorentzVector", &gen_lepton1_p4);
    Z_tree->Branch("gen_lepton2_p4",  "TLorentzVector", &gen_lepton2_p4);
 
+   Z_tree->Branch("gen_z_t", "TLorentzVector", &gen_z_t);
+   Z_tree->Branch("gen_muon1_t",  "TLorentzVector", &gen_muon1_t);
+   Z_tree->Branch("gen_muon2_t",  "TLorentzVector", &gen_muon2_t);
+   Z_tree->Branch("gen_dimuon_t", "TLorentzVector", &gen_dimuon_t);
+   Z_tree->Branch("gen_dilepton_t", "TLorentzVector", &gen_dilepton_t);
+   Z_tree->Branch("gen_lepton1_t",  "TLorentzVector", &gen_lepton1_t);
+   Z_tree->Branch("gen_lepton2_t",  "TLorentzVector", &gen_lepton2_t);
+    
+   Z_tree->Branch("gen_z_s", "TLorentzVector", &gen_z_s);
+   Z_tree->Branch("gen_muon1_s",  "TLorentzVector", &gen_muon1_s);
+   Z_tree->Branch("gen_muon2_s",  "TLorentzVector", &gen_muon2_s);
+   Z_tree->Branch("gen_dimuon_s", "TLorentzVector", &gen_dimuon_s);
+   Z_tree->Branch("gen_dilepton_s", "TLorentzVector", &gen_dilepton_s);
+   Z_tree->Branch("gen_lepton1_s",  "TLorentzVector", &gen_lepton1_s);
+   Z_tree->Branch("gen_lepton2_s",  "TLorentzVector", &gen_lepton2_s);
 //} //end of NotOnlyGen
 }//end of constructor 
 
@@ -177,10 +196,22 @@ Zjpsi_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     gen_jpsi_vtx.SetXYZ(0.,0.,0.);
     int n_Z_dau = 0;
     int Event_Cand = 1;
-    int tst;
+    int tst = 0;
     int nm = 0;
     int foundit = 0;
+    if (pruned.isValid()){
+        for (size_t i=0; i<pruned->size(); i++) {
+            const reco::Candidate *cand = &(*pruned)[i];
+            if ((abs(cand->pdgId()) == 23)) {
+                printMCtree(cand, 0);
+                tst++;
+                break;
+            }
+        }//end loop over pruned
+    }//end if pruned
+    
      //std::cout << "test" << std::endl;
+    /*
      if ( pruned.isValid() ) {
        //std::cout << "MC ok " << std::endl;
 
@@ -244,6 +275,7 @@ Zjpsi_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
        }//end for
 
     } //end pruned
+    */
     if (tst) std::cout << "x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x NEW EVENT -x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x" << std::endl;
 
 
@@ -291,6 +323,8 @@ std::string Zjpsi_onlyMC_rec::printName(int pdgid){
     umap[111] = "pi0";
     umap[211] = "pi+";
     umap[-211]= "pi-";
+    umap[333] = "phi";
+    umap[443] = "J/psi";
     std::string retstr;
     if (umap.find(pdgid) == umap.end()){
         retstr = std::to_string(pdgid);
@@ -345,6 +379,34 @@ void Zjpsi_onlyMC_rec::printMCtreeUP(const reco::Candidate* daughter, int indent
     }
 }
 
+void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzVector& l1, TLorentzVector& l2, TLorentzVector& m1, TLorentzVector& m2, int indent = 0){
+
+    int momID = mother->pdgId();
+    if (mother == NULL){
+         //std::cout << "end tree" << std::endl;
+         return;
+    }
+    if (mother->numberOfDaughters() > 1){
+        std::cout << printName(mother->pdgId()) <<" has "<< mother->numberOfDaughters() <<" daughters " <<std::endl;
+    }
+    int extraIndent = 0;
+    for (size_t i=0; i< mother->numberOfDaughters(); i++){
+        const reco::Candidate * daughter = mother->daughter(i);
+        int dauID = daughter->pdgId();
+        if(indent){
+            std::cout << std::setw(indent) << " ";
+        }
+        std::cout << " daugter "<< i+1 <<": "<<  printName(dauID) << " with Pt: ";
+        std::cout << daughter->pt() << " | Eta: "<< daughter->eta() << " | Phi: "<< daughter->phi() << " | mass: "<< daughter->mass() <<     std::endl;
+        extraIndent+=4;
+        if (daughter->numberOfDaughters() == 0) {
+            if (dauID == 22) continue;
+        }
+        else{
+                analyzeDecay(daughter, muP1, muN1, muP2, muN2, indent+extraIndent);
+            }
+        }
+}
 //recursively check is a given particle is ancestor
 bool Zjpsi_onlyMC_rec::isAncestor(const reco::Candidate* ancestor, const reco::Candidate * particle) {
     if (ancestor == particle ) return true;
