@@ -403,7 +403,7 @@ void Zjpsi_onlyMC_rec::analyzeDecay(const reco::Candidate* mother, TLorentzVecto
             if (dauID == 22) continue;
         }
         else{
-                analyzeDecay(daughter, muP1, muN1, muP2, muN2, indent+extraIndent);
+                analyzeDecay(daughter, l1, l2, m1, m2, indent+extraIndent);
             }
         }
 }
