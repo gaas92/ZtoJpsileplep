@@ -192,6 +192,26 @@ Zjpsi_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     gen_dilepton_p4.SetPtEtaPhiM(0.,0.,0.,0.);
     gen_dimuon_p4.SetPtEtaPhiM(0.,0.,0.,0.);
 
+    gen_z_t.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_dimuon_t.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_muon1_t.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_muon2_t.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_lepton1_t.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_lepton2_t.SetPtEtaPhiM(0.,0.,0.,0.);
+
+    gen_dilepton_t.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_dimuon_t.SetPtEtaPhiM(0.,0.,0.,0.);
+    
+    gen_z_s.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_dimuon_s.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_muon1_s.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_muon2_s.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_lepton1_s.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_lepton2_s.SetPtEtaPhiM(0.,0.,0.,0.);
+
+    gen_dilepton_s.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_dimuon_s.SetPtEtaPhiM(0.,0.,0.,0.);
+    
     gen_z_vtx.SetXYZ(0.,0.,0.);
     gen_jpsi_vtx.SetXYZ(0.,0.,0.);
     int n_Z_dau = 0;
@@ -207,6 +227,8 @@ Zjpsi_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
             if ((abs(cand->pdgId()) == 23)) {
                 std::cout << "find Z " << std::endl;
                 printMCtree(cand, 0);
+                std::cout << "Analize decay " << std::endl;
+                analyzeDecay(gen_lepton1_t, gen_lepton2_t, gen_muon1_t, gen_muon2_t, gen_dimuon_t, 0);
                 tst++;
                 break;
             }
@@ -389,13 +411,31 @@ void Zjpsi_onlyMC_rec::analyzeDecay(const reco::Candidate* mother, TLorentzVecto
          //std::cout << "end tree" << std::endl;
          return;
     }
-    if (mother->numberOfDaughters() > 1){
+    if (mother->numberOfDaughters() > 0){
+        if(indent){
+                std::cout << std::setw(indent) << " ";
+        }
         std::cout << printName(mother->pdgId()) <<" has "<< mother->numberOfDaughters() <<" daughters " <<std::endl;
     }
     int extraIndent = 0;
     for (size_t i=0; i< mother->numberOfDaughters(); i++){
         const reco::Candidate * daughter = mother->daughter(i);
         int dauID = daughter->pdgId();
+        if (mother->numberOfDaughters() > 0){
+            if(indent){
+                std::cout << std::setw(indent) << " ";
+            }
+            std::cout << " daugter "<< i+1 <<": "<<  printName(daughter->pdgId()) << " with Pt: ";
+            std::cout << daughter->pt() << " | Eta: "<< daughter->eta() << " | Phi: "<< daughter->phi() << " | mass: "<< daughter->mass() << std::endl;
+            extraIndent+=4;
+            if(dauID == 443 && dim.M() == 0) dim.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass()); //jpsi
+            else if(dauID == 13 && l1.M() == 0) l1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass()); // m1
+            else if(dauID == -13 && l2.M() ==0) l2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
+            else if(dauID == 13 && m1.M() == 0 && isAncestor(443,daughter)) m1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
+            else if(dauID == -13 && m2.M() ==0 && isAncestor(443,daughter)) m2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
+            if (daughter->numberOfDaughters()) printMCtree(daughter, indent+extraIndent);
+        }
+        /*
         if(indent){
             std::cout << std::setw(indent) << " ";
         }
@@ -408,7 +448,7 @@ void Zjpsi_onlyMC_rec::analyzeDecay(const reco::Candidate* mother, TLorentzVecto
         else{
                 analyzeDecay(daughter, l1, l2, m1, m2, dim, indent+extraIndent);
             }
-        }
+        }*/
 }
 //recursively check is a given particle is ancestor
 bool Zjpsi_onlyMC_rec::isAncestor(const reco::Candidate* ancestor, const reco::Candidate * particle) {
