@@ -431,8 +431,9 @@ void Zjpsi_onlyMC_rec::analyzeDecay(const reco::Candidate* mother, TLorentzVecto
             if(dauID == 443 && dim.M() == 0) dim.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass()); //jpsi
             else if(dauID == 13 && l1.M() == 0) l1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass()); // m1
             else if(dauID == -13 && l2.M() ==0) l2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
-            else if(dauID == 13 && m1.M() == 0 && isAncestor(443,daughter)) m1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
-            else if(dauID == -13 && m2.M() ==0 && isAncestor(443,daughter)) m2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
+            else if(dauID == 13 && m1.M() == 0) m1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
+            else if(dauID == -13 && m2.M() ==0) m2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
+            }
             if (daughter->numberOfDaughters()) printMCtree(daughter, indent+extraIndent);
         }
         /*
