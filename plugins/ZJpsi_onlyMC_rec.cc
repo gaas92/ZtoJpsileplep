@@ -426,13 +426,28 @@ void Zjpsi_onlyMC_rec::analyzeDecay(const reco::Candidate* mother, TLorentzVecto
                 std::cout << std::setw(indent) << " ";
             }
             std::cout << " daugter "<< i+1 <<": "<<  printName(daughter->pdgId()) << " with Pt: ";
-            std::cout << daughter->pt() << " | Eta: "<< daughter->eta() << " | Phi: "<< daughter->phi() << " | mass: "<< daughter->mass() << std::endl;
+            std::cout << daughter->pt() << " | Eta: "<< daughter->eta() << " | Phi: "<< daughter->phi() << " | mass: "<< daughter->mass() << " ";
             extraIndent+=4;
-            if(dauID == 443 && dim.M() == 0) dim.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass()); //jpsi
-            else if(dauID == 13 && l1.M() == 0) l1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass()); // m1
-            else if(dauID == -13 && l2.M() ==0) l2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
-            else if(dauID == 13 && m1.M() == 0) m1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
-            else if(dauID == -13 && m2.M() ==0) m2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
+            if(dauID == 443 && dim.M() == 0) {
+                dim.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass()); //jpsi
+                std::cout << " jpsi " << std::endl;
+                }
+            else if(dauID == 13 && l1.M() == 0){
+                l1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass()); // m1
+                std::cout << "lep 1" << std::endl;
+            }
+            else if(dauID == -13 && l2.M() ==0){
+                l2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
+                std::cout << "lep 2" << std::endl;
+            }
+            else if(dauID == 13 && m1.M() == 0){
+                m1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
+                std::cout << "muon 1" << std::endl;
+            }
+            else if(dauID == -13 && m2.M() ==0){
+                m2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
+                std::cout << "muon 2" << std::endl;
+            }
             }
             if (daughter->numberOfDaughters()) printMCtree(daughter, indent+extraIndent);
         }
