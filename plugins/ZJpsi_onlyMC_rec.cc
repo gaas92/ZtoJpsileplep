@@ -379,7 +379,7 @@ void Zjpsi_onlyMC_rec::printMCtreeUP(const reco::Candidate* daughter, int indent
     }
 }
 
-void jpsi4LepLepKmcFitter::analyzeDecay(const reco::Candidate* mother, TLorentzVector& l1, TLorentzVector& l2, TLorentzVector& m1, TLorentzVector& m2, int indent = 0){
+void Zjpsi_onlyMC_rec::analyzeDecay(const reco::Candidate* mother, TLorentzVector& l1, TLorentzVector& l2, TLorentzVector& m1, TLorentzVector& m2, int indent = 0){
 
     int momID = mother->pdgId();
     if (mother == NULL){
