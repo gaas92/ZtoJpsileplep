@@ -76,7 +76,7 @@ class Zjpsi_onlyMC_rec : public edm::one::EDAnalyzer<edm::one::SharedResources> 
       void printMCtreeUP(const reco::Candidate *, int);
       std::string printName(int);
       void analyzeDecay(const reco::Candidate*, TLorentzVector&, TLorentzVector&, TLorentzVector&,
-      TLorentzVector&, int);
+      TLorentzVector&, TLorentzVector&, int);
       bool    isAncestor(const reco::Candidate*, const reco::Candidate*);
       bool    isAncestor(int, const reco::Candidate*);
       //edm::EDGetTokenT<reco::BeamSpot> BSLabel_;
@@ -199,10 +199,13 @@ Zjpsi_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     int tst = 0;
     int nm = 0;
     int foundit = 0;
+    std::cout<< "enters analyzer" << std::endl;
     if (pruned.isValid()){
+        std::<< "pruned valid "<< std::endl;
         for (size_t i=0; i<pruned->size(); i++) {
             const reco::Candidate *cand = &(*pruned)[i];
             if ((abs(cand->pdgId()) == 23)) {
+                std::cout << "find Z " << std::endl;
                 printMCtree(cand, 0);
                 tst++;
                 break;
@@ -379,7 +382,7 @@ void Zjpsi_onlyMC_rec::printMCtreeUP(const reco::Candidate* daughter, int indent
     }
 }
 
-void Zjpsi_onlyMC_rec::analyzeDecay(const reco::Candidate* mother, TLorentzVector& l1, TLorentzVector& l2, TLorentzVector& m1, TLorentzVector& m2, int indent = 0){
+void Zjpsi_onlyMC_rec::analyzeDecay(const reco::Candidate* mother, TLorentzVector& l1, TLorentzVector& l2, TLorentzVector& m1, TLorentzVector& m2, TLorentzVector& dim, int indent = 0){
 
     int momID = mother->pdgId();
     if (mother == NULL){
