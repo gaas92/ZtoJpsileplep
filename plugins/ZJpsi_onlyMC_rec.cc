@@ -199,9 +199,9 @@ Zjpsi_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     int tst = 0;
     int nm = 0;
     int foundit = 0;
-    std::cout<< "enters analyzer" << std::endl;
+    std::cout << "enters analyzer" << std::endl;
     if (pruned.isValid()){
-        std::<< "pruned valid "<< std::endl;
+        std::cout << "pruned valid "<< std::endl;
         for (size_t i=0; i<pruned->size(); i++) {
             const reco::Candidate *cand = &(*pruned)[i];
             if ((abs(cand->pdgId()) == 23)) {
