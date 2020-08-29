@@ -228,7 +228,7 @@ Zjpsi_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
                 std::cout << "find Z " << std::endl;
                 //printMCtree(cand, 0);
                 std::cout << "Analize decay " << std::endl;
-                analyzeDecay(gen_lepton1_t, gen_lepton2_t, gen_muon1_t, gen_muon2_t, gen_dimuon_t, 0);
+                analyzeDecay(cand, gen_lepton1_t, gen_lepton2_t, gen_muon1_t, gen_muon2_t, gen_dimuon_t, 0);
                 tst++;
                 break;
             }
