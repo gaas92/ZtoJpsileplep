@@ -86,7 +86,7 @@ def main():
 	#config.Data.lumiMask = '' #has nosence in Mc
 	config.Data.publication = True
         config.Data.outputDatasetTag = None
-	config.Data.outLFNDirBase = '/store/user/%s/Zjpsi_onlygen/' % ("gayalasa")
+	config.Data.outLFNDirBase = '/store/user/%s/Zjpsi_onlygen_v2/' % ("gayalasa")
 	config.Site.storageSite = 'T3_US_FNALLPC'
         #config.Site.storageSite = None # Choose your site. 
         #--------------------------------------------------------
