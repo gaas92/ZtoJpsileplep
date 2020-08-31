@@ -243,7 +243,7 @@ Zjpsi_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
                            gen_muon2_p4.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                       }
                    }
-                   else if (stable_dau != nullptr && !isAncestor(443, stable_dau), && isAncestor(23, stable_dau)){
+                   else if (stable_dau != nullptr && ! isAncestor(443, stable_dau) && isAncestor(23, stable_dau)){
                        if(stable_id == 13){
                            gen_lepton1_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_id->phi(), stable_dau->mass());
                        }
@@ -253,7 +253,7 @@ Zjpsi_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
                    }
                 }// end loop over stable
                 gen_z_p4 = gen_z_t;
-                std::cout" Z: "<< gen_z_p4.M()<<" | jpsi: "<<gen_dimuon_p4.Pt()<<" | m1: "<<gen_muon1_p4.Pt()<<" | m2: "<<gen_muon2_p4.Pt()<<" | l1: "<<gen_lepton1_p4.Pt()<<
+                std::cout<<" Z: "<< gen_z_p4.M()<<" | jpsi: "<<gen_dimuon_p4.Pt()<<" | m1: "<<gen_muon1_p4.Pt()<<" | m2: "<<gen_muon2_p4.Pt()<<" | l1: "<<gen_lepton1_p4.Pt()<<
                 " | l2: "<<gen_lepton2_p4.Pt()<<std::endl;
                 break;
                 
