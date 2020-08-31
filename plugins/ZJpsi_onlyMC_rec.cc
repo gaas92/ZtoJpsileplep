@@ -426,7 +426,7 @@ void Zjpsi_onlyMC_rec::analyzeDecay(const reco::Candidate* mother, TLorentzVecto
                 std::cout << std::setw(indent) << " ";
             }
             std::cout << " daugter "<< i+1 <<": "<<  printName(daughter->pdgId()) << " with Pt: ";
-            std::cout << daughter->pt() << " | Eta: "<< daughter->eta() << " | Phi: "<< daughter->phi() << " | mass: "<< daughter->mass() << " | ";
+            std::cout << daughter->pt() << " | Etaaaaaaaa: "<< daughter->eta() << " | Phi: "<< daughter->phi() << " | mass: "<< daughter->mass() << " | ";
             extraIndent+=4;
             std::cout<< "masa de dimuon ? " << dim.M() << std::endl;
             if(dauID == 443 && dim.M() == 0) {
@@ -449,23 +449,9 @@ void Zjpsi_onlyMC_rec::analyzeDecay(const reco::Candidate* mother, TLorentzVecto
                 m2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
                 std::cout << "muon 2" << std::endl;
             }
-            }
+        }
             if (daughter->numberOfDaughters()) printMCtree(daughter, indent+extraIndent);
-        }
-        /*
-        if(indent){
-            std::cout << std::setw(indent) << " ";
-        }
-        std::cout << " daugter "<< i+1 <<": "<<  printName(dauID) << " with Pt: ";
-        std::cout << daughter->pt() << " | Eta: "<< daughter->eta() << " | Phi: "<< daughter->phi() << " | mass: "<< daughter->mass() <<     std::endl;
-        extraIndent+=4;
-        if (daughter->numberOfDaughters() == 0) {
-            if (dauID == 22) continue;
-        }
-        else{
-                analyzeDecay(daughter, l1, l2, m1, m2, dim, indent+extraIndent);
-            }
-        }*/
+    }
 }
 //recursively check is a given particle is ancestor
 bool Zjpsi_onlyMC_rec::isAncestor(const reco::Candidate* ancestor, const reco::Candidate * particle) {
