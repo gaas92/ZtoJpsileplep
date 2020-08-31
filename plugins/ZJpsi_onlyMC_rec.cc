@@ -229,6 +229,7 @@ Zjpsi_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
                 //printMCtree(cand, 0);
                 std::cout << "print Tree " << std::endl;
                 gen_z_t.SetPtEtaPhiM(cand->pt(), cand->eta(), cand->phi(), cand->mass());
+                gen_z_p4.SetPtEtaPhiM(cand->pt(), cand->eta(), cand->phi(), cand->mass());
                 analyzeDecay(cand, gen_lepton1_t, gen_lepton2_t, gen_muon1_t, gen_muon2_t, gen_dimuon_t, 0);
                 tst++;
                 for (size_t k=0; k<packed->size(); k++) {
@@ -252,7 +253,7 @@ Zjpsi_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
                        }
                    }
                 }// end loop over stable
-                gen_z_p4 = gen_z_t;
+                gen_dimuon_p4.SetPtEtaPhiM(gen_dimuon_t.Pt(), gen_dimuon_t.Eta(), gen_dimuon_t.Phi(), gen_dimuon_t.M());
                 std::cout<<" Z: "<< gen_z_p4.M()<<" | jpsi: "<<gen_dimuon_p4.Pt()<<" | m1: "<<gen_muon1_p4.Pt()<<" | m2: "<<gen_muon2_p4.Pt()<<" | l1: "<<gen_lepton1_p4.Pt()<<
                 " | l2: "<<gen_lepton2_p4.Pt()<<std::endl;
                 break;
