@@ -245,7 +245,7 @@ Zjpsi_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
                    }
                    else if (stable_dau != nullptr && ! isAncestor(443, stable_dau) && isAncestor(23, stable_dau)){
                        if(stable_id == 13){
-                           gen_lepton1_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_id->phi(), stable_dau->mass());
+                           gen_lepton1_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
                        }
                        else if(stable_id==-13){
                            gen_lepton2_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
