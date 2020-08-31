@@ -472,7 +472,7 @@ void Zjpsi_onlyMC_rec::analyzeDecay(const reco::Candidate* mother, TLorentzVecto
             std::cout<<"Z: "<<Z.M()<<" jpsi: "<<dim.Pt()<<" | l1: "<<l1.Pt()<< " | l2: "<<l2.Pt()<<" | m1: "<<m1.Pt()<<" | m2: "<<m2.Pt()<<std::endl;
             extraIndent+=4;
             if (dauID == 23 && Z.M() == 0){
-                Z.SetPtEtaPhiM(daugter->pt(), daugter->eta(), daugter->phi(), daugter->mass());
+                Z.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
             }
             else if(dauID == 443 && dim.M() == 0) {
                 dim.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass()); //jpsi
