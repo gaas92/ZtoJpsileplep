@@ -426,7 +426,11 @@ void Zjpsi_onlyMC_rec::analyzeDecay(const reco::Candidate* mother, TLorentzVecto
                 std::cout << std::setw(indent) << " ";
             }
             std::cout << " daugter "<< i+1 <<": "<<  printName(daughter->pdgId()) << " with Pt: ";
-            std::cout << daughter->pt() << " | Etaaaaaaaa: "<< daughter->eta() << " | Phi: "<< daughter->phi() << " | mass: "<< daughter->mass() << " | ";
+            std::cout << daughter->pt() << " | Eta: "<< daughter->eta() << " | Phi: "<< daughter->phi() << " | mass: "<< daughter->mass() << std::endl;
+            if(indent){
+                std::cout << std::setw(indent) << " ";
+            }
+            std::cout<< "jpsi: "<<dim.M()<<" | l1: "<<l1.M()<< " | l2: "<<l2.M()<<" | m1: "<<m1.M()<<" | m2: "<<m2.M()<<std::endl;
             extraIndent+=4;
             std::cout<< "masa de dimuon ? " << dim.M() << std::endl;
             if(dauID == 443 && dim.M() == 0) {
