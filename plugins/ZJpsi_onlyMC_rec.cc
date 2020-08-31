@@ -257,6 +257,15 @@ Zjpsi_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
                 gen_dimuon_p4.SetPtEtaPhiM(gen_dimuon_t.Pt(), gen_dimuon_t.Eta(), gen_dimuon_t.Phi(), gen_dimuon_t.M());
                 std::cout<<" Z: "<< gen_z_p4.M() <<" | jpsi: "<<gen_dimuon_p4.Pt()<<" | m1: "<<gen_muon1_p4.Pt()<<" | m2: "<<gen_muon2_p4.Pt()<<" | l1: "<<gen_lepton1_p4.Pt()<<
                 " | l2: "<<gen_lepton2_p4.Pt()<<std::endl;
+                gen_lepton1_s = gen_lepton1_p4;
+                gen_lepton2_s = gen_lepton2_p4;
+                gen_muon1_s = gen_muon1_p4;
+                gen_muon2_s = gen_muon2_p4;
+                gen_dimuon_s = gen_muon1_s + gen_muon2_s;
+                gen_z_s = gen_lepton1_s + gen_lepton2_s + gen_dimuon_s;
+                std::cout<< "sum gen-<-<-<-<"<< std::endl;
+                std::cout<<" Z: "<< gen_z_s.M() <<" | jpsi: "<<gen_dimuon_s.Pt()<<" | m1: "<<gen_muon1_s.Pt()<<" | m2: "<<gen_muon2_s.Pt()<<" | l1: "<<gen_lepton1_s.Pt()<<
+                " | l2: "<<gen_lepton2_s.Pt()<<std::endl;
                 break;
                 
             }
