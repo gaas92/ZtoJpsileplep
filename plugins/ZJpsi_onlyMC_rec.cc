@@ -231,7 +231,7 @@ Zjpsi_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
                 //gen_z_t.SetPtEtaPhiM(cand->pt(), cand->eta(), cand->phi(), cand->mass());
                 //std::cout << "print Tree Z: "<< gen_z_t.Pt() <<" "<<gen_z_t.M() << std::endl;
                 gen_z_p4.SetPtEtaPhiM(cand->pt(), cand->eta(), cand->phi(), cand->mass());
-                analyzeDecay(cand, gen_lepton1_t, gen_lepton2_t, gen_muon1_t, gen_muon2_t, gen_dimuon_t, 0);
+                analyzeDecay(cand, gen_z_t, gen_lepton1_t, gen_lepton2_t, gen_muon1_t, gen_muon2_t, gen_dimuon_t, 0);
                 std::cout << "print Tree Z: "<< gen_z_t.Pt() <<" "<<gen_z_t.M() << std::endl;
                 tst++;
                 for (size_t k=0; k<packed->size(); k++) {
