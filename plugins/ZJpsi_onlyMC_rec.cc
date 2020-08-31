@@ -450,7 +450,7 @@ void Zjpsi_onlyMC_rec::analyzeDecay(const reco::Candidate* mother, TLorentzVecto
                 std::cout << "muon 2" << std::endl;
             }
         }
-            if (daughter->numberOfDaughters()) printMCtree(daughter, indent+extraIndent);
+            if (daughter->numberOfDaughters()) analyzeDecay(daughter, l1, l2, m1, m2, dim, indent+extraIndent);
     }
 }
 //recursively check is a given particle is ancestor
