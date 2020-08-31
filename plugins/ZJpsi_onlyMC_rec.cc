@@ -75,7 +75,7 @@ class Zjpsi_onlyMC_rec : public edm::one::EDAnalyzer<edm::one::SharedResources> 
       void printMCtree(const reco::Candidate *, int);
       void printMCtreeUP(const reco::Candidate *, int);
       std::string printName(int);
-      void analyzeDecay(const reco::Candidate*, TLorentzVector&, TLorentzVector&, TLorentzVector&,
+      void analyzeDecay(const reco::Candidate*, TLorentzVector& ,TLorentzVector&, TLorentzVector&, TLorentzVector&,
       TLorentzVector&, TLorentzVector&, int);
       bool    isAncestor(const reco::Candidate*, const reco::Candidate*);
       bool    isAncestor(int, const reco::Candidate*);
@@ -228,10 +228,11 @@ Zjpsi_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
                 std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX " << std::endl;
                 //printMCtree(cand, 0);
                 std::cout << "print Tree Z: "<< cand->mass() << std::endl;
-                gen_z_t.SetPtEtaPhiM(cand->pt(), cand->eta(), cand->phi(), cand->mass());
-                std::cout << "print Tree Z: "<< gen_z_t.Pt() <<" "<<gen_z_t.M() << std::endl;
+                //gen_z_t.SetPtEtaPhiM(cand->pt(), cand->eta(), cand->phi(), cand->mass());
+                //std::cout << "print Tree Z: "<< gen_z_t.Pt() <<" "<<gen_z_t.M() << std::endl;
                 gen_z_p4.SetPtEtaPhiM(cand->pt(), cand->eta(), cand->phi(), cand->mass());
                 analyzeDecay(cand, gen_lepton1_t, gen_lepton2_t, gen_muon1_t, gen_muon2_t, gen_dimuon_t, 0);
+                std::cout << "print Tree Z: "<< gen_z_t.Pt() <<" "<<gen_z_t.M() << std::endl;
                 tst++;
                 for (size_t k=0; k<packed->size(); k++) {
                    //const reco::Candidate * dauInPrunedColl = (*packed)[k].mother(0);
@@ -239,7 +240,7 @@ Zjpsi_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
                    int stable_id = (*packed)[k].pdgId();
                    if (stable_dau != nullptr && isAncestor(443,stable_dau) && isAncestor(23, stable_dau)) {
                       if(stable_id == 13) { //found muon-
-                              gen_muon1_p4.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                           gen_muon1_p4.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
                       }
                       else if(stable_id == -13){ //found muon+
                            gen_muon2_p4.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
@@ -255,6 +256,7 @@ Zjpsi_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
                    }
                 }// end loop over stable
                 gen_dimuon_p4.SetPtEtaPhiM(gen_dimuon_t.Pt(), gen_dimuon_t.Eta(), gen_dimuon_t.Phi(), gen_dimuon_t.M());
+                std::cout<< "p4 gen-<-<-<-<"<< std::endl;
                 std::cout<<" Z: "<< gen_z_p4.M() <<" | jpsi: "<<gen_dimuon_p4.Pt()<<" | m1: "<<gen_muon1_p4.Pt()<<" | m2: "<<gen_muon2_p4.Pt()<<" | l1: "<<gen_lepton1_p4.Pt()<<
                 " | l2: "<<gen_lepton2_p4.Pt()<<std::endl;
                 gen_lepton1_s = gen_lepton1_p4;
@@ -441,7 +443,7 @@ void Zjpsi_onlyMC_rec::printMCtreeUP(const reco::Candidate* daughter, int indent
     }
 }
 
-void Zjpsi_onlyMC_rec::analyzeDecay(const reco::Candidate* mother, TLorentzVector& l1, TLorentzVector& l2, TLorentzVector& m1, TLorentzVector& m2, TLorentzVector& dim, int indent = 0){
+void Zjpsi_onlyMC_rec::analyzeDecay(const reco::Candidate* mother, TLorentzVector& Z, TLorentzVector& l1, TLorentzVector& l2, TLorentzVector& m1, TLorentzVector& m2, TLorentzVector& dim, int indent = 0){
 
     int momID = mother->pdgId();
     if (mother == NULL){
@@ -467,9 +469,12 @@ void Zjpsi_onlyMC_rec::analyzeDecay(const reco::Candidate* mother, TLorentzVecto
             if(indent){
                 std::cout << std::setw(indent) << " ";
             }
-            std::cout<< " jpsi: "<<dim.Pt()<<" | l1: "<<l1.Pt()<< " | l2: "<<l2.Pt()<<" | m1: "<<m1.Pt()<<" | m2: "<<m2.Pt()<<std::endl;
+            std::cout<<"Z: "<<Z.M()<<" jpsi: "<<dim.Pt()<<" | l1: "<<l1.Pt()<< " | l2: "<<l2.Pt()<<" | m1: "<<m1.Pt()<<" | m2: "<<m2.Pt()<<std::endl;
             extraIndent+=4;
-            if(dauID == 443 && dim.M() == 0) {
+            if (dauID == 23 && Z.M() == 0){
+                Z.SetPtEtaPhiM(daugter->pt(), daugter->eta(), daugter->phi(), daugter->mass());
+            }
+            else if(dauID == 443 && dim.M() == 0) {
                 dim.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass()); //jpsi
                 std::cout << " jpsi " << std::endl;
                 }
@@ -490,7 +495,7 @@ void Zjpsi_onlyMC_rec::analyzeDecay(const reco::Candidate* mother, TLorentzVecto
                 std::cout << "muon 2" << std::endl;
             }
         }
-            if (daughter->numberOfDaughters()) analyzeDecay(daughter, l1, l2, m1, m2, dim, indent+extraIndent);
+            if (daughter->numberOfDaughters()) analyzeDecay(daughter, Z, l1, l2, m1, m2, dim, indent+extraIndent);
     }
 }
 //recursively check is a given particle is ancestor
