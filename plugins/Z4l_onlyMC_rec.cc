@@ -503,7 +503,7 @@ std::string Z4l_onlyMC_rec::printName(int pdgid){
 
     return retstr;
 }
-void Zjpsi_onlyMC_rec::analyzeDecay(const reco::Candidate* mother, TLorentzVector& Z, TLorentzVector& l1, TLorentzVector& l2, TLorentzVector& m1, TLorentzVector& m2, TLorentzVector& dim, int indent = 0){
+void Z4l_onlyMC_rec::analyzeDecay(const reco::Candidate* mother, TLorentzVector& Z, TLorentzVector& l1, TLorentzVector& l2, TLorentzVector& m1, TLorentzVector& m2, TLorentzVector& dim, int indent = 0){
 
     int momID = mother->pdgId();
     if (mother == NULL){
