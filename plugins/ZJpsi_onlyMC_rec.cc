@@ -268,6 +268,7 @@ Zjpsi_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
                 std::cout<< "sum gen-<-<-<-<"<< std::endl;
                 std::cout<<" Z: "<< gen_z_s.M() <<" | jpsi: "<<gen_dimuon_s.Pt()<<" | m1: "<<gen_muon1_s.Pt()<<" | m2: "<<gen_muon2_s.Pt()<<" | l1: "<<gen_lepton1_s.Pt()<<
                 " | l2: "<<gen_lepton2_s.Pt()<<std::endl;
+                Z_tree->Fill();
                 break;
                 
             }
@@ -341,6 +342,7 @@ Zjpsi_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     } //end pruned
     */
     if (tst) std::cout << "x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x NEW EVENT -x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x" << std::endl;
+    
 
 
 }//end analyze  
