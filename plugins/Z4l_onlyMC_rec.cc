@@ -75,6 +75,7 @@ class Z4l_onlyMC_rec : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
       void printMCtree(const reco::Candidate *, int);
       void printMCtreeUP(const reco::Candidate *, int);
       std::string printName(int);
+      void analyzeDecay(const reco::Candidate*, TLorentzVector& ,TLorentzVector&, TLorentzVector&, TLorentzVector&, TLorentzVector&, TLorentzVector&, int);
       bool    isAncestor(const reco::Candidate*, const reco::Candidate*);
       bool    isAncestor(int, const reco::Candidate*);
       //edm::EDGetTokenT<reco::BeamSpot> BSLabel_;
@@ -214,7 +215,7 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
     gen_z_vtx.SetXYZ(0.,0.,0.);
     gen_jpsi_vtx.SetXYZ(0.,0.,0.);
-
+    int tst = 0;
     std::cout << "enters analyzer" << std::endl;
     if (pruned.isValid()){
         std::cout << "pruned valid "<< std::endl;
