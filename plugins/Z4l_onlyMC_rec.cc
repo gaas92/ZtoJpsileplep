@@ -86,24 +86,13 @@ class Z4l_onlyMC_rec : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
       virtual void endJob() override;
 
       TTree *Z_tree;
+      UInt_t    run;
+      ULong64_t event;
 
-      int mfromZ;
-      int efromZ;
-      int tfromZ;
-      int zfromZ;
-
-      int goodmuons;
-      int goodelecs;
-
-      TLorentzVector gen_z_p4;
-      TLorentzVector gen_muon1N;
-      TLorentzVector gen_muon1P;
-      TLorentzVector gen_muon2N;
-      TLorentzVector gen_muon2P;
-      TLorentzVector gen_elec1N;
-      TLorentzVector gen_elec1P;
-      TLorentzVector gen_elec2N;
-      TLorentzVector gen_elec2P;
+      TLorentzVector gen_z_p4, gen_dimuon_p4,gen_muon1_p4,gen_muon2_p4,gen_lepton1_p4,gen_lepton2_p4, gen_dilepton_p4;
+      TLorentzVector gen_z_t, gen_dimuon_t, gen_muon1_t, gen_muon2_t, gen_lepton1_t, gen_lepton2_t, gen_dilepton_t;
+      TLorentzVector gen_z_s, gen_dimuon_s, gen_muon1_s, gen_muon2_s, gen_lepton1_s, gen_lepton2_s, gen_dilepton_s;
+      TVector3       gen_z_vtx, gen_jpsi_vtx;
 
 };
 
@@ -133,23 +122,32 @@ Z4l_onlyMC_rec::Z4l_onlyMC_rec(const edm::ParameterSet& iConfig)
    //Now we assing the member variables to the result TTree
    Z_tree = fs->make < TTree > ("ZTree", "Tree of Z4leptons");
 
-   Z_tree->Branch("mfromZ", &mfromZ, "mfromZ/I");
-   Z_tree->Branch("efromZ", &efromZ, "efromZ/I");
-   Z_tree->Branch("tfromZ", &tfromZ, "tfromZ/I");
-   Z_tree->Branch("zfromZ", &zfromZ, "zfromZ/I");
-
-   Z_tree->Branch("goodmuons", &goodmuons, "goodmuons/I");
-   Z_tree->Branch("goodelecs", &goodelecs, "goodelecs/I");
+   Z_tree->Branch("run",      &run,      "run/i");
+   Z_tree->Branch("event",    &event,    "event/i");
 
    Z_tree->Branch("gen_z_p4", "TLorentzVector", &gen_z_p4);
-   Z_tree->Branch("gen_muon1N",      "TLorentzVector", &gen_muon1N);
-   Z_tree->Branch("gen_muon1P",      "TLorentzVector", &gen_muon1P);
-   Z_tree->Branch("gen_muon2N",      "TLorentzVector", &gen_muon2N);
-   Z_tree->Branch("gen_muon2P",      "TLorentzVector", &gen_muon2P);
-   Z_tree->Branch("gen_elec1N",      "TLorentzVector", &gen_elec1N);
-   Z_tree->Branch("gen_elec1P",      "TLorentzVector", &gen_elec1P);
-   Z_tree->Branch("gen_elec2N",      "TLorentzVector", &gen_elec2N);
-   Z_tree->Branch("gen_elec2P",      "TLorentzVector", &gen_elec2P);
+   Z_tree->Branch("gen_muon1_p4",  "TLorentzVector", &gen_muon1_p4);
+   Z_tree->Branch("gen_muon2_p4",  "TLorentzVector", &gen_muon2_p4);
+   Z_tree->Branch("gen_dimuon_p4", "TLorentzVector", &gen_dimuon_p4);
+   Z_tree->Branch("gen_dilepton_p4", "TLorentzVector", &gen_dilepton_p4);
+   Z_tree->Branch("gen_lepton1_p4",  "TLorentzVector", &gen_lepton1_p4);
+   Z_tree->Branch("gen_lepton2_p4",  "TLorentzVector", &gen_lepton2_p4);
+
+   Z_tree->Branch("gen_z_t", "TLorentzVector", &gen_z_t);
+   Z_tree->Branch("gen_muon1_t",  "TLorentzVector", &gen_muon1_t);
+   Z_tree->Branch("gen_muon2_t",  "TLorentzVector", &gen_muon2_t);
+   Z_tree->Branch("gen_dimuon_t", "TLorentzVector", &gen_dimuon_t);
+   Z_tree->Branch("gen_dilepton_t", "TLorentzVector", &gen_dilepton_t);
+   Z_tree->Branch("gen_lepton1_t",  "TLorentzVector", &gen_lepton1_t);
+   Z_tree->Branch("gen_lepton2_t",  "TLorentzVector", &gen_lepton2_t);
+
+   Z_tree->Branch("gen_z_s", "TLorentzVector", &gen_z_s);
+   Z_tree->Branch("gen_muon1_s",  "TLorentzVector", &gen_muon1_s);
+   Z_tree->Branch("gen_muon2_s",  "TLorentzVector", &gen_muon2_s);
+   Z_tree->Branch("gen_dimuon_s", "TLorentzVector", &gen_dimuon_s);
+   Z_tree->Branch("gen_dilepton_s", "TLorentzVector", &gen_dilepton_s);
+   Z_tree->Branch("gen_lepton1_s",  "TLorentzVector", &gen_lepton1_s);
+   Z_tree->Branch("gen_lepton2_s",  "TLorentzVector", &gen_lepton2_s);
 
 //} //end of NotOnlyGen
 }//end of constructor 
@@ -181,19 +179,120 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    edm::Handle<pat::PackedGenParticleCollection> packed;
    iEvent.getByToken(packedGenToken_,packed);
 
+   run       = iEvent.id().run();
+    event     = iEvent.id().event();
+
     gen_z_p4.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_dimuon_p4.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_muon1_p4.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_muon2_p4.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_lepton1_p4.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_lepton2_p4.SetPtEtaPhiM(0.,0.,0.,0.);
 
-    gen_muon1N.SetPtEtaPhiM(0.,0.,0.,0.);
-    gen_muon1P.SetPtEtaPhiM(0.,0.,0.,0.);
-    gen_muon2N.SetPtEtaPhiM(0.,0.,0.,0.);
-    gen_muon2P.SetPtEtaPhiM(0.,0.,0.,0.);
-    gen_elec1N.SetPtEtaPhiM(0.,0.,0.,0.);
-    gen_elec1P.SetPtEtaPhiM(0.,0.,0.,0.);
-    gen_elec2N.SetPtEtaPhiM(0.,0.,0.,0.);
-    gen_elec2P.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_dilepton_p4.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_dimuon_p4.SetPtEtaPhiM(0.,0.,0.,0.);
 
+    gen_z_t.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_dimuon_t.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_muon1_t.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_muon2_t.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_lepton1_t.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_lepton2_t.SetPtEtaPhiM(0.,0.,0.,0.);
 
+    gen_dilepton_t.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_dimuon_t.SetPtEtaPhiM(0.,0.,0.,0.);
 
+    gen_z_s.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_dimuon_s.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_muon1_s.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_muon2_s.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_lepton1_s.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_lepton2_s.SetPtEtaPhiM(0.,0.,0.,0.);
+
+    gen_dilepton_s.SetPtEtaPhiM(0.,0.,0.,0.);
+    gen_dimuon_s.SetPtEtaPhiM(0.,0.,0.,0.);
+
+    gen_z_vtx.SetXYZ(0.,0.,0.);
+    gen_jpsi_vtx.SetXYZ(0.,0.,0.);
+
+    std::cout << "enters analyzer" << std::endl;
+    if (pruned.isValid()){
+        std::cout << "pruned valid "<< std::endl;
+        for (size_t i=0; i<pruned->size(); i++) {
+            const reco::Candidate *cand = &(*pruned)[i];
+            if ((abs(cand->pdgId()) == 23)) {
+                std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX " << std::endl;
+                //printMCtree(cand, 0);
+                std::cout << "print Tree Z: "<< cand->mass() << std::endl;
+                int mfromZ = 0;
+                int efromZ = 0;
+                int tfromZ = 0;
+                //gen_z_t.SetPtEtaPhiM(cand->pt(), cand->eta(), cand->phi(), cand->mass());
+                //std::cout << "print Tree Z: "<< gen_z_t.Pt() <<" "<<gen_z_t.M() << std::endl;
+                //gen_z_p4.SetPtEtaPhiM(cand->pt(), cand->eta(), cand->phi(), cand->mass());
+                for(size_t k=0; k<packed->size(); k++){
+                     const reco::Candidate * stable_dau = &(*packed)[k];
+                     int stable_id = (*packed)[k].pdgId();
+                     if (stable_dau != nullptr && isAncestor(cand,stable_dau)) {
+                         if (stable_id == 13 || stable_id == -13) { //electros 11 muons 13 as final states
+                             mfromZ++;
+                         }
+                         else if (stable_id == 11 || stable_id == -11){
+                             efromZ++;
+                         }
+                         else if (stable_id == 16 || stable_id == -16){
+                             tfromZ++;
+                         }
+                     }
+                }
+                if (tfromZ) continue;
+                analyzeDecay(cand, gen_z_t, gen_lepton1_t, gen_lepton2_t, gen_muon1_t, gen_muon2_t, gen_dimuon_t, 0);
+                std::cout << "print Tree Z: "<< gen_z_t.Pt() <<" "<<gen_z_t.M() << std::endl;
+                tst++;
+                for (size_t k=0; k<packed->size(); k++) {
+                   //const reco::Candidate * dauInPrunedColl = (*packed)[k].mother(0);
+                   const reco::Candidate * stable_dau = &(*packed)[k];
+                   int stable_id = (*packed)[k].pdgId();
+                   if (stable_dau != nullptr && isAncestor(23, stable_dau)) {
+                      if(stable_id == 13) { //found muon-
+                           gen_muon1_p4.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                      }
+                      else if(stable_id == -13){ //found muon+
+                           gen_muon2_p4.SetPtEtaPhiM(stable_dau->pt(),stable_dau->eta(),stable_dau->phi(),stable_dau->mass());
+                      }
+                   }
+                   else if (stable_dau != nullptr && isAncestor(23, stable_dau)){
+                       if(stable_id == 13){
+                           gen_lepton1_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
+                       }
+                       else if(stable_id==-13){
+                           gen_lepton2_p4.SetPtEtaPhiM(stable_dau->pt(), stable_dau->eta(), stable_dau->phi(), stable_dau->mass());
+                       }
+                   }
+                }// end loop over stable
+                gen_dimuon_p4.SetPtEtaPhiM(gen_dimuon_t.Pt(), gen_dimuon_t.Eta(), gen_dimuon_t.Phi(), gen_dimuon_t.M());
+                gen_z_p4 = gen_z_t;
+                std::cout<< "p4 gen-<-<-<-<"<< std::endl;
+                std::cout<<" Z: "<< gen_z_p4.M() <<" | jpsi: "<<gen_dimuon_p4.Pt()<<" | m1: "<<gen_muon1_p4.Pt()<<" | m2: "<<gen_muon2_p4.Pt()<<" | l1: "<<gen_lepton1_p4.Pt()<<
+                " | l2: "<<gen_lepton2_p4.Pt()<<std::endl;
+                gen_lepton1_s = gen_lepton1_p4;
+                gen_lepton2_s = gen_lepton2_p4;
+                gen_muon1_s = gen_muon1_p4;
+                gen_muon2_s = gen_muon2_p4;
+                gen_dimuon_s = gen_muon1_s + gen_muon2_s;
+                gen_z_s = gen_lepton1_s + gen_lepton2_s + gen_dimuon_s;
+                std::cout<< "sum gen-<-<-<-<"<< std::endl;
+                std::cout<<" Z: "<< gen_z_s.M() <<" | jpsi: "<<gen_dimuon_s.Pt()<<" | m1: "<<gen_muon1_s.Pt()<<" | m2: "<<gen_muon2_s.Pt()<<" | l1: "<<gen_lepton1_s.Pt()<<
+                " | l2: "<<gen_lepton2_s.Pt()<<std::endl;
+                Z_tree->Fill();
+                break;
+
+            }
+        }//end loop over pruned
+    }//end if pruned
+    
+    if (tst) std::cout << "x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x NEW EVENT -x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x" << std::endl;
+    /*
     int n_Z_dau = 0;
     int Event_Cand = 1;
     //NEW MC ALV
@@ -348,7 +447,7 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         }//end loop over pruned
     }//end if pruned
     if (tst) std::cout << "x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x NEW EVENT -x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x" << std::endl;
-
+    */
 
 }//end analyze  
 //Try to print mc Tree
@@ -403,6 +502,63 @@ std::string Z4l_onlyMC_rec::printName(int pdgid){
     }
 
     return retstr;
+}
+void Zjpsi_onlyMC_rec::analyzeDecay(const reco::Candidate* mother, TLorentzVector& Z, TLorentzVector& l1, TLorentzVector& l2, TLorentzVector& m1, TLorentzVector& m2, TLorentzVector& dim, int indent = 0){
+
+    int momID = mother->pdgId();
+    if (mother == NULL){
+         //std::cout << "end tree" << std::endl;
+         return;
+    }
+    if (mother->numberOfDaughters() > 0){
+        if(indent){
+                std::cout << std::setw(indent) << " ";
+        }
+        std::cout << printName(mother->pdgId()) <<" has "<< mother->numberOfDaughters() <<" daughters " <<std::endl;
+    }
+    int extraIndent = 0;
+    for (size_t i=0; i< mother->numberOfDaughters(); i++){
+        const reco::Candidate * daughter = mother->daughter(i);
+        int dauID = daughter->pdgId();
+        if (mother->numberOfDaughters() > 0){
+            if(indent){
+                std::cout << std::setw(indent) << " ";
+            }
+            std::cout << " daugter "<< i+1 <<": "<<  printName(daughter->pdgId()) << " with Pt: ";
+            std::cout << daughter->pt() << " | Eta: "<< daughter->eta() << " | Phi: "<< daughter->phi() << " | mass: "<< daughter->mass() << std::endl;
+            if(indent){
+                std::cout << std::setw(indent) << " ";
+            }
+            std::cout<<"Z: "<<Z.M()<<" jpsi: "<<dim.Pt()<<" | l1: "<<l1.Pt()<< " | l2: "<<l2.Pt()<<" | m1: "<<m1.Pt()<<" | m2: "<<m2.Pt()<<std::endl;
+            extraIndent+=4;
+            if (dauID == 23 && Z.M() == 0){
+                Z.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
+            }
+            //else if(dauID == 443 && dim.M() == 0) { // for jpsi
+            else if (m1.M() != 0 && m2.M() != 0 && dim.M() == 0){
+                //dim.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass()); //jpsi
+                dim = m1 + m2;
+                std::cout << " jpsi " << std::endl;
+            }
+            else if(dauID == 13 && l1.M() == 0){
+                l1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass()); // m1
+                std::cout << "lep 1" << std::endl;
+            }
+            else if(dauID == -13 && l2.M() ==0){
+                l2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
+                std::cout << "lep 2" << std::endl;
+            }
+            else if(dauID == 13 && m1.M() == 0){
+                m1.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
+                std::cout << "muon 1" << std::endl;
+            }
+            else if(dauID == -13 && m2.M() ==0){
+                m2.SetPtEtaPhiM(daughter->pt(), daughter->eta(), daughter->phi(), daughter->mass());
+                std::cout << "muon 2" << std::endl;
+            }
+        }
+            if (daughter->numberOfDaughters()) analyzeDecay(daughter, Z, l1, l2, m1, m2, dim, indent+extraIndent);
+    }
 }
 
 void Z4l_onlyMC_rec::printMCtree(const reco::Candidate* mother, int indent=0){
