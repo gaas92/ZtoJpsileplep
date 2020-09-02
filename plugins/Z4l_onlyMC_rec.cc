@@ -330,7 +330,7 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                             }
                         }
                         gen_z_p4 = gen_lepton1_p4 + gen_lepton2_p4 + gen_muon1_p4 + gen_muon2_p4;
-                        gen_jpsi_p4 = gen_muon1_p4 + gen_muon2_p4;
+                        gen_dimuon_p4 = gen_muon1_p4 + gen_muon2_p4;
                 }// end if packed valid
                 std::cout<< "p4 gen-<-<-<-<"<< std::endl;
                 std::cout<<" Z: "<< gen_z_p4.M() <<" | jpsi: "<<gen_dimuon_p4.Pt()<<" | m1: "<<gen_muon1_p4.Pt()<<" | m2: "<<gen_muon2_p4.Pt()<<" | l1: "<<gen_lepton1_p4.Pt()<<
