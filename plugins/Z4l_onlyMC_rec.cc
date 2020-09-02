@@ -250,6 +250,7 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 analyzeDecay(cand, gen_z_t, gen_lepton1_t, gen_lepton2_t, gen_muon1_t, gen_muon2_t, gen_dimuon_t, 0);
                 std::cout << "print Tree Z: "<< gen_z_t.Pt() <<" "<<gen_z_t.M() << std::endl;
                 tst++;
+                /*
                 for (size_t k=0; k<packed->size(); k++) {
                    //const reco::Candidate * dauInPrunedColl = (*packed)[k].mother(0);
                    const reco::Candidate * stable_dau = &(*packed)[k];
@@ -271,11 +272,70 @@ Z4l_onlyMC_rec::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                        }
                    }
                 }// end loop over stable
+                
                 gen_dimuon_p4.SetPtEtaPhiM(gen_dimuon_t.Pt(), gen_dimuon_t.Eta(), gen_dimuon_t.Phi(), gen_dimuon_t.M());
                 gen_z_p4 = gen_z_t;
                 std::cout<< "p4 gen-<-<-<-<"<< std::endl;
                 std::cout<<" Z: "<< gen_z_p4.M() <<" | jpsi: "<<gen_dimuon_p4.Pt()<<" | m1: "<<gen_muon1_p4.Pt()<<" | m2: "<<gen_muon2_p4.Pt()<<" | l1: "<<gen_lepton1_p4.Pt()<<
                 " | l2: "<<gen_lepton2_p4.Pt()<<std::endl;
+                */
+                
+                TLorentzVector temp_mu1P, temp_mu2P, temp_mu1N, temp_mu2N, temp_di1, temp_di2, temp_di3, temp_di4;
+                temp_mu1P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_mu1N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_mu2P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                temp_mu2N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+                if (packed.isValid()) {
+                    for(size_t k=0; k<packed->size(); k++){
+                        const reco::Candidate * dau = &(*packed)[k];
+                        int stable_id = (*packed)[k].pdgId();
+                        if(!isAncestor(23, dau)) continue;
+                        if(stable_id ==  13 && temp_mu1N.M() == 0) temp_mu1N.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
+                        else if(stable_id == -13 && temp_mu1P.M() == 0) temp_mu1P.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
+                        else if(stable_id ==  13 && temp_mu2N.M() == 0) temp_mu2N.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
+                        else if(stable_id == -13 && temp_mu2P.M() == 0) temp_mu2P.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
+                    }//end for packed
+                    std::cout << temp_mu1N.Pt() << " | " << temp_mu2N.Pt() << " | " << temp_mu1P.Pt() << " | " << temp_mu2P.Pt() << std::endl;
+                    temp_di1 = temp_mu1P + temp_mu1N;
+                    temp_di2 = temp_mu2P + temp_mu2N;
+
+                    temp_di3 = temp_mu1P + temp_mu2N;
+                    temp_di4 = temp_mu2P + temp_mu1N;
+                    if (abs(temp_di1.M() - temp_di2.M()) > abs(temp_di3.M() - temp_di4.M())) {
+                            if (temp_di1.M() > temp_di2.M()){
+                                gen_lepton1_p4 = temp_mu1N;
+                                gen_lepton2_p4 = temp_mu1P;
+                                gen_muon1_p4 = temp_mu2N;
+                                gen_muon2_p4 = temp_mu2P;
+                            }
+                            else{
+                                gen_lepton1_p4 = temp_mu2N;
+                                gen_lepton2_p4 = temp_mu2P;
+                                gen_muon1_p4 = temp_mu1N;
+                                gen_muon2_p4 = temp_mu1P;
+                            }
+                        }
+                        else{
+                            if (temp_di3.M() > temp_di4.M()){
+                                gen_lepton1_p4 = temp_mu2N;
+                                gen_lepton2_p4 = temp_mu1P;
+                                gen_muon1_p4 = temp_mu1N;
+                                gen_muon2_p4 = temp_mu2P;
+                            }
+                            else{
+                                gen_lepton1_p4 = temp_mu1N;
+                                gen_lepton2_p4 = temp_mu2P;
+                                gen_muon1_p4 = temp_mu1N;
+                                gen_muon2_p4 = temp_mu2P;
+                            }
+                        }
+                        gen_z_p4 = gen_lepton1_p4 + gen_lepton2_p4 + gen_muon1_p4 + gen_muon2_p4;
+                        gen_jpsi_p4 = gen_muon1_p4 + gen_muon2_p4;
+                }// end if packed valid
+                std::cout<< "p4 gen-<-<-<-<"<< std::endl;
+                std::cout<<" Z: "<< gen_z_p4.M() <<" | jpsi: "<<gen_dimuon_p4.Pt()<<" | m1: "<<gen_muon1_p4.Pt()<<" | m2: "<<gen_muon2_p4.Pt()<<" | l1: "<<gen_lepton1_p4.Pt()<<
+                " | l2: "<<gen_lepton2_p4.Pt()<<std::endl;
+                std::cout << "found Z: "<< gen_z_p4.M() << std::endl;
                 gen_lepton1_s = gen_lepton1_p4;
                 gen_lepton2_s = gen_lepton2_p4;
                 gen_muon1_s = gen_muon1_p4;
