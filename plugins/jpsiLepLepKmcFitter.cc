@@ -111,8 +111,8 @@ class jpsiLepLepKmcFitter : public edm::stream::EDProducer<> {
       double dxyl_      = 0;
       double dzm_       = 0;
       double dzl_       = 0;
-      int tlwm_         = 0;
-      int plwm_         = 0;
+      double tlwm_         = 0;
+      double plwm_         = 0;
 };
 
 //
@@ -147,8 +147,8 @@ jpsiLepLepKmcFitter::jpsiLepLepKmcFitter(const edm::ParameterSet& iConfig)
    dxyl_            = iConfig.getParameter<double>("dxyl");
    dzm_             = iConfig.getParameter<double>("dzm");
    dzl_             = iConfig.getParameter<double>("dzl");
-   tlwm_            = iConfig.getParameter<int>("trackerLayersWithMeasurement");
-   plwm_            = iConfig.getParameter<int>("pixelLayersWithMeasurement");
+   tlwm_            = iConfig.getParameter<double>("trackerLayersWithMeasurement");
+   plwm_            = iConfig.getParameter<double>("pixelLayersWithMeasurement");
 
    produces<pat::CompositeCandidateCollection>("ZCandidates");
 }

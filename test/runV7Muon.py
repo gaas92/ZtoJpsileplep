@@ -76,8 +76,8 @@ process.Zfitter    = cms.EDProducer("jpsiLepLepKmcFitter",
                           dxyl                = cms.double(1.0),
                           dzm                 = cms.double(0.5),
                           dzl                 = cms.double(1.0),
-                          trackerLayersWithMeasurement = cms.int(4),
-                          pixelLayersWithMeasurement   = cms.int(1)
+                          trackerLayersWithMeasurement = cms.double(4),
+                          pixelLayersWithMeasurement   = cms.double(1)
 )
 
 process.oniarootupler = cms.EDAnalyzer('ZjpsiMCTupler',
