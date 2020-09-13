@@ -87,7 +87,7 @@ process.oniarootupler = cms.EDAnalyzer('ZjpsiMCTupler',
 
 
 
-process.oniaSequence = cms.Sequence(pprocess.onia2MuMuPAT) ##No trigger matching for 2017yet
+process.oniaSequence = cms.Sequence(process.onia2MuMuPAT) ##No trigger matching for 2017yet
 process.leptonSequence = cms.Sequence(process.Zfitter)
 
 process.p = cms.Path(process.muonFilter*process.oniaSequence*process.leptonSequence*process.oniarootupler)
