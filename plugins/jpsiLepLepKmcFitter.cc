@@ -219,7 +219,7 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
            && vtx->ndof()>=4. && vtx->position().Rho() < 2.0 // and number of degres of freedeom (fit) is > than 4
            && fabs(vtx->position().Z()) < 24.0) {            // and is near the beeam pipe we select it as our primary vertex PV
            PV = vtx;
-           pvChi2->normalizedChi2();
+           pvChi2 = vtx->normalizedChi2();
            break;
            }
    }
