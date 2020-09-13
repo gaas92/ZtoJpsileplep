@@ -135,7 +135,7 @@ jpsiLepLepKmcFitter::jpsiLepLepKmcFitter(const edm::ParameterSet& iConfig)
    genCands_ = consumes<reco::GenParticleCollection>(iConfig.getParameter < edm::InputTag > ("GenParticles"));
    packedGenToken_ = consumes<pat::PackedGenParticleCollection>((edm::InputTag)"packedGenParticles");
    
-   isMC_ = iConfig.getParameter<bool>("isMC" );
+   isMC4l_ = iConfig.getParameter<bool>("isMC4l" );
     
    ImparSigm_       = iConfig.getParameter<double>("ImparSigm");
    ImparSigl_       = iConfig.getParameter<double>("ImparSigl");
