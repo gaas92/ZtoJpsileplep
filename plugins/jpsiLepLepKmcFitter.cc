@@ -715,13 +715,13 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 		   patZ.addUserFloat("dRl1m2",dR2);
 		   patZ.addUserFloat("dRl2m1",dR3);
 		   patZ.addUserFloat("dRl2m2",dR4);
-           
+
            patZ.addUserFloat("dRm1m2_",dRm1m2);
            patZ.addUserFloat("dRl1l2_",dRl1l2);
-           patZ.addUserFloat("dRl1m1_",dRl1m1);
-           patZ.addUserFloat("dRl1m2_",dRl1m2);
-           patZ.addUserFloat("dRl2m1_",dRl2m1);
-           patZ.addUserFloat("dRl2m2_",dRl2m2);
+           patZ.addUserFloat("dRl1m1_",dRm1l1);
+           patZ.addUserFloat("dRl1m2_",dRm2l1);
+           patZ.addUserFloat("dRl2m1_",dRm1l2);
+           patZ.addUserFloat("dRl2m2_",dRm2l2);
 
 		   bool child = ZTree->movePointerToTheFirstChild();
 		   //get first muon
