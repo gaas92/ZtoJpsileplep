@@ -304,7 +304,7 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
     } //end pruned
     //NEW for muons and psi pairs
     int nonia = dimuons->size();
-    int nmuons = dileptons->size()*2;
+    int nmuons = leptons->size();
     int nPV    = vertices->size();
     
    //double chiVtxSqdProb = ChiSquaredProbability((double)(PV.chi2()),(double)(PV.ndof())); 
@@ -325,7 +325,7 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
          const pat::Muon *lept1 = 0;
          const pat::Muon *lept2 = 0;
          if(lepton1->charge() == -1 && lepton2->charge() == 1){ lept1 = &(*lepton1); lept2 = &(*lepton2);}
-         else if (lepton1->charge() == 1 && lepton2->charge == -1) {lept1 = &(*lepton2); lept2 = (*lepton1);}
+         else if (lepton1->charge() == 1 && lepton2->charge() == -1) {lept1 = &(*lepton2); lept2 = (*lepton1);}
          else continue;
         //const pat::Muon* lept1 = dynamic_cast<const pat::Muon*>(dilepton->daughter("lepton1"));
         //const pat::Muon* lept2 = dynamic_cast<const pat::Muon*>(dilepton->daughter("lepton2"));
