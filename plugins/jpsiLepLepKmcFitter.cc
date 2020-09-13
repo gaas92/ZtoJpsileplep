@@ -706,6 +706,7 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
            patZ.addUserFloat("vChi2",ZDecayVertex->chiSquared());
             
            patZ.addUserFloat("pvChi2_", pvChi2);
+           patZ.addUserFloat("pvIndex", vertexRef_i);
 		   patZ.addUserFloat("ZvtxX",ZVtxX_fit);
 		   patZ.addUserFloat("ZvtxY",ZVtxY_fit);
 		   patZ.addUserFloat("ZvtxZ",ZVtxZ_fit);
@@ -762,6 +763,18 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 		   patM1.addUserFloat("Dz",mdz1);
            //new
            patM1.addUserFloat("dRIso"    ,getIso( *muon1 ) );
+           //v7 new
+           patM1.addUserFloat("isolationR03_",          muon1->isolationR03());
+           patM1.addUserFloat("isolationR05_",          muon1->isolationR05());
+           patM1.addUserFloat("pfIsolationR03_",        muon1->pfIsolationR03());
+           patM1.addUserFloat("pfMeanDRIsoProfileR03_", muon1->pfMeanDRIsoProfileR03());
+           patM1.addUserFloat("pfSumDRIsoProfileR03_",  muon1->pfSumDRIsoProfileR03());
+           patM1.addUserFloat("pfIsolationR04_",        muon1->pfIsolationR04());
+           patM1.addUserFloat("pfMeanDRIsoProfileR04_", muon1->pfMeanDRIsoProfileR04());
+           patM1.addUserFloat("pfSumDRIsoProfileR04_",  muon1->pfSumDRIsoProfileR04());
+
+            
+            
            patM1.addUserFloat("dIP3DSig", tkPVdist1.second.significance());
         
 		   patM1.addUserFloat("dIP3D",tkPVdist1.second.value());
@@ -819,6 +832,16 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 		   patM2.addUserFloat("Dz",mdz2);
            //New
            patM2.addUserFloat("dRIso"    ,getIso( *muon2 ) );
+           //v7 new
+           patM2.addUserFloat("isolationR03_",          muon2->isolationR03());
+           patM2.addUserFloat("isolationR05_",          muon2->isolationR05());
+           patM2.addUserFloat("pfIsolationR03_",        muon2->pfIsolationR03());
+           patM2.addUserFloat("pfMeanDRIsoProfileR03_", muon2->pfMeanDRIsoProfileR03());
+           patM2.addUserFloat("pfSumDRIsoProfileR03_",  muon2->pfSumDRIsoProfileR03());
+           patM2.addUserFloat("pfIsolationR04_",        muon2->pfIsolationR04());
+           patM2.addUserFloat("pfMeanDRIsoProfileR04_", muon2->pfMeanDRIsoProfileR04());
+           patM2.addUserFloat("pfSumDRIsoProfileR04_",  muon2->pfSumDRIsoProfileR04());
+
            patM2.addUserFloat("dIP3DSig", tkPVdist2.second.significance());
                  
            patM2.addUserFloat("dIP3d", tkPVdist2.second.significance());
@@ -879,6 +902,17 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 		   patL1.addUserFloat("Dz"         ,ldz1);
 		   patL1.addUserFloat("dRIso"      ,getIso( *lept1 ) );
            //New
+           //v7 new
+           patL1.addUserFloat("isolationR03_",          lept1->isolationR03());
+           patL1.addUserFloat("isolationR05_",          lept1->isolationR05());
+           patL1.addUserFloat("pfIsolationR03_",        lept1->pfIsolationR03());
+           patL1.addUserFloat("pfMeanDRIsoProfileR03_", lept1->pfMeanDRIsoProfileR03());
+           patL1.addUserFloat("pfSumDRIsoProfileR03_",  lept1->pfSumDRIsoProfileR03());
+           patL1.addUserFloat("pfIsolationR04_",        lept1->pfIsolationR04());
+           patL1.addUserFloat("pfMeanDRIsoProfileR04_", lept1->pfMeanDRIsoProfileR04());
+           patL1.addUserFloat("pfSumDRIsoProfileR04_",  lept1->pfSumDRIsoProfileR04());
+
+            
            patL1.addUserFloat("dIP3DSig"   ,tkPVdistel1.second.significance());
            
 		   patL1.addUserFloat("dIP3D"      ,tkPVdistel1.second.value());
@@ -927,6 +961,16 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 		   patL2.addUserFloat("Dxy"        ,ldxy2);
 		   patL2.addUserFloat("Dz"         ,ldz2);
 		   patL2.addUserFloat("dRIso"      ,getIso( *lept2 ) );
+           //v7 new
+           patL2.addUserFloat("isolationR03_",          lept2->isolationR03());
+           patL2.addUserFloat("isolationR05_",          lept2->isolationR05());
+           patL2.addUserFloat("pfIsolationR03_",        lept2->pfIsolationR03());
+           patL2.addUserFloat("pfMeanDRIsoProfileR03_", lept2->pfMeanDRIsoProfileR03());
+           patL2.addUserFloat("pfSumDRIsoProfileR03_",  lept2->pfSumDRIsoProfileR03());
+           patL2.addUserFloat("pfIsolationR04_",        lept2->pfIsolationR04());
+           patL2.addUserFloat("pfMeanDRIsoProfileR04_", lept2->pfMeanDRIsoProfileR04());
+           patL2.addUserFloat("pfSumDRIsoProfileR04_",  lept2->pfSumDRIsoProfileR04());
+            
            patL2.addUserFloat("dIP3DSig"   ,tkPVdistel2.second.significance());
 		   patL2.addUserFloat("dIP3D"      ,tkPVdistel2.second.value());
 		   patL2.addUserFloat("dIP3DErr"   ,tkPVdistel2.second.error());
