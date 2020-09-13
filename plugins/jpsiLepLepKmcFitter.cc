@@ -619,8 +619,8 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
             //if (fabs(tkPVdist2.second.significance())>4.) continue;
              
             reco::TrackRef dilepTk[2]={
-            ( dynamic_cast<const pat::Muon*>(dilepton->daughter("lepton1")))->innerTrack(),
-            ( dynamic_cast<const pat::Muon*>(dilepton->daughter("lepton2")))->innerTrack()};
+            lept1->innerTrack(),
+            lept2->innerTrack()};
             //build the dimuon secondary vertex
             std::vector<reco::TransientTrack> LLTTks;
             LLTTks.push_back(theTTB->build(&dilepTk[0]));
