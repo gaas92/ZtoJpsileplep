@@ -212,7 +212,7 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
    //reco::Vertex bestPtVtx;
    //loop over all the possible vertices in the container, starting with the one with higger PT
    int vertexRef_i = -1;
-   double pvChi2;
+   double pvChi2 = -1;
    for (reco::VertexCollection::const_iterator vtx = vertices->begin(); vtx != vertices->end(); ++vtx, ++PV) {
       vertexRef_i++;
       if ( !(vtx->isFake())                                  // if is not fake
