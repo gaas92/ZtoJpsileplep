@@ -95,7 +95,8 @@ class jpsiLepLepKmcFitter : public edm::stream::EDProducer<> {
       //edm::EDGetTokenT<edm::View<pat::PackedCandidate>> trackCollection_label; //miniAPD
       edm::EDGetTokenT<pat::CompositeCandidateCollection> dimuon_Label;
       edm::EDGetTokenT<reco::VertexCollection> primaryVertices_Label;
-      edm::EDGetTokenT<pat::CompositeCandidateCollection> dilepton_Label;
+      //edm::EDGetTokenT<pat::CompositeCandidateCollection> dilepton_Label;
+      edm::EDGetTokenT<edm::View<pat::Muon>> leptonToken_;
 
       //edm::EDGetTokenT<reco::BeamSpot> BSLabel_;
       edm::EDGetTokenT<reco::GenParticleCollection> genCands_;
@@ -127,9 +128,10 @@ class jpsiLepLepKmcFitter : public edm::stream::EDProducer<> {
 jpsiLepLepKmcFitter::jpsiLepLepKmcFitter(const edm::ParameterSet& iConfig)
 {
    //trackCollection_label = consumes<edm::View<pat::PackedCandidate>>(iConfig.getParameter<edm::InputTag>("Tracks")); //miniAOD
-    dimuon_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter< edm::InputTag>("dimuon"));
-    primaryVertices_Label = consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("primaryVertices"));
-   dilepton_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter<edm::InputTag>("dilepton"));
+   dimuon_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter< edm::InputTag>("dimuon"));
+   primaryVertices_Label = consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("primaryVertices"));
+   //dilepton_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter<edm::InputTag>("dilepton"));
+   leptonToken_ = consumes<edm::View<pat::Muon>>(iConfig.getParameter<edm::InputTag>("leptons"));
 
    //BSLabel_ = consumes<reco::BeamSpot>(iConfig.getParameter<edm::InputTag>("beamSpotLabel"));
    genCands_ = consumes<reco::GenParticleCollection>(iConfig.getParameter < edm::InputTag > ("GenParticles"));
@@ -187,8 +189,10 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
    edm::ESHandle<TransientTrackBuilder> theTTB;
    iSetup.get<TransientTrackRecord>().get("TransientTrackBuilder",theTTB); 
 
-   edm::Handle<pat::CompositeCandidateCollection> dileptons;
-   iEvent.getByToken(dilepton_Label,dileptons); //dilepton
+   //edm::Handle<pat::CompositeCandidateCollection> dileptons;
+   //iEvent.getByToken(dilepton_Label,dileptons); //dilepton
+   edm::Handle< View<pat::Muon> > leptons;
+   iEvent.getByToken(leptonToken_,leptons);
     
    edm::Handle<pat::CompositeCandidateCollection> dimuons;
    iEvent.getByToken(dimuon_Label,dimuons); //dimuon
@@ -306,9 +310,25 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
    //double chiVtxSqdProb = ChiSquaredProbability((double)(PV.chi2()),(double)(PV.ndof())); 
    //int breaker = 0;
    // We Cycle over dileptons for the Kfit
-   for (pat::CompositeCandidateCollection::const_iterator dilepton = dileptons->begin(); dilepton != dileptons->end() /*test && breaker < 10*/; ++dilepton){  
-        const pat::Muon* lept1 = dynamic_cast<const pat::Muon*>(dilepton->daughter("lepton1"));
-        const pat::Muon* lept2 = dynamic_cast<const pat::Muon*>(dilepton->daughter("lepton2"));
+   //for (pat::CompositeCandidateCollection::const_iterator dilepton = dileptons->begin(); dilepton != dileptons->end() /*test && breaker < 10*/; ++dilepton){
+   for (View<pat::Muon>::const_iterator lepton1 = leptons->begin(); lepton1 != leptons->end(); ++lepton1 ) {
+     reco::TrackRef track_1 = lepton1->track();
+     if (track_1.isNull()) continue;
+     //std::cout << "PASS MU 1, LOOPING OVER MU 2" << std::endl;
+     for (View<pat::Muon>::const_iterator lepton2 = leptons->begin() ; lepton2 !=  leptons->end(); ++lepton2 ) {
+         if((lepton1->charge() * lepton2->charge()) != -1) continue;
+         if(lepton1==lepton2) continue; //v7 add
+         reco::TrackRef track_2 = lepton2->track();
+         if (track_2.isNull()) continue;
+         if(!(track_1->quality(reco::TrackBase::highPurity))) continue; //v7
+         if(!(track_2->quality(reco::TrackBase::highPurity))) continue; //v7
+         const pat::Muon *lept1 = 0;
+         const pat::Muon *lept2 = 0;
+         if(lepton1->charge() == -1 && lepton2->charge() == 1){ lept1 = &(*lepton1); lept2 = &(*lepton2);}
+         else if (lepton1->charge() == 1 && lepton2->charge == -1) {lept1 = &(*lepton2); lept2 = (*lepton1);}
+         else continue;
+        //const pat::Muon* lept1 = dynamic_cast<const pat::Muon*>(dilepton->daughter("lepton1"));
+        //const pat::Muon* lept2 = dynamic_cast<const pat::Muon*>(dilepton->daughter("lepton2"));
         //check if the muons came from PV
         //int pass1 = 0;
         //int pass2 = 0;
@@ -1038,6 +1058,7 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
         }//end of loop for dimuon
 
    }//end for dilepton
+   }
    iEvent.put(std::move(ZCandColl),"ZCandidates");
 }//end produce 
 

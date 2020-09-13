@@ -45,7 +45,7 @@ process.muonFilter = cms.EDFilter('PATMuonSelector',
                     ' && innerTrack.hitPattern.trackerLayersWithMeasurement > 4'
                     ' && innerTrack.hitPattern.pixelLayersWithMeasurement > 0'
                     ' && innerTrack.quality(\"highPurity\") '
-                    ' && abs(eta) <= 2.5 && pt >= 4'),
+                    ' && abs(eta) <= 2.5 && pt >= 1'),
    filter = cms.bool(True)
 )
 process.load("HeavyFlavorAnalysis.Onia2MuMu.onia2MuMuPAT_cfi")
@@ -65,7 +65,7 @@ process.onia2MuMuPAT.addMCTruth = cms.bool(False)
 ####this apply de BF cuts to dimuon & dilepton 5 & 6
 process.Zfitter    = cms.EDProducer("jpsiLepLepKmcFitter",
                           dimuon = cms.InputTag("onia2MuMuPAT"),
-			              dilepton = cms.InputTag("muonFilter"),
+			              leptons = cms.InputTag("muonFilter"),
                           primaryVertices     = cms.InputTag("offlineSlimmedPrimaryVertices"),
                           GenParticles        = cms.InputTag("prunedGenParticles"),
                           packedGenParticles  = cms.InputTag("packedGenParticles"),
