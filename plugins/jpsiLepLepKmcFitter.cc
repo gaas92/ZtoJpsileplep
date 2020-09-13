@@ -111,6 +111,8 @@ class jpsiLepLepKmcFitter : public edm::stream::EDProducer<> {
       double dxyl_      = 0;
       double dzm_       = 0;
       double dzl_       = 0;
+      int tlwm_         = 0;
+      int plwm_         = 0;
 };
 
 //
@@ -145,6 +147,8 @@ jpsiLepLepKmcFitter::jpsiLepLepKmcFitter(const edm::ParameterSet& iConfig)
    dxyl_            = iConfig.getParameter<double>("dxyl");
    dzm_             = iConfig.getParameter<double>("dzm");
    dzl_             = iConfig.getParameter<double>("dzl");
+   tlwm_            = iConfig.getParameter<int>("trackerLayersWithMeasurement");
+   plwm_            = iConfig.getParameter<int>("pixelLayersWithMeasurement");
 
    produces<pat::CompositeCandidateCollection>("ZCandidates");
 }
@@ -438,7 +442,12 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 	    int ZLe2_TrackerLWM = lept2->innerTrack()->hitPattern().trackerLayersWithMeasurement();
 	    int ZLe2_PixelLWM   = lept2->innerTrack()->hitPattern().pixelLayersWithMeasurement();
 	    int ZLe2_ValPixHit  = lept2->innerTrack()->hitPattern().numberOfValidPixelHits();
-    
+         
+        if (ZLe1_TrackerLWM < tlwm_) continue;
+        if (ZLe2_TrackerLWM < tlwm_) continue;
+        if (ZLe1_PixelLWM < plwm_) continue;
+        if (ZLe2_PixelLWM < plwm_) continue;
+
   	    float ldxy1 = lept1->muonBestTrack()->dxy(PV->position());
 	    float ldz1 = lept1->muonBestTrack()->dz(PV->position());
 
@@ -478,6 +487,7 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
         for (pat::CompositeCandidateCollection::const_iterator dimuon = dimuons->begin(); dimuon != dimuons->end() /*test && breaker < 10*/; ++dimuon){
             const pat::Muon* muon1 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon1"));
             const pat::Muon* muon2 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon2"));
+            
             //check if the muons came from PV
             //int pass1 = 0;
             //int pass2 = 0;
@@ -608,7 +618,11 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
             /////////////////////////////////////////////////////
             //    T r a n s i e n t   T r a c k s  b u i l d e r //
             //////////////////////////////////////////////////////
-            reco::TrackRef JpsiTk[2] = {muon1->innerTrack(), muon2->innerTrack()};
+            reco::TrackRef muTrack1 = muon1->innerTrack();
+            reco::TrackRef muTrack2 = muon2->innerTrack();
+            if(!(muTrack1->quality(reco::TrackBase::highPurity))) continue; //v7
+            if(!(muTrack1->quality(reco::TrackBase::highPurity))) continue; //v7
+            reco::TrackRef JpsiTk[2] = {muTrack1, muTrack2};
             std::vector<reco::TransientTrack> MuMuTTks;
             MuMuTTks.push_back(theTTB->build(&JpsiTk[0]));
             MuMuTTks.push_back(theTTB->build(&JpsiTk[1]));
@@ -807,6 +821,10 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 		   int psiM2_PixelLWM   = muon2->muonBestTrack()->hitPattern().pixelLayersWithMeasurement();
 		   int psiM2_ValPixHit  = muon2->muonBestTrack()->hitPattern().numberOfValidPixelHits();
 
+           if (psiM1_TrackerLWM < tlwm_) continue;
+           if (psiM2_TrackerLWM < tlwm_) continue;
+           if (psiM1_PixelLWM < plwm_) continue;
+           if (psiM2_PixelLWM < plwm_) continue;
            patM1.addUserInt("ZMu1Qid_", ZMu1Qid);
 		   patM1.addUserFloat("psiM1_TrackerLWM_", psiM1_TrackerLWM);
 		   patM1.addUserFloat("psiM1_PixelLWM_",  psiM1_PixelLWM);

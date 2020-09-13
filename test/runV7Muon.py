@@ -42,7 +42,7 @@ process.muonFilter = cms.EDFilter('PATMuonSelector',
    src = cms.InputTag('slimmedMuons'),
    cut = cms.string(
                     '(pfIsolationR03().sumChargedHadronPt + max(0., pfIsolationR03().sumNeutralHadronEt + pfIsolationR03().sumPhotonEt-0.5*pfIsolationR03().sumPUPt))/pt() < 0.6'
-                    ' && innerTrack.hitPattern.trackerLayersWithMeasurement > 4'
+                    #' && innerTrack.hitPattern.trackerLayersWithMeasurement > 4'
                     #' && innerTrack.hitPattern.pixelLayersWithMeasurement > 0'
                     #' && innerTrack.quality(\"highPurity\") '
                     ' && abs(eta) <= 2.5 && pt >= 1'),
@@ -75,7 +75,9 @@ process.Zfitter    = cms.EDProducer("jpsiLepLepKmcFitter",
                           dxym                = cms.double(0.5),
                           dxyl                = cms.double(1.0),
                           dzm                 = cms.double(0.5),
-                          dzl                 = cms.double(1.0)
+                          dzl                 = cms.double(1.0),
+                          trackerLayersWithMeasurement = cms.int(4),
+                          pixelLayersWithMeasurement   = cms.int(1)
 )
 
 process.oniarootupler = cms.EDAnalyzer('ZjpsiMCTupler',
