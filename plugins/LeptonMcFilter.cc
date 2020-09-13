@@ -5,7 +5,7 @@
 // 
 /**\class LeptonMcFilter LeptonMcFilter.cc AnalyzeZphill/ZphiTupler/plugins/LeptonMcFilter.cc
 
- Description: [one line class summary]
+ Description: apply BF filter 1, 3, 4, & 5
 
  Implementation:
      [Notes on implementation]
@@ -13,7 +13,7 @@
 //
 // Original Author:  Gabriel Artemio Ayala Sanchez
 //         Created:  Tue, 18 Jun 2019 15:02:36 GMT
-//
+//         Updated: v7-12/09/20 not currently used 
 //
 
 
@@ -75,6 +75,7 @@ class LeptonMcFilter : public edm::stream::EDProducer<> {
       // ----------member data ---------------------------
       edm::EDGetTokenT<edm::View<pat::Muon>> muonToken_;
       edm::EDGetTokenT<reco::VertexCollection> pVToken_;
+      
 };
 
 //
@@ -93,7 +94,8 @@ LeptonMcFilter::LeptonMcFilter(const edm::ParameterSet& iConfig):
 muonToken_(consumes<edm::View<pat::Muon>>(iConfig.getParameter<edm::InputTag>("muons")))
 {
    //muonToken_   = consumes<pat::MuonCollection>(iConfig.getParameter< edm::InputTag>("muons"));
-   pVToken_     = consumes<reco::VertexCollection>(iConfig.getParameter< edm::InputTag>("primaryVertices")); 
+   pVToken_     = consumes<reco::VertexCollection>(iConfig.getParameter< edm::InputTag>("primaryVertices"));
+   
    produces<pat::CompositeCandidateCollection>("dilepton");
 }
 
