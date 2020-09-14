@@ -236,7 +236,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   //// Select  the best PV      ////
   //////////////////////////////////
   
-  if (!dileptons.isValid() )return; 	
+  if (!leptons.isValid() )return; 	
 
   if(primaryVertices_handle->empty())return;  
   
