@@ -236,7 +236,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   //// Select  the best PV      ////
   //////////////////////////////////
   
-  if (!leptons.isValid() )return; 	
+  if (!leptons.isValid() )return;
 
   if(primaryVertices_handle->empty())return;  
   
@@ -1210,7 +1210,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
       }//end lepton
   }
   iEvent.put(std::move(ZCandColl),"ZCandidates");
-  //std::cout << "is ZCandColl empty ?" << /*ZCandColl->empty() <<*/ std::endl; 
+  std::cout << "is ZCandColl empty ?" << ZCandColl->empty() << std::endl;
   //std::cout << "jpsiElecKmcFitter is working ok" << std::endl;
 }
 
