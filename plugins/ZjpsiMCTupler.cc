@@ -13,7 +13,7 @@
 //
 // Original Author:  Gabriel Artemio Ayala Sanchez
 //         Created:  Thu, 20 Jun 2019 19:12:04 GMT
-//
+//         Updated:  v7-12/09/20
 //
 
 
@@ -136,6 +136,7 @@ class ZjpsiMCTupler : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
       TVector3 Zvtx;
       Float_t ZvtxP;
       Float_t ZvtxC2;
+      Float_t pvChi2;
       //int tst;
       //int decaychannel;
       //int pass_match;
@@ -170,6 +171,13 @@ class ZjpsiMCTupler : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
       Float_t dR_m1_l2;
       Float_t dR_m2_l1;
       Float_t dR_m2_l2;
+    
+      Float_t dR_m1_m2_;
+      Float_t dR_l1_l2_;
+      Float_t dR_m1_l1_;
+      Float_t dR_m1_l2_;
+      Float_t dR_m2_l1_;
+      Float_t dR_m2_l2_;
     
       //new
       Float_t ipSm1;
@@ -311,6 +319,7 @@ ZjpsiMCTupler::ZjpsiMCTupler(const edm::ParameterSet& iConfig):
     Z_tree->Branch("msrd_lepton2_p4",  "TLorentzVector", &msrd_lepton2_p4);
     Z_tree->Branch("msrd_Z_p4", "TLorentzVector", &msrd_Z_p4);
 
+    Z_tree->Branch("pvChi2", &pvChi2, "pvChi2/F");
     Z_tree->Branch("Zvtx", "TVector3", &Zvtx);
     Z_tree->Branch("ZvtxP", &ZvtxP, "ZvtxP/F");
     Z_tree->Branch("ZvtxC2", &ZvtxC2, "ZvtxC2/F");
@@ -343,6 +352,13 @@ ZjpsiMCTupler::ZjpsiMCTupler(const edm::ParameterSet& iConfig):
     Z_tree->Branch("rIsoOverPtm1", &rIsoOverPtm1, "rIsoOverPtm1/F");
     Z_tree->Branch("rIsoOverPtm2", &rIsoOverPtm2, "rIsoOverPtm2/F");
     
+    Z_tree->Branch("dR_m1_m2_", &dR_m1_m2_, "dR_m1_m2_/F");
+    Z_tree->Branch("dR_l1_l2_", &dR_l1_l2_, "dR_l1_l2_/F");
+    Z_tree->Branch("dR_m1_l1_", &dR_m1_l1_, "dR_m1_l1_/F");
+    Z_tree->Branch("dR_m1_l2_", &dR_m1_l2_, "dR_m1_l2_/F");
+    Z_tree->Branch("dR_m2_l1_", &dR_m2_l1_, "dR_m2_l1_/F");
+    Z_tree->Branch("dR_m2_l2_", &dR_m2_l2_, "dR_m2_l2_/F");
+
     Z_tree->Branch("dR_m1_m2", &dR_m1_m2, "dR_m1_m2/F");
     Z_tree->Branch("dR_l1_l2", &dR_l1_l2, "dR_l1_l2/F");
     Z_tree->Branch("dR_m1_l1", &dR_m1_l1, "dR_m1_l1/F");
@@ -605,6 +621,7 @@ ZjpsiMCTupler::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
              gen_leading_muon_p4.SetPtEtaPhiM(   gen_lm.pt(), gen_lm.eta(), gen_lm.phi(), gen_lm.mass());
              gen_trailing_muon_p4.SetPtEtaPhiM(  gen_tm.pt(), gen_tm.eta(), gen_tm.phi(), gen_tm.mass());
              
+           pvChi2 = z_Cand.userFloat("pvChi2_");
            ZvtxP = z_Cand.userFloat("vProb") ;
            ZvtxC2 = z_Cand.userFloat("vChi2") ;
            //tst = z_Cand.userInt("tst_");
@@ -681,6 +698,13 @@ ZjpsiMCTupler::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
            ImparSigl2 = dipl2/dipl2Err;
            ImparSigm1 = dipm1/dipm1Err;
            ImparSigm2 = dipm2/dipm2Err;
+             
+           dR_m1_m2 = z_Cand.userFloat("dRm1m2_");
+           dR_l1_l2 = z_Cand.userFloat("dRl1l2_");
+           dR_m1_l1 = z_Cand.userFloat("dRl1m1_");
+           dR_m1_l2 = z_Cand.userFloat("dRl1m2_");
+           dR_m2_l1 = z_Cand.userFloat("dRl2m1_");
+           dR_m2_l2 = z_Cand.userFloat("dRl2m2_");
              
            dR_m1_m2 = z_Cand.userFloat("dRm1m2");
            dR_l1_l2 = z_Cand.userFloat("dRl1l2");
