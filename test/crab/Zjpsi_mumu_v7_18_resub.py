@@ -82,7 +82,7 @@ def main():
    #     config.Data.splitting = 'LumiBased'
         config.Data.splitting = 'FileBased'
    #     config.Data.unitsPerJob = 30
-        config.Data.unitsPerJob = 8
+        config.Data.unitsPerJob = 1
    #     config.Data.totalUnits = 30
 	config.Data.lumiMask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions18/13TeV/ReReco/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON_MuonPhys.txt' #has nosence in Mc
 	config.Data.publication = True
