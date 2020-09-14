@@ -84,7 +84,7 @@ def main():
    #     config.Data.unitsPerJob = 30
         config.Data.unitsPerJob = 1
    #     config.Data.totalUnits = 30
-	config.Data.lumiMask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/Legacy_2016/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON_MuonPhys.txt' #has nosence in Mc
+	config.Data.lumiMask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions17/13TeV/Final/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON_MuonPhys.txt' #has nosence in Mc
 	config.Data.publication = True
         config.Data.outputDatasetTag = None
 	config.Data.outLFNDirBase = '/store/user/%s/Zpsi_mm17_v7/' % ("gayalasa")
