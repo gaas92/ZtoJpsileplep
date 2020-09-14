@@ -28,12 +28,12 @@ process.source = cms.Source("PoolSource",
 process.TFileService = cms.Service("TFileService",
         fileName = cms.string('Zjpsi_elel_v7.root'),
 )
-process.SimpleMemoryCheck = cms.Service('SimpleMemoryCheck',
-                                        ignoreTotal=cms.untracked.int32(0),
-                                        oncePerEventMode = cms.untracked.bool(False)
-                                        )
-
-process.Timing = cms.Service("Timing")
+#process.SimpleMemoryCheck = cms.Service('SimpleMemoryCheck',
+#                                        ignoreTotal=cms.untracked.int32(0),
+#                                        oncePerEventMode = cms.untracked.bool(False)
+#                                        )
+#
+#process.Timing = cms.Service("Timing")
 
 
 #from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
