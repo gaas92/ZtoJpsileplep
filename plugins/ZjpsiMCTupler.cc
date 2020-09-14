@@ -699,12 +699,12 @@ ZjpsiMCTupler::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
            ImparSigm1 = dipm1/dipm1Err;
            ImparSigm2 = dipm2/dipm2Err;
              
-           dR_m1_m2 = z_Cand.userFloat("dRm1m2_");
-           dR_l1_l2 = z_Cand.userFloat("dRl1l2_");
-           dR_m1_l1 = z_Cand.userFloat("dRl1m1_");
-           dR_m1_l2 = z_Cand.userFloat("dRl1m2_");
-           dR_m2_l1 = z_Cand.userFloat("dRl2m1_");
-           dR_m2_l2 = z_Cand.userFloat("dRl2m2_");
+           dR_m1_m2_ = z_Cand.userFloat("dRm1m2_");
+           dR_l1_l2_ = z_Cand.userFloat("dRl1l2_");
+           dR_m1_l1_ = z_Cand.userFloat("dRl1m1_");
+           dR_m1_l2_ = z_Cand.userFloat("dRl1m2_");
+           dR_m2_l1_ = z_Cand.userFloat("dRl2m1_");
+           dR_m2_l2_ = z_Cand.userFloat("dRl2m2_");
              
            dR_m1_m2 = z_Cand.userFloat("dRm1m2");
            dR_l1_l2 = z_Cand.userFloat("dRl1l2");
