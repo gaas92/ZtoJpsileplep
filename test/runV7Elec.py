@@ -62,7 +62,7 @@ process.electonFilter = cms.EDFilter('PATElectronSelector',
                     #' && innerTrack.hitPattern.trackerLayersWithMeasurement > 4'
                     #' && innerTrack.hitPattern.pixelLayersWithMeasurement > 0'
                     #' && innerTrack.quality(\"highPurity\") '
-                    ' && abs(eta) <= 2.6 && pt >= 1'),
+                    ' abs(eta) <= 2.6 && pt >= 1'),
    filter = cms.bool(True)
 )
 ###jspsi sequence
