@@ -73,7 +73,7 @@ def main():
 	config.General.transferLogs = False
 
         config.JobType.pluginName = 'Analysis'
-	config.JobType.psetName = '/afs/cern.ch/work/g/gayalasa/public/Zll/z_sl7/jpsielec18mc/CMSSW_10_2_10/src/AnalizeZee/ZelecTupler/test/runV7Muon.py' #2018 DT configfile
+	config.JobType.psetName = '/afs/cern.ch/work/g/gayalasa/public/Zll/z_sl7/ZtoJpsill/CMSSW_10_6_3/src/AnalizeZll/ZtoJpsileplep/test/runV7Muon.py' #2018 DT configfile
 	config.JobType.allowUndistributedCMSSW = True
 
         config.Data.inputDataset = None
