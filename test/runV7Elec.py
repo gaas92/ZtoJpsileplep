@@ -59,11 +59,10 @@ process.muonFilter = cms.EDFilter('PATMuonSelector',
 process.electonFilter = cms.EDFilter('PATElectronSelector',
    src = cms.InputTag('slimmedElectrons'),
    cut = cms.string(
-                    '(pfIsolationR03().sumChargedHadronPt + max(0., pfIsolationR03().sumNeutralHadronEt + pfIsolationR03().sumPhotonEt-0.5*pfIsolationR03().sumPUPt))/pt() < 0.6'
                     #' && innerTrack.hitPattern.trackerLayersWithMeasurement > 4'
                     #' && innerTrack.hitPattern.pixelLayersWithMeasurement > 0'
                     #' && innerTrack.quality(\"highPurity\") '
-                    ' && abs(eta) <= 2.5 && pt >= 1'),
+                    ' && abs(eta) <= 2.6 && pt >= 1'),
    filter = cms.bool(True)
 )
 ###jspsi sequence
@@ -76,20 +75,24 @@ process.onia2MuMuPAT.lowerPuritySelection=cms.string("isGlobalMuon")
 process.onia2MuMuPAT.dimuonSelection=cms.string("2.0 < mass && mass < 100") ## linea 149
 process.onia2MuMuPAT.addMCTruth = cms.bool(False)
 
-###Lepton filter
-process.dileptonFilter = cms.EDProducer('LeptonMcFilterElectron',
-    electronsMiniAOD        = cms.InputTag("slimmedElectrons"),
-    primaryVertices         = cms.InputTag('offlineSlimmedPrimaryVertices')
-)
 
-####Kinematic Fit
+#update for v7
+####this apply de BF cuts to dimuon & dilepton 5 & 6
 process.Zfitter    = cms.EDProducer("jpsiElecKmcFitter",
                           dimuon = cms.InputTag("onia2MuMuPAT"),
-                          dilepton = cms.InputTag("dileptonFilter","dilepton"),
+                          leptons = cms.InputTag("electonFilter"),
                           primaryVertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
                           GenParticles   = cms.InputTag("prunedGenParticles"),
                           packedGenParticles = cms.InputTag("packedGenParticles")
-                          
+                          isMC4l              = cms.bool(False),
+                          ImparSigm           = cms.double(4.5),
+                          ImparSigl           = cms.double(4.5),
+                          dxym                = cms.double(0.5),
+                          dxyl                = cms.double(1.0),
+                          dzm                 = cms.double(0.5),
+                          dzl                 = cms.double(1.0),
+                          trackerLayersWithMeasurement = cms.double(4),
+                          pixelLayersWithMeasurement   = cms.double(1)
 #                          fixedGridRhoFastjetAll = cms.InputTag("fixedGridRhoFastjetAll")
 )
 
@@ -101,6 +104,6 @@ process.oniarootupler = cms.EDAnalyzer('Zjpsi_eeMCTupler',
 
 
 process.oniaSequence = cms.Sequence(process.onia2MuMuPAT) ##No trigger matching for 2017yet
-process.leptonSequence = cms.Sequence(process.dileptonFilter*process.Zfitter)
+process.leptonSequence = cms.Sequence(process.Zfitter)
 
 process.p = cms.Path(process.egammaPostRecoSeq*process.muonFilter*process.electonFilter*process.oniaSequence*process.leptonSequence*process.oniarootupler)

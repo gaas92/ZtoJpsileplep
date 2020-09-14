@@ -13,7 +13,7 @@
 //
 // Original Author:  Rogelio Reyes Almanza
 //         Created:  Tue, 04 Sep 2018 09:41:00 GMT
-//
+//         Updated:  v7-12/09/2020
 //
 
 
@@ -124,13 +124,27 @@ class jpsiElecKmcFitter : public edm::stream::EDProducer<>{
         //edm::EDGetTokenT<double> fixedGridRhoFastjetAll_;
         edm::Handle<double> rhoH;
         edm::EDGetTokenT<double> rhoHToken;
+    
+        //what MC
+        bool isMC4l_;
+        //Cuts
+        double ImparSigm_ = 0;
+        double ImparSigl_ = 0;
+        double dxym_      = 0;
+        double dxyl_      = 0;
+        double dzm_       = 0;
+        double dzl_       = 0;
+        double tlwm_         = 0;
+        double plwm_         = 0;
 
 };
 
 
 jpsiElecKmcFitter::jpsiElecKmcFitter(const edm::ParameterSet& iConfig){
 	dimuon_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter< edm::InputTag>("dimuon"));
-	dielec_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter<edm::InputTag>("dilepton"));
+	//dielec_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter<edm::InputTag>("dilepton"));
+    leptonToken_ = consumes<edm::View<pat::Electron>>(iConfig.getParameter<edm::InputTag>("leptons"));
+
 	primaryVertices_Label = consumes<reco::VertexCollection>(iConfig.getParameter< edm::InputTag>("primaryVertices"));
     
     genCands_ = consumes<reco::GenParticleCollection>(iConfig.getParameter < edm::InputTag > ("GenParticles"));
@@ -138,7 +152,18 @@ jpsiElecKmcFitter::jpsiElecKmcFitter(const edm::ParameterSet& iConfig){
     
     //fixedGridRhoFastjetAll_ = consumes<double> (iConfig.getParameter <edm::InputTag>("fixedGridRhoFastjetAll"));
     rhoHToken = consumes<double>(iConfig.getUntrackedParameter("fixedGridRhoFastjetAll",edm::InputTag("fixedGridRhoFastjetAll")));
-
+    
+    isMC4l_ = iConfig.getParameter<bool>("isMC4l" );
+     
+    ImparSigm_       = iConfig.getParameter<double>("ImparSigm");
+    ImparSigl_       = iConfig.getParameter<double>("ImparSigl");
+    dxym_            = iConfig.getParameter<double>("dxym");
+    dxyl_            = iConfig.getParameter<double>("dxyl");
+    dzm_             = iConfig.getParameter<double>("dzm");
+    dzl_             = iConfig.getParameter<double>("dzl");
+    tlwm_            = iConfig.getParameter<double>("trackerLayersWithMeasurement");
+    plwm_            = iConfig.getParameter<double>("pixelLayersWithMeasurement");
+    
    	produces<pat::CompositeCandidateCollection>("ZCandidates"); 
  
 }
@@ -179,9 +204,11 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   edm::Handle<pat::CompositeCandidateCollection> dimuons;
   iEvent.getByToken(dimuon_Label,dimuons);
   
-  edm::Handle<pat::CompositeCandidateCollection> dileptons;
-  iEvent.getByToken(dielec_Label,dileptons);
-
+  //edm::Handle<pat::CompositeCandidateCollection> dileptons;
+  //iEvent.getByToken(dielec_Label,dileptons);
+  edm::Handle<View<pat::Electron>> leptons;
+  iEvent.getByToken(leptonToken_,leptons);
+    
   edm::Handle<edm::View<pat::Electron> > electrons; //new
   //if( !electrons.isValid() ) iEvent.getByToken(electronsMiniAODToken_,electrons); //new
   
@@ -302,7 +329,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
     
   //NEW for muons and psi pairs
   int nonia = dimuons->size();
-  int nmuons = dileptons->size()*2;
+  int nmuons = dimuons->size()*2;
+  int nelecs = leptons->size();
   int nPV    = primaryVertices_handle->size();
     
   for (pat::CompositeCandidateCollection::const_iterator dimuon = dimuons->begin(); dimuon != dimuons->end(); ++dimuon ) {
@@ -429,9 +457,15 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
       //if (fabs(tkPVdist2.second.significance())>4.) continue;
       //std::cout << "works for jpsimuons" << std::endl;
       //std::cout << "diElectrons handle Size: " << dileptons->size() << " " << std::endl;
-	  for (pat::CompositeCandidateCollection::const_iterator dilepton = dileptons->begin(); dilepton != dileptons->end(); ++dilepton){
-                //std::cout << "Enters elec" << std::endl;
-                //cambiar pues ahora son electrones	
+	  for (View<pat::Electron>::const_iterator lepton1 = leptons->begin(); lepton1 != leptons->end(); ++lepton1 ) {
+            reco::TrackRef track_1 = lepton1->track();
+            if (track_1.isNull()) continue;
+            //std::cout << "PASS MU 1, LOOPING OVER MU 2" << std::endl;
+            for (View<pat::Electron>::const_iterator lepton2 = leptons->begin() ; lepton2 !=  leptons->end(); ++lepton2 ) {
+                if((lepton1->charge() * lepton2->charge()) != -1) continue;
+                if(lepton1==lepton2) continue; //v7 add
+                reco::TrackRef track_2 = lepton2->track();
+                if (track_2.isNull()) continue;
                 int lept1Ele25wpT = 0;
                 int lept2Ele25wpT = 0;
                      
@@ -441,8 +475,13 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                 int lept1Mu8DiEle12 = 0;
                 int lept2Mu8DiEle12 = 0;
           
-                const pat::Electron* lept1 = dynamic_cast<const pat::Electron*>(dilepton->daughter("lepton1"));
-                const pat::Electron* lept2 = dynamic_cast<const pat::Electron*>(dilepton->daughter("lepton2"));
+                //const pat::Electron* lept1 = dynamic_cast<const pat::Electron*>(dilepton->daughter("lepton1"));
+                //const pat::Electron* lept2 = dynamic_cast<const pat::Electron*>(dilepton->daughter("lepton2"));
+                const pat::Electron* lept1 = 0;
+                const pat::Electron* lept2 = 0;
+                if(lepton1->charge() == -1 && lepton2->charge() == 1){ lept1 = &(*lepton1); lept2 = &(*lepton2);}
+                else if (lepton1->charge() == 1 && lepton2->charge() == -1) {lept1 = &(*lepton2); lept2 = &(*lepton1);}
+                else continue;
           /*
                 try {
                      const pat::TriggerObjectStandAloneCollection lept1HLT_Ele25wpT = lept1->triggerObjectMatchesByFilter("HLTEle25WPTightGsfSequence");
@@ -748,427 +787,427 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                 ZVtxY_fit = 0;
                 ZVtxZ_fit = 0;
                 ZVtxP_fit = ChiSquaredProbability((double)(ZDecayVertex->chiSquared()), (double)(ZDecayVertex->degreesOfFreedom()));
-                }
-                float Z_px = muon1->px()+muon2->px()+lept1->px()+lept2->px();
-                float Z_py = muon1->py()+muon2->py()+lept1->py()+lept2->py();
-                float Z_pz = muon1->pz()+muon2->pz()+lept1->pz()+lept2->pz();
-				TLorentzVector m1;
-				TLorentzVector m2;
-				TLorentzVector l1;
-				TLorentzVector l2;
-                m1.SetPtEtaPhiM(muon1->pt(), muon1->eta(),muon1->phi(),muon1->mass());
-                m2.SetPtEtaPhiM(muon2->pt(), muon2->eta(),muon2->phi(),muon2->mass());
-                l1.SetPtEtaPhiM(lept1->pt(), lept1->eta(),lept1->phi(),lept1->mass());
-                l2.SetPtEtaPhiM(lept2->pt(), lept2->eta(),lept2->phi(),lept2->mass());
-                TLorentzVector theZ = m1+m2+l1+l2;
-                // Get the Z boson
-                //std::cout << "Z Fit diff: " << ZM_fit - gen_z_p4.M() << std::endl;
-                //std::cout << "Z msrd diff: "<< theZ.M() - gen_z_p4.M() << std::endl;
-                if (theZ.M() < 60.0) continue;
-                if (theZ.M() > 150.0) continue;
-				reco::CompositeCandidate recoZ(0, math::XYZTLorentzVector(ZPx_fit, ZPy_fit, ZPz_fit,
-                                              sqrt(ZM_fit*ZM_fit + ZPx_fit*ZPx_fit + ZPy_fit*ZPy_fit +
-                                              ZPz_fit*ZPz_fit)), math::XYZPoint(ZVtxX_fit,
+            }
+            float Z_px = muon1->px()+muon2->px()+lept1->px()+lept2->px();
+            float Z_py = muon1->py()+muon2->py()+lept1->py()+lept2->py();
+            float Z_pz = muon1->pz()+muon2->pz()+lept1->pz()+lept2->pz();
+            TLorentzVector m1;
+            TLorentzVector m2;
+            TLorentzVector l1;
+            TLorentzVector l2;
+            m1.SetPtEtaPhiM(muon1->pt(), muon1->eta(),muon1->phi(),muon1->mass());
+            m2.SetPtEtaPhiM(muon2->pt(), muon2->eta(),muon2->phi(),muon2->mass());
+            l1.SetPtEtaPhiM(lept1->pt(), lept1->eta(),lept1->phi(),lept1->mass());
+            l2.SetPtEtaPhiM(lept2->pt(), lept2->eta(),lept2->phi(),lept2->mass());
+            TLorentzVector theZ = m1+m2+l1+l2;
+            // Get the Z boson
+            //std::cout << "Z Fit diff: " << ZM_fit - gen_z_p4.M() << std::endl;
+            //std::cout << "Z msrd diff: "<< theZ.M() - gen_z_p4.M() << std::endl;
+            if (theZ.M() < 60.0) continue;
+            if (theZ.M() > 150.0) continue;
+            reco::CompositeCandidate recoZ(0, math::XYZTLorentzVector(ZPx_fit, ZPy_fit, ZPz_fit,
+                                            sqrt(ZM_fit*ZM_fit + ZPx_fit*ZPx_fit + ZPy_fit*ZPy_fit +
+                                            ZPz_fit*ZPz_fit)), math::XYZPoint(ZVtxX_fit,
 	      				                      ZVtxY_fit, ZVtxZ_fit), 23);
-                reco::CompositeCandidate msrdZ(0, math::XYZTLorentzVector( Z_px, Z_py, Z_pz,
-                                              sqrt(theZ.M()*theZ.M() + Z_px*Z_px + Z_py*Z_py +
-                                              Z_pz*Z_pz)), math::XYZPoint(ZVtxX_fit,
-	      		                		       ZVtxY_fit, ZVtxZ_fit), 23);
-                pat::CompositeCandidate patMZ(msrdZ);
-				pat::CompositeCandidate patZ(recoZ);
-                //New
-                patZ.addUserInt("passFit_", passFit);
-                patZ.addUserInt("nonia_", nonia );
-                patZ.addUserInt("nmuons_",nmuons);
-                patZ.addUserInt("nPV_",   nPV   );
+            reco::CompositeCandidate msrdZ(0, math::XYZTLorentzVector( Z_px, Z_py, Z_pz,
+                                            sqrt(theZ.M()*theZ.M() + Z_px*Z_px + Z_py*Z_py +
+                                            Z_pz*Z_pz)), math::XYZPoint(ZVtxX_fit,
+                                            ZVtxY_fit, ZVtxZ_fit), 23);
+            pat::CompositeCandidate patMZ(msrdZ);
+            pat::CompositeCandidate patZ(recoZ);
+            //New
+            patZ.addUserInt("passFit_", passFit);
+            patZ.addUserInt("nonia_", nonia );
+            patZ.addUserInt("nmuons_",nmuons);
+            patZ.addUserInt("nPV_",   nPV   );
           
-				patZ.addUserFloat("vProb",ZVtxP_fit);
-                patZ.addUserFloat("vChi2",ZDecayVertex->chiSquared());
-				patZ.addUserFloat("ZvtxX",ZVtxX_fit);
-				patZ.addUserFloat("ZvtxY",ZVtxY_fit);
-				patZ.addUserFloat("ZvtxZ",ZVtxZ_fit);
-				patZ.addUserFloat("dRm1m2",dRm1m2);	
-				patZ.addUserFloat("dRl1l2",dRel1el2);	
-				patZ.addUserFloat("dRl1m1",dRel1mu1);	
-				patZ.addUserFloat("dRl1m2",dRel1mu2);	
-				patZ.addUserFloat("dRl2m1",dRel2mu1);	
-				patZ.addUserFloat("dRl2m2",dRel2mu2);	
+            patZ.addUserFloat("vProb",ZVtxP_fit);
+            patZ.addUserFloat("vChi2",ZDecayVertex->chiSquared());
+            patZ.addUserFloat("ZvtxX",ZVtxX_fit);
+            patZ.addUserFloat("ZvtxY",ZVtxY_fit);
+            patZ.addUserFloat("ZvtxZ",ZVtxZ_fit);
+            patZ.addUserFloat("dRm1m2",dRm1m2);
+            patZ.addUserFloat("dRl1l2",dRel1el2);
+            patZ.addUserFloat("dRl1m1",dRel1mu1);
+            patZ.addUserFloat("dRl1m2",dRel1mu2);
+            patZ.addUserFloat("dRl2m1",dRel2mu1);
+            patZ.addUserFloat("dRl2m2",dRel2mu2);
 
-                ////////////////////////////////
-                ///////// MY MUON Q ID /////////
-                ////////////////////////////////
+            ////////////////////////////////
+            ///////// MY MUON Q ID /////////
+            ////////////////////////////////
 				
-                bool child = ZTree->movePointerToTheFirstChild();
-				//get first muon
-                RefCountedKinematicParticle fitMu1 = ZTree->currentParticle();
-                float mu1M_fit;
-                float mu1Q_fit ;
-                float mu1Px_fit;
-                float mu1Py_fit;
-                float mu1Pz_fit;
+            bool child = ZTree->movePointerToTheFirstChild();
+            //get first muon
+            RefCountedKinematicParticle fitMu1 = ZTree->currentParticle();
+            float mu1M_fit;
+            float mu1Q_fit ;
+            float mu1Px_fit;
+            float mu1Py_fit;
+            float mu1Pz_fit;
           
-            	if (!child){
-                    std::cout << "Mu1" << std::endl;
-                    mu1M_fit  = 0;
-                    mu1Q_fit  = 0;
-                    mu1Px_fit = 0;
-                    mu1Py_fit = 0;
-                    mu1Pz_fit = 0;
-                }
-                else{
-                    mu1M_fit  = fitMu1->currentState().mass();
-                    mu1Q_fit  = fitMu1->currentState().particleCharge();
-                    mu1Px_fit = fitMu1->currentState().kinematicParameters().momentum().x();
-                    mu1Py_fit = fitMu1->currentState().kinematicParameters().momentum().y();
-                    mu1Pz_fit = fitMu1->currentState().kinematicParameters().momentum().z();
-                }
+            if (!child){
+                std::cout << "Mu1" << std::endl;
+                mu1M_fit  = 0;
+                mu1Q_fit  = 0;
+                mu1Px_fit = 0;
+                mu1Py_fit = 0;
+                mu1Pz_fit = 0;
+            }
+            else{
+                mu1M_fit  = fitMu1->currentState().mass();
+                mu1Q_fit  = fitMu1->currentState().particleCharge();
+                mu1Px_fit = fitMu1->currentState().kinematicParameters().momentum().x();
+                mu1Py_fit = fitMu1->currentState().kinematicParameters().momentum().y();
+                mu1Pz_fit = fitMu1->currentState().kinematicParameters().momentum().z();
+            }
 
-			    //int muId ;
-				//if (mu1Q_fit > 0 ) muId = 13;
-				//else  muId = -13;	 
-				reco::CompositeCandidate recoMu1(mu1Q_fit, math::XYZTLorentzVector(mu1Px_fit, mu1Py_fit, mu1Pz_fit, 
-		                                             sqrt(mu1M_fit*mu1M_fit + mu1Px_fit*mu1Px_fit + mu1Py_fit*mu1Py_fit + 
-		                                             mu1Pz_fit*mu1Pz_fit)), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
-                                
-                //save measured values
-                reco::CompositeCandidate msrdMu1(muon1->charge(), math::XYZTLorentzVector(muon1->px(), muon1->py(), muon1->pz(),
-                                                 sqrt((muon1->mass())*(muon1->mass()) + (muon1->px())*(muon1->px()) + (muon1->py())*(muon1->py()) +
-                                                 (muon1->pz())*(muon1->pz()))), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
-                pat::CompositeCandidate pat_msrdMu1(msrdMu1);
+            //int muId ;
+            //if (mu1Q_fit > 0 ) muId = 13;
+            //else  muId = -13;
+            reco::CompositeCandidate recoMu1(mu1Q_fit, math::XYZTLorentzVector(mu1Px_fit, mu1Py_fit, mu1Pz_fit,
+                                                    sqrt(mu1M_fit*mu1M_fit + mu1Px_fit*mu1Px_fit + mu1Py_fit*mu1Py_fit +
+                                                    mu1Pz_fit*mu1Pz_fit)), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
+                            
+            //save measured values
+            reco::CompositeCandidate msrdMu1(muon1->charge(), math::XYZTLorentzVector(muon1->px(), muon1->py(), muon1->pz(),
+                                                sqrt((muon1->mass())*(muon1->mass()) + (muon1->px())*(muon1->px()) + (muon1->py())*(muon1->py()) +
+                                                (muon1->pz())*(muon1->pz()))), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
+            pat::CompositeCandidate pat_msrdMu1(msrdMu1);
 
-			    pat::CompositeCandidate patMu1(recoMu1);
-           		//patMu1.addUserFloat("mu1Q_", muon1->charge());
-                patMu1.addUserFloat("Dxy",mdxy1);
-           		patMu1.addUserFloat("Dz",mdz1);
-                //new
-                patMu1.addUserFloat("dRIso"    ,getIso( *muon1 ) );
-                patMu1.addUserFloat("dIP3DSig", tkPVdist1.second.significance());
+            pat::CompositeCandidate patMu1(recoMu1);
+            //patMu1.addUserFloat("mu1Q_", muon1->charge());
+            patMu1.addUserFloat("Dxy",mdxy1);
+            patMu1.addUserFloat("Dz",mdz1);
+            //new
+            patMu1.addUserFloat("dRIso"    ,getIso( *muon1 ) );
+            patMu1.addUserFloat("dIP3DSig", tkPVdist1.second.significance());
           
-           		patMu1.addUserFloat("dIP3D",tkPVdist1.second.value());
-           		patMu1.addUserFloat("dIP3DErr",tkPVdist1.second.error());
-                ////////////////////////////////
-                ///////// MY MUON Q ID /////////
-                ////////////////////////////////
-                //patMu1.addUserFloat("JpM1Qid_", JpM1Qid);
-                                
-                patMu1.addUserFloat("muon1Mu8DiEle12_", muon1Mu8DiEle12);
-                       
-                patMu1.addUserInt("JpM1Qid_", ZMu1Qid);
-                //patMu1.addUserFloat("JpM1Qid_TP_", JpM1Qid_TP);
+            patMu1.addUserFloat("dIP3D",tkPVdist1.second.value());
+            patMu1.addUserFloat("dIP3DErr",tkPVdist1.second.error());
+            ////////////////////////////////
+            ///////// MY MUON Q ID /////////
+            ////////////////////////////////
+            //patMu1.addUserFloat("JpM1Qid_", JpM1Qid);
+                            
+            patMu1.addUserFloat("muon1Mu8DiEle12_", muon1Mu8DiEle12);
+                    
+            patMu1.addUserInt("JpM1Qid_", ZMu1Qid);
+            //patMu1.addUserFloat("JpM1Qid_TP_", JpM1Qid_TP);
   
-                patMu1.addUserFloat("psiM1_TrackerLWM_", psiM1_TrackerLWM);
-                patMu1.addUserFloat("psiM1_PixelLWM_",  psiM1_PixelLWM);
-                patMu1.addUserFloat("psiM1_ValPixHit_", psiM1_ValPixHit);
-                //get second muon
-                child = ZTree->movePointerToTheNextChild();
-			    RefCountedKinematicParticle fitMu2 = ZTree->currentParticle();
-                float mu2M_fit ;
-                float mu2Q_fit ;
-                float mu2Px_fit;
-                float mu2Py_fit;
-                float mu2Pz_fit;
+            patMu1.addUserFloat("psiM1_TrackerLWM_", psiM1_TrackerLWM);
+            patMu1.addUserFloat("psiM1_PixelLWM_",  psiM1_PixelLWM);
+            patMu1.addUserFloat("psiM1_ValPixHit_", psiM1_ValPixHit);
+            //get second muon
+            child = ZTree->movePointerToTheNextChild();
+            RefCountedKinematicParticle fitMu2 = ZTree->currentParticle();
+            float mu2M_fit ;
+            float mu2Q_fit ;
+            float mu2Px_fit;
+            float mu2Py_fit;
+            float mu2Pz_fit;
           
-		        if (!child){
-                    std::cout << "Mu2" << std::endl;
-                    mu2M_fit  = 0;
-                    mu2Q_fit  = 0;
-                    mu2Px_fit = 0;
-                    mu2Py_fit = 0;
-                    mu2Pz_fit = 0;
-                }
-                else{
-			        mu2M_fit  = fitMu2->currentState().mass();
-		            mu2Q_fit  = fitMu2->currentState().particleCharge();
-		            mu2Px_fit =    fitMu2->currentState().kinematicParameters().momentum().x();
-			        mu2Py_fit =    fitMu2->currentState().kinematicParameters().momentum().y();
-			        mu2Pz_fit =    fitMu2->currentState().kinematicParameters().momentum().z();
-                }
-		        reco::CompositeCandidate recoMu2(mu2Q_fit, math::XYZTLorentzVector(mu2Px_fit, mu2Py_fit, mu2Pz_fit,
-                                                 sqrt(mu2M_fit*mu2M_fit + mu2Px_fit*mu2Px_fit + mu2Py_fit*mu2Py_fit +
-		                                         mu2Pz_fit*mu2Pz_fit)), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
+            if (!child){
+                std::cout << "Mu2" << std::endl;
+                mu2M_fit  = 0;
+                mu2Q_fit  = 0;
+                mu2Px_fit = 0;
+                mu2Py_fit = 0;
+                mu2Pz_fit = 0;
+            }
+            else{
+                mu2M_fit  = fitMu2->currentState().mass();
+                mu2Q_fit  = fitMu2->currentState().particleCharge();
+                mu2Px_fit =    fitMu2->currentState().kinematicParameters().momentum().x();
+                mu2Py_fit =    fitMu2->currentState().kinematicParameters().momentum().y();
+                mu2Pz_fit =    fitMu2->currentState().kinematicParameters().momentum().z();
+            }
+            reco::CompositeCandidate recoMu2(mu2Q_fit, math::XYZTLorentzVector(mu2Px_fit, mu2Py_fit, mu2Pz_fit,
+                                                sqrt(mu2M_fit*mu2M_fit + mu2Px_fit*mu2Px_fit + mu2Py_fit*mu2Py_fit +
+                                                mu2Pz_fit*mu2Pz_fit)), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
 		    		
-                reco::CompositeCandidate msrdMu2(muon2->charge(), math::XYZTLorentzVector(muon2->px(), muon2->py(), muon2->pz(),
-                                                 sqrt((muon2->mass())*(muon2->mass()) + (muon2->px())*(muon2->px()) + (muon2->py())*(muon2->py()) +
-                                                 (muon2->pz())*(muon2->pz()))), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
-                pat::CompositeCandidate pat_msrdMu2(msrdMu2);
+            reco::CompositeCandidate msrdMu2(muon2->charge(), math::XYZTLorentzVector(muon2->px(), muon2->py(), muon2->pz(),
+                                                sqrt((muon2->mass())*(muon2->mass()) + (muon2->px())*(muon2->px()) + (muon2->py())*(muon2->py()) +
+                                                (muon2->pz())*(muon2->pz()))), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
+            pat::CompositeCandidate pat_msrdMu2(msrdMu2);
 
-			    pat::CompositeCandidate patMu2(recoMu2);
-                patMu2.addUserFloat("Dxy",mdxy2);
-                patMu2.addUserFloat("Dz",mdz2);
-                //New
-                patMu2.addUserFloat("dRIso"    ,getIso( *muon2 ) );
-                patMu2.addUserFloat("dIP3DSig", tkPVdist2.second.significance());
+            pat::CompositeCandidate patMu2(recoMu2);
+            patMu2.addUserFloat("Dxy",mdxy2);
+            patMu2.addUserFloat("Dz",mdz2);
+            //New
+            patMu2.addUserFloat("dRIso"    ,getIso( *muon2 ) );
+            patMu2.addUserFloat("dIP3DSig", tkPVdist2.second.significance());
           
-                patMu2.addUserFloat("dIP3D",tkPVdist2.second.value());
-                patMu2.addUserFloat("dIP3DErr",tkPVdist2.second.error());
+            patMu2.addUserFloat("dIP3D",tkPVdist2.second.value());
+            patMu2.addUserFloat("dIP3DErr",tkPVdist2.second.error());
 		
           
-                //patMu2.addUserFloat("JpM2Qid_", JpM2Qid);
+            //patMu2.addUserFloat("JpM2Qid_", JpM2Qid);
 
-                patMu2.addUserFloat("muon2Mu8DiEle12_", muon2Mu8DiEle12);
-		             
-                patMu2.addUserInt("JpM2Qid_", ZMu2Qid);
-                //patMu2.addUserFloat("JpM2Qid_TP_", JpM2Qid_TP);
+            patMu2.addUserFloat("muon2Mu8DiEle12_", muon2Mu8DiEle12);
+                    
+            patMu2.addUserInt("JpM2Qid_", ZMu2Qid);
+            //patMu2.addUserFloat("JpM2Qid_TP_", JpM2Qid_TP);
 
-                patMu2.addUserFloat("psiM2_TrackerLWM_", psiM2_TrackerLWM);
-                patMu2.addUserFloat("psiM2_PixelLWM_",  psiM2_PixelLWM);
-                patMu2.addUserFloat("psiM2_ValPixHit_", psiM2_ValPixHit);
+            patMu2.addUserFloat("psiM2_TrackerLWM_", psiM2_TrackerLWM);
+            patMu2.addUserFloat("psiM2_PixelLWM_",  psiM2_PixelLWM);
+            patMu2.addUserFloat("psiM2_ValPixHit_", psiM2_ValPixHit);
 	
-                //Define Onia from two muon and the information of Onia2Mumu
-                pat::CompositeCandidate jpsi;
-                jpsi.addDaughter(patMu1,"muon1");
-                jpsi.addDaughter(patMu2,"muon2");
-                jpsi.setP4(patMu1.p4()+patMu2.p4());
-				jpsi.addUserFloat("vProb",jpsiVprob);
-				jpsi.addUserFloat("vChi2",jpsiChi2);
-                //save measured values on a different daughter
-                pat::CompositeCandidate msrd_jpsi;
-                msrd_jpsi.addDaughter(pat_msrdMu1,"msrd_muon1");
-                msrd_jpsi.addDaughter(pat_msrdMu2,"msrd_muon2");
-                msrd_jpsi.setP4(pat_msrdMu1.p4()+pat_msrdMu2.p4());
-				msrd_jpsi.addUserFloat("vProb",jpsiVprob);
-				msrd_jpsi.addUserFloat("vChi2",jpsiChi2);
-				        
+            //Define Onia from two muon and the information of Onia2Mumu
+            pat::CompositeCandidate jpsi;
+            jpsi.addDaughter(patMu1,"muon1");
+            jpsi.addDaughter(patMu2,"muon2");
+            jpsi.setP4(patMu1.p4()+patMu2.p4());
+            jpsi.addUserFloat("vProb",jpsiVprob);
+            jpsi.addUserFloat("vChi2",jpsiChi2);
+            //save measured values on a different daughter
+            pat::CompositeCandidate msrd_jpsi;
+            msrd_jpsi.addDaughter(pat_msrdMu1,"msrd_muon1");
+            msrd_jpsi.addDaughter(pat_msrdMu2,"msrd_muon2");
+            msrd_jpsi.setP4(pat_msrdMu1.p4()+pat_msrdMu2.p4());
+            msrd_jpsi.addUserFloat("vProb",jpsiVprob);
+            msrd_jpsi.addUserFloat("vChi2",jpsiChi2);
+                    
 
 
-				//get Lepton
-				child = ZTree->movePointerToTheNextChild();
-                RefCountedKinematicParticle fitL1 = ZTree->currentParticle();
-                float L1M_fit ;
-                float L1Q_fit ;
-                float L1Px_fit;
-                float L1Py_fit;
-                float L1Pz_fit;
+            //get Lepton
+            child = ZTree->movePointerToTheNextChild();
+            RefCountedKinematicParticle fitL1 = ZTree->currentParticle();
+            float L1M_fit ;
+            float L1Q_fit ;
+            float L1Px_fit;
+            float L1Py_fit;
+            float L1Pz_fit;
           
-                if (!child){
-                    L1M_fit = 0;
-                    L1Q_fit = 0;
-                    L1Px_fit = 0;
-                    L1Py_fit = 0;
-                    L1Pz_fit = 0;
-                }
-                else{
-			         L1M_fit  = fitL1->currentState().mass();
-                     L1Q_fit  = fitL1->currentState().particleCharge();
-		             L1Px_fit =     fitL1->currentState().kinematicParameters().momentum().x();
-			         L1Py_fit =     fitL1->currentState().kinematicParameters().momentum().y();
-		             L1Pz_fit =     fitL1->currentState().kinematicParameters().momentum().z();
-                }
-			    reco::CompositeCandidate recoL1(L1Q_fit, math::XYZTLorentzVector(L1Px_fit, L1Py_fit, L1Pz_fit,
-		                                        sqrt(L1M_fit*L1M_fit + L1Px_fit*L1Px_fit + L1Py_fit*L1Py_fit +
-		                                        L1Pz_fit*L1Pz_fit)), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
-                reco::CompositeCandidate msrdL1(lept1->charge(), math::XYZTLorentzVector(lept1->px(), lept1->py(), lept1->pz(),
-                                                sqrt((lept1->mass())*(lept1->mass()) + (lept1->px())*(lept1->px()) + (lept1->py())*(lept1->py()) +
-                                                (lept1->pz())*(lept1->pz()))), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
-                pat::CompositeCandidate pat_msrdL1(msrdL1);
+            if (!child){
+                L1M_fit = 0;
+                L1Q_fit = 0;
+                L1Px_fit = 0;
+                L1Py_fit = 0;
+                L1Pz_fit = 0;
+            }
+            else{
+                    L1M_fit  = fitL1->currentState().mass();
+                    L1Q_fit  = fitL1->currentState().particleCharge();
+                    L1Px_fit =     fitL1->currentState().kinematicParameters().momentum().x();
+                    L1Py_fit =     fitL1->currentState().kinematicParameters().momentum().y();
+                    L1Pz_fit =     fitL1->currentState().kinematicParameters().momentum().z();
+            }
+            reco::CompositeCandidate recoL1(L1Q_fit, math::XYZTLorentzVector(L1Px_fit, L1Py_fit, L1Pz_fit,
+                                            sqrt(L1M_fit*L1M_fit + L1Px_fit*L1Px_fit + L1Py_fit*L1Py_fit +
+                                            L1Pz_fit*L1Pz_fit)), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
+            reco::CompositeCandidate msrdL1(lept1->charge(), math::XYZTLorentzVector(lept1->px(), lept1->py(), lept1->pz(),
+                                            sqrt((lept1->mass())*(lept1->mass()) + (lept1->px())*(lept1->px()) + (lept1->py())*(lept1->py()) +
+                                            (lept1->pz())*(lept1->pz()))), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
+            pat::CompositeCandidate pat_msrdL1(msrdL1);
 	
-                pat::CompositeCandidate patL1(recoL1);
-           		patL1.addUserFloat("Dxy"	,ldxy1);
-           		patL1.addUserFloat("Dz"		,ldz1);
+            pat::CompositeCandidate patL1(recoL1);
+            patL1.addUserFloat("Dxy"	,ldxy1);
+            patL1.addUserFloat("Dz"		,ldz1);
 
-                patL1.addUserFloat("Dxy_gsf"        , lept1->gsfTrack()->dxy(PV->position()));
-                patL1.addUserFloat("Dz_gsf"         , lept1->gsfTrack()->dz(PV->position()));
+            patL1.addUserFloat("Dxy_gsf"        , lept1->gsfTrack()->dxy(PV->position()));
+            patL1.addUserFloat("Dz_gsf"         , lept1->gsfTrack()->dz(PV->position()));
                 
-                //only data, no userFloat for mc
-                float corrEt_1;//  lept1->et() * lept1->userFloat("ecalTrkEnergyPostCorr")/lept1->energy();
-                float corrfactor_1;// lept1->userFloat("ecalTrkEnergyPostCorr") / lept1->energy();
-                try {
-                    corrEt_1 = lept1->et() * lept1->userFloat("ecalTrkEnergyPostCorr")/lept1->energy();
-                    corrfactor_1 = lept1->userFloat("ecalTrkEnergyPostCorr") / lept1->energy();
-                }
-                catch (...) {
-                    corrEt_1 = 0;
-                    corrfactor_1 = 0;
-                }
-                patL1.addUserFloat("corrEt_", corrEt_1);
-                patL1.addUserFloat("corrfactor_", corrfactor_1);
+            //only data, no userFloat for mc
+            float corrEt_1;//  lept1->et() * lept1->userFloat("ecalTrkEnergyPostCorr")/lept1->energy();
+            float corrfactor_1;// lept1->userFloat("ecalTrkEnergyPostCorr") / lept1->energy();
+            try {
+                corrEt_1 = lept1->et() * lept1->userFloat("ecalTrkEnergyPostCorr")/lept1->energy();
+                corrfactor_1 = lept1->userFloat("ecalTrkEnergyPostCorr") / lept1->energy();
+            }
+            catch (...) {
+                corrEt_1 = 0;
+                corrfactor_1 = 0;
+            }
+            patL1.addUserFloat("corrEt_", corrEt_1);
+            patL1.addUserFloat("corrfactor_", corrfactor_1);
                 
-                patL1.addUserFloat("dRIso"	,getIsoVar( *lept1 ) );
-                //New
-                patL1.addUserFloat("dIP3DSig",tkPVdistel1.second.significance());
+            patL1.addUserFloat("dRIso"	,getIsoVar( *lept1 ) );
+            //New
+            patL1.addUserFloat("dIP3DSig",tkPVdistel1.second.significance());
           
-                patL1.addUserFloat("dIP3D"	,tkPVdistel1.second.value());
-                patL1.addUserFloat("dIP3DErr"	,tkPVdistel1.second.error());
+            patL1.addUserFloat("dIP3D"	,tkPVdistel1.second.value());
+            patL1.addUserFloat("dIP3DErr"	,tkPVdistel1.second.error());
                 
-                patL1.addUserFloat("dRIsoEA", ElectronRelIso(*lept1));
-                patL1.addUserFloat("trackMomentumAtVtx"   , (float)sqrt(lept1->trackMomentumAtVtx().mag2()));
-                patL1.addUserFloat("ecalEnergy"           , (float)lept1->ecalEnergy());
-                patL1.addUserFloat("full5x5_sigmaIetaIeta", (float)lept1->full5x5_sigmaIetaIeta());
-                patL1.addUserFloat("dEtaIn"               , (float)lept1->deltaEtaSuperClusterTrackAtVtx());
-                patL1.addUserFloat("dPhiIn"               , (float)lept1->deltaPhiSuperClusterTrackAtVtx());
-                patL1.addUserFloat("HoE"                  , (float)lept1->hadronicOverEm());
-                patL1.addUserFloat("ooEmooP"              , (float)fabs(1/lept1->ecalEnergy() - 1/sqrt(lept1->trackMomentumAtVtx().mag2())));
-                patL1.addUserFloat("passConversionVeto"   , (float)lept1->passConversionVeto());
+            patL1.addUserFloat("dRIsoEA", ElectronRelIso(*lept1));
+            patL1.addUserFloat("trackMomentumAtVtx"   , (float)sqrt(lept1->trackMomentumAtVtx().mag2()));
+            patL1.addUserFloat("ecalEnergy"           , (float)lept1->ecalEnergy());
+            patL1.addUserFloat("full5x5_sigmaIetaIeta", (float)lept1->full5x5_sigmaIetaIeta());
+            patL1.addUserFloat("dEtaIn"               , (float)lept1->deltaEtaSuperClusterTrackAtVtx());
+            patL1.addUserFloat("dPhiIn"               , (float)lept1->deltaPhiSuperClusterTrackAtVtx());
+            patL1.addUserFloat("HoE"                  , (float)lept1->hadronicOverEm());
+            patL1.addUserFloat("ooEmooP"              , (float)fabs(1/lept1->ecalEnergy() - 1/sqrt(lept1->trackMomentumAtVtx().mag2())));
+            patL1.addUserFloat("passConversionVeto"   , (float)lept1->passConversionVeto());
 
-                patL1.addUserFloat("dPhiInSeed" , lept1->deltaPhiSuperClusterTrackAtVtx());
-                patL1.addUserFloat("dEtaInSeed" , getEtaInSeed( *lept1 )) ;
-                patL1.addUserFloat("SigmaIEtaIEta" ,lept1->full5x5_sigmaIetaIeta());
-                patL1.addUserFloat("SigmaIPhiIPhi" ,lept1->full5x5_sigmaIphiIphi());
-                patL1.addUserFloat("HoverE"     , lept1->hcalOverEcal());
-                //patL1.addUserInt("ElecMissHits" , lept1->gsfTrack()->hitPattern().numberOfHits(reco::HitPattern::MISSING_INNER_HITS) );
-                patL1.addUserFloat("ElecMissHits" , ZLe1_ElecMissHits);
-                //patL1.addUserInt("ElecMissHits" , lept1->gsfTrack()->hitPattern().numberOfAllHits(reco::HitPattern::MISSING_INNER_HITS) );
-                //Due to changes in function names from 80X to 94X, the function numberOfHits
-                // MY Muon ID
-				 
-                patL1.addUserInt("ZLe1Qid_", ZLe1Qid);
-	                        
-                //patL1.addUserFloat("ZLe1Qid_TP_", ZLe1Qid_TP);
-
-                patL1.addUserFloat("ZLe1_TrackerLWM_", ZLe1_TrackerLWM);
-                patL1.addUserFloat("ZLe1_PixelLWM_", ZLe1_PixelLWM);
-                patL1.addUserFloat("ZLe1_ValPixHit_", ZLe1_ValPixHit);
-                patL1.addUserFloat("lept1Ele25wpT_", lept1Ele25wpT);
-                patL1.addUserFloat("lept1Ele23_12_", lept1Ele23_12);
-                patL1.addUserFloat("lept1Mu8DiEle12_", lept1Mu8DiEle12);
-                //get Lepton
-		        child = ZTree->movePointerToTheNextChild();
-		        RefCountedKinematicParticle fitL2 = ZTree->currentParticle();
-                float L2M_fit ;
-                float L2Q_fit ;
-                float L2Px_fit;
-                float L2Py_fit;
-                float L2Pz_fit;
-
-                if (!child){
-                    L2M_fit  = 0;
-                    L2Q_fit  = 0;
-                    L2Px_fit = 0;
-                    L2Py_fit = 0;
-                    L2Pz_fit = 0;
-                }
-                else {
-			        L2M_fit  = fitL2->currentState().mass();
-			        L2Q_fit  = fitL2->currentState().particleCharge();
-		            L2Px_fit =    fitL2->currentState().kinematicParameters().momentum().x();
-			        L2Py_fit =    fitL2->currentState().kinematicParameters().momentum().y();
-		            L2Pz_fit =    fitL2->currentState().kinematicParameters().momentum().z();
-                }
-				reco::CompositeCandidate recoL2(L2Q_fit, math::XYZTLorentzVector(L2Px_fit, L2Py_fit, L2Pz_fit, 
-		                                        sqrt(L2M_fit*L2M_fit + L2Px_fit*L2Px_fit + L2Py_fit*L2Py_fit +
-		                                        L2Pz_fit*L2Pz_fit)), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
-
-                reco::CompositeCandidate msrdL2(lept2->charge(), math::XYZTLorentzVector(lept2->px(), lept2->py(), lept2->pz(),
-                                                sqrt((lept2->mass())*(lept2->mass()) + (lept2->px())*(lept2->px()) + (lept2->py())*(lept2->py()) +
-                                                (lept2->pz())*(lept2->pz()))), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
-                pat::CompositeCandidate pat_msrdL2(msrdL2);
-
-		        pat::CompositeCandidate patL2(recoL2);
-                patL2.addUserFloat("Dxy"	,ldxy2);
-           		patL2.addUserFloat("Dz"		,ldz2);
-
-                patL2.addUserFloat("Dxy_gsf"        , lept2->gsfTrack()->dxy(PV->position()));
-                patL2.addUserFloat("Dz_gsf"         , lept2->gsfTrack()->dz(PV->position()));
+            patL1.addUserFloat("dPhiInSeed" , lept1->deltaPhiSuperClusterTrackAtVtx());
+            patL1.addUserFloat("dEtaInSeed" , getEtaInSeed( *lept1 )) ;
+            patL1.addUserFloat("SigmaIEtaIEta" ,lept1->full5x5_sigmaIetaIeta());
+            patL1.addUserFloat("SigmaIPhiIPhi" ,lept1->full5x5_sigmaIphiIphi());
+            patL1.addUserFloat("HoverE"     , lept1->hcalOverEcal());
+            //patL1.addUserInt("ElecMissHits" , lept1->gsfTrack()->hitPattern().numberOfHits(reco::HitPattern::MISSING_INNER_HITS) );
+            patL1.addUserFloat("ElecMissHits" , ZLe1_ElecMissHits);
+            //patL1.addUserInt("ElecMissHits" , lept1->gsfTrack()->hitPattern().numberOfAllHits(reco::HitPattern::MISSING_INNER_HITS) );
+            //Due to changes in function names from 80X to 94X, the function numberOfHits
+            // MY Muon ID
                 
-                //only data, no userFloat for mc
-                float corrEt_2;//lept2->et() * lept2->userFloat("ecalTrkEnergyPostCorr")/lept2->energy();
-                float corrfactor_2;//lept2->userFloat("ecalTrkEnergyPostCorr") / lept2->energy();
-                try {
-                    corrEt_2 = lept2->et() * lept1->userFloat("ecalTrkEnergyPostCorr")/lept2->energy();
-                    corrfactor_2 = lept2->userFloat("ecalTrkEnergyPostCorr") / lept2->energy();
-                }
-                catch (...) {
-                    corrEt_2 = 0;
-                    corrfactor_2 = 0;
-                }
-                patL2.addUserFloat("corrEt_", corrEt_2);
-                patL2.addUserFloat("corrfactor_", corrfactor_2);
+            patL1.addUserInt("ZLe1Qid_", ZLe1Qid);
+                        
+            //patL1.addUserFloat("ZLe1Qid_TP_", ZLe1Qid_TP);
+
+            patL1.addUserFloat("ZLe1_TrackerLWM_", ZLe1_TrackerLWM);
+            patL1.addUserFloat("ZLe1_PixelLWM_", ZLe1_PixelLWM);
+            patL1.addUserFloat("ZLe1_ValPixHit_", ZLe1_ValPixHit);
+            patL1.addUserFloat("lept1Ele25wpT_", lept1Ele25wpT);
+            patL1.addUserFloat("lept1Ele23_12_", lept1Ele23_12);
+            patL1.addUserFloat("lept1Mu8DiEle12_", lept1Mu8DiEle12);
+            //get Lepton
+            child = ZTree->movePointerToTheNextChild();
+            RefCountedKinematicParticle fitL2 = ZTree->currentParticle();
+            float L2M_fit ;
+            float L2Q_fit ;
+            float L2Px_fit;
+            float L2Py_fit;
+            float L2Pz_fit;
+
+            if (!child){
+                L2M_fit  = 0;
+                L2Q_fit  = 0;
+                L2Px_fit = 0;
+                L2Py_fit = 0;
+                L2Pz_fit = 0;
+            }
+            else {
+                L2M_fit  = fitL2->currentState().mass();
+                L2Q_fit  = fitL2->currentState().particleCharge();
+                L2Px_fit =    fitL2->currentState().kinematicParameters().momentum().x();
+                L2Py_fit =    fitL2->currentState().kinematicParameters().momentum().y();
+                L2Pz_fit =    fitL2->currentState().kinematicParameters().momentum().z();
+            }
+            reco::CompositeCandidate recoL2(L2Q_fit, math::XYZTLorentzVector(L2Px_fit, L2Py_fit, L2Pz_fit,
+                                            sqrt(L2M_fit*L2M_fit + L2Px_fit*L2Px_fit + L2Py_fit*L2Py_fit +
+                                            L2Pz_fit*L2Pz_fit)), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
+
+            reco::CompositeCandidate msrdL2(lept2->charge(), math::XYZTLorentzVector(lept2->px(), lept2->py(), lept2->pz(),
+                                            sqrt((lept2->mass())*(lept2->mass()) + (lept2->px())*(lept2->px()) + (lept2->py())*(lept2->py()) +
+                                            (lept2->pz())*(lept2->pz()))), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
+            pat::CompositeCandidate pat_msrdL2(msrdL2);
+
+            pat::CompositeCandidate patL2(recoL2);
+            patL2.addUserFloat("Dxy"	,ldxy2);
+            patL2.addUserFloat("Dz"		,ldz2);
+
+            patL2.addUserFloat("Dxy_gsf"        , lept2->gsfTrack()->dxy(PV->position()));
+            patL2.addUserFloat("Dz_gsf"         , lept2->gsfTrack()->dz(PV->position()));
                 
-                patL2.addUserFloat("dRIso"	,getIsoVar( *lept2 ) );
-                patL2.addUserFloat("dIP3DSig",tkPVdistel2.second.significance());
-                patL2.addUserFloat("dIP3D"	,tkPVdistel2.second.value());
-                patL2.addUserFloat("dIP3DErr"	,tkPVdistel2.second.error());
+            //only data, no userFloat for mc
+            float corrEt_2;//lept2->et() * lept2->userFloat("ecalTrkEnergyPostCorr")/lept2->energy();
+            float corrfactor_2;//lept2->userFloat("ecalTrkEnergyPostCorr") / lept2->energy();
+            try {
+                corrEt_2 = lept2->et() * lept1->userFloat("ecalTrkEnergyPostCorr")/lept2->energy();
+                corrfactor_2 = lept2->userFloat("ecalTrkEnergyPostCorr") / lept2->energy();
+            }
+            catch (...) {
+                corrEt_2 = 0;
+                corrfactor_2 = 0;
+            }
+            patL2.addUserFloat("corrEt_", corrEt_2);
+            patL2.addUserFloat("corrfactor_", corrfactor_2);
+                
+            patL2.addUserFloat("dRIso"	,getIsoVar( *lept2 ) );
+            patL2.addUserFloat("dIP3DSig",tkPVdistel2.second.significance());
+            patL2.addUserFloat("dIP3D"	,tkPVdistel2.second.value());
+            patL2.addUserFloat("dIP3DErr"	,tkPVdistel2.second.error());
           
-                patL2.addUserFloat("dRIsoEA", ElectronRelIso(*lept2));
-                patL2.addUserFloat("trackMomentumAtVtx"   , (float)sqrt(lept2->trackMomentumAtVtx().mag2()));
-                patL2.addUserFloat("ecalEnergy"           , (float)lept2->ecalEnergy());
-                patL2.addUserFloat("full5x5_sigmaIetaIeta", (float)lept2->full5x5_sigmaIetaIeta());
-                patL2.addUserFloat("dEtaIn"               , (float)lept2->deltaEtaSuperClusterTrackAtVtx());
-                patL2.addUserFloat("dPhiIn"               , (float)lept2->deltaPhiSuperClusterTrackAtVtx());
-                patL2.addUserFloat("HoE"                  , (float)lept2->hadronicOverEm());
-                patL2.addUserFloat("ooEmooP"              , (float)fabs(1/lept2->ecalEnergy() - 1/sqrt(lept2->trackMomentumAtVtx().mag2())));
-                patL2.addUserFloat("passConversionVeto"   , (float)lept2->passConversionVeto());
+            patL2.addUserFloat("dRIsoEA", ElectronRelIso(*lept2));
+            patL2.addUserFloat("trackMomentumAtVtx"   , (float)sqrt(lept2->trackMomentumAtVtx().mag2()));
+            patL2.addUserFloat("ecalEnergy"           , (float)lept2->ecalEnergy());
+            patL2.addUserFloat("full5x5_sigmaIetaIeta", (float)lept2->full5x5_sigmaIetaIeta());
+            patL2.addUserFloat("dEtaIn"               , (float)lept2->deltaEtaSuperClusterTrackAtVtx());
+            patL2.addUserFloat("dPhiIn"               , (float)lept2->deltaPhiSuperClusterTrackAtVtx());
+            patL2.addUserFloat("HoE"                  , (float)lept2->hadronicOverEm());
+            patL2.addUserFloat("ooEmooP"              , (float)fabs(1/lept2->ecalEnergy() - 1/sqrt(lept2->trackMomentumAtVtx().mag2())));
+            patL2.addUserFloat("passConversionVeto"   , (float)lept2->passConversionVeto());
           
-                patL2.addUserFloat("dPhiInSeed" , lept2->deltaPhiSuperClusterTrackAtVtx());
-                patL2.addUserFloat("dEtaInSeed" , getEtaInSeed( *lept2 )) ;
-                patL2.addUserFloat("SigmaIEtaIEta" ,lept2->full5x5_sigmaIetaIeta());
-                patL2.addUserFloat("SigmaIPhiIPhi" ,lept2->full5x5_sigmaIphiIphi());
-                patL2.addUserFloat("HoverE"     , lept2->hcalOverEcal());
-                //patL2.addUserInt("ElecMissHits" , lept2->gsfTrack()->hitPattern().numberOfHits(reco::HitPattern::MISSING_INNER_HITS) );
-                patL2.addUserFloat("ElecMissHits" , ZLe2_ElecMissHits);
-                //patL2.addUserInt("ElecMissHits" , lept2->gsfTrack()->hitPattern().numberOfAllHits(reco::HitPattern::MISSING_INNER_HITS) );
-                //Due to changes in function names from 80X to 94X, the function numberOfHits
+            patL2.addUserFloat("dPhiInSeed" , lept2->deltaPhiSuperClusterTrackAtVtx());
+            patL2.addUserFloat("dEtaInSeed" , getEtaInSeed( *lept2 )) ;
+            patL2.addUserFloat("SigmaIEtaIEta" ,lept2->full5x5_sigmaIetaIeta());
+            patL2.addUserFloat("SigmaIPhiIPhi" ,lept2->full5x5_sigmaIphiIphi());
+            patL2.addUserFloat("HoverE"     , lept2->hcalOverEcal());
+            //patL2.addUserInt("ElecMissHits" , lept2->gsfTrack()->hitPattern().numberOfHits(reco::HitPattern::MISSING_INNER_HITS) );
+            patL2.addUserFloat("ElecMissHits" , ZLe2_ElecMissHits);
+            //patL2.addUserInt("ElecMissHits" , lept2->gsfTrack()->hitPattern().numberOfAllHits(reco::HitPattern::MISSING_INNER_HITS) );
+            //Due to changes in function names from 80X to 94X, the function numberOfHits
 
-				// My leoton-electron Q id
-                patL2.addUserInt("ZLe2Qid_", ZLe2Qid);
+            // My leoton-electron Q id
+            patL2.addUserInt("ZLe2Qid_", ZLe2Qid);
 
-                //patL2.addUserFloat("ZLe2Qid_TP_", ZLe2Qid_TP);
-	              
-                patL2.addUserFloat("ZLe2_TrackerLWM_", ZLe2_TrackerLWM);
-                patL2.addUserFloat("ZLe2_PixelLWM_", ZLe2_PixelLWM);
-                patL2.addUserFloat("ZLe2_ValPixHit_", ZLe2_ValPixHit);
-
-                patL2.addUserFloat("lept2Ele25wpT_", lept2Ele25wpT);
-                patL2.addUserFloat("lept2Ele23_12_", lept2Ele23_12);
-                patL2.addUserFloat("lept2Mu8DiEle12_", lept2Mu8DiEle12);
+            //patL2.addUserFloat("ZLe2Qid_TP_", ZLe2Qid_TP);
                 
-                ///MONTECARLO
-                reco::CompositeCandidate mc_Z(0, math::XYZTLorentzVector(gen_z_p4.Px(), gen_z_p4.Py(), gen_z_p4.Pz(),
-                    sqrt((gen_z_p4.M())*(gen_z_p4.M()) + (gen_z_p4.Px())*(gen_z_p4.Px()) + (gen_z_p4.Py())*(gen_z_p4.Py()) +
-                    (gen_z_p4.Pz())*(gen_z_p4.Pz()))), math::XYZPoint(gen_z_vtx.x(), gen_z_vtx.y(), gen_z_vtx.z()));
-                pat::CompositeCandidate pat_mcZ(mc_Z);
-                         
-                reco::CompositeCandidate mc_Psi(0, math::XYZTLorentzVector(gen_jpsi_p4.Px(), gen_jpsi_p4.Py(), gen_jpsi_p4.Pz(),
-                    sqrt((gen_jpsi_p4.M())*(gen_jpsi_p4.M()) + (gen_jpsi_p4.Px())*(gen_jpsi_p4.Px()) + (gen_jpsi_p4.Py())*(gen_jpsi_p4.Py()) +
-                    (gen_jpsi_p4.Pz())*(gen_jpsi_p4.Pz()))), math::XYZPoint(gen_jpsi_vtx.x(), gen_jpsi_vtx.y(), gen_jpsi_vtx.z()));
-                pat::CompositeCandidate pat_mcPsi(mc_Psi);
+            patL2.addUserFloat("ZLe2_TrackerLWM_", ZLe2_TrackerLWM);
+            patL2.addUserFloat("ZLe2_PixelLWM_", ZLe2_PixelLWM);
+            patL2.addUserFloat("ZLe2_ValPixHit_", ZLe2_ValPixHit);
 
-                reco::CompositeCandidate mc_M1(1, math::XYZTLorentzVector(gen_muon1_p4.Px(), gen_muon1_p4.Py(), gen_muon1_p4.Pz(),
-                sqrt((gen_muon1_p4.M())*(gen_muon1_p4.M()) + (gen_muon1_p4.Px())*(gen_muon1_p4.Px()) + (gen_muon1_p4.Py())*(gen_muon1_p4.Py()) +
-                    (gen_muon1_p4.Pz())*(gen_muon1_p4.Pz()))), math::XYZPoint(gen_jpsi_vtx.x(), gen_jpsi_vtx.y(), gen_jpsi_vtx.z()));
-                pat::CompositeCandidate pat_mcM1(mc_M1);
-
-                reco::CompositeCandidate mc_M2(-1, math::XYZTLorentzVector(gen_muon2_p4.Px(), gen_muon2_p4.Py(), gen_muon2_p4.Pz(),
-                sqrt((gen_muon2_p4.M())*(gen_muon2_p4.M()) + (gen_muon2_p4.Px())*(gen_muon2_p4.Px()) + (gen_muon2_p4.Py())*(gen_muon2_p4.Py()) +
-                    (gen_muon2_p4.Pz())*(gen_muon2_p4.Pz()))), math::XYZPoint(gen_jpsi_vtx.x(), gen_jpsi_vtx.y(), gen_jpsi_vtx.z()));
-                pat::CompositeCandidate pat_mcM2(mc_M2);
-                         
-                reco::CompositeCandidate mc_L1(-1, math::XYZTLorentzVector(gen_lepton1_p4.Px(), gen_lepton1_p4.Py(), gen_lepton1_p4.Pz(),
-                sqrt((gen_lepton1_p4.M())*(gen_lepton1_p4.M()) + (gen_lepton1_p4.Px())*(gen_lepton1_p4.Px()) + (gen_lepton1_p4.Py())*(gen_lepton1_p4.Py()) +
-                    (gen_lepton1_p4.Pz())*(gen_lepton1_p4.Pz()))), math::XYZPoint(gen_z_vtx.x(), gen_z_vtx.y(), gen_z_vtx.z()));
-                pat::CompositeCandidate pat_mcL1(mc_L1);
-
-                reco::CompositeCandidate mc_L2(1, math::XYZTLorentzVector(gen_lepton2_p4.Px(), gen_lepton2_p4.Py(), gen_lepton2_p4.Pz(),
-                sqrt((gen_lepton2_p4.M())*(gen_lepton2_p4.M()) + (gen_lepton2_p4.Px())*(gen_lepton2_p4.Px()) + (gen_lepton2_p4.Py())*(gen_lepton2_p4.Py()) +
-                    (gen_lepton2_p4.Pz())*(gen_lepton2_p4.Pz()))), math::XYZPoint(gen_z_vtx.x(), gen_z_vtx.y(), gen_z_vtx.z()));
-                pat::CompositeCandidate pat_mcL2(mc_L2);
-
-				patZ.addDaughter(jpsi,"jpsi");
-                patZ.addDaughter(msrd_jpsi, "msrd_jpsi");
-                patZ.addDaughter(patL1,"lepton1");
-                patZ.addDaughter(patL2,"lepton2");
-                patZ.addDaughter(pat_msrdL1, "msrd_lepton1");
-                patZ.addDaughter(pat_msrdL2, "msrd_lepton2");
-                patZ.addDaughter(patMZ, "patMZ");
+            patL2.addUserFloat("lept2Ele25wpT_", lept2Ele25wpT);
+            patL2.addUserFloat("lept2Ele23_12_", lept2Ele23_12);
+            patL2.addUserFloat("lept2Mu8DiEle12_", lept2Mu8DiEle12);
                 
-                patZ.addDaughter(pat_mcZ, "mcZ");
-                patZ.addDaughter(pat_mcPsi, "mcPsi");
-                patZ.addDaughter(pat_mcM1, "mcM1");
-                patZ.addDaughter(pat_mcM2, "mcM2");
-                patZ.addDaughter(pat_mcL1, "mcL1");
-                patZ.addDaughter(pat_mcL2, "mcL2");
+            ///MONTECARLO
+            reco::CompositeCandidate mc_Z(0, math::XYZTLorentzVector(gen_z_p4.Px(), gen_z_p4.Py(), gen_z_p4.Pz(),
+                sqrt((gen_z_p4.M())*(gen_z_p4.M()) + (gen_z_p4.Px())*(gen_z_p4.Px()) + (gen_z_p4.Py())*(gen_z_p4.Py()) +
+                (gen_z_p4.Pz())*(gen_z_p4.Pz()))), math::XYZPoint(gen_z_vtx.x(), gen_z_vtx.y(), gen_z_vtx.z()));
+            pat::CompositeCandidate pat_mcZ(mc_Z);
+                        
+            reco::CompositeCandidate mc_Psi(0, math::XYZTLorentzVector(gen_jpsi_p4.Px(), gen_jpsi_p4.Py(), gen_jpsi_p4.Pz(),
+                sqrt((gen_jpsi_p4.M())*(gen_jpsi_p4.M()) + (gen_jpsi_p4.Px())*(gen_jpsi_p4.Px()) + (gen_jpsi_p4.Py())*(gen_jpsi_p4.Py()) +
+                (gen_jpsi_p4.Pz())*(gen_jpsi_p4.Pz()))), math::XYZPoint(gen_jpsi_vtx.x(), gen_jpsi_vtx.y(), gen_jpsi_vtx.z()));
+            pat::CompositeCandidate pat_mcPsi(mc_Psi);
+
+            reco::CompositeCandidate mc_M1(1, math::XYZTLorentzVector(gen_muon1_p4.Px(), gen_muon1_p4.Py(), gen_muon1_p4.Pz(),
+            sqrt((gen_muon1_p4.M())*(gen_muon1_p4.M()) + (gen_muon1_p4.Px())*(gen_muon1_p4.Px()) + (gen_muon1_p4.Py())*(gen_muon1_p4.Py()) +
+                (gen_muon1_p4.Pz())*(gen_muon1_p4.Pz()))), math::XYZPoint(gen_jpsi_vtx.x(), gen_jpsi_vtx.y(), gen_jpsi_vtx.z()));
+            pat::CompositeCandidate pat_mcM1(mc_M1);
+
+            reco::CompositeCandidate mc_M2(-1, math::XYZTLorentzVector(gen_muon2_p4.Px(), gen_muon2_p4.Py(), gen_muon2_p4.Pz(),
+            sqrt((gen_muon2_p4.M())*(gen_muon2_p4.M()) + (gen_muon2_p4.Px())*(gen_muon2_p4.Px()) + (gen_muon2_p4.Py())*(gen_muon2_p4.Py()) +
+                (gen_muon2_p4.Pz())*(gen_muon2_p4.Pz()))), math::XYZPoint(gen_jpsi_vtx.x(), gen_jpsi_vtx.y(), gen_jpsi_vtx.z()));
+            pat::CompositeCandidate pat_mcM2(mc_M2);
+                        
+            reco::CompositeCandidate mc_L1(-1, math::XYZTLorentzVector(gen_lepton1_p4.Px(), gen_lepton1_p4.Py(), gen_lepton1_p4.Pz(),
+            sqrt((gen_lepton1_p4.M())*(gen_lepton1_p4.M()) + (gen_lepton1_p4.Px())*(gen_lepton1_p4.Px()) + (gen_lepton1_p4.Py())*(gen_lepton1_p4.Py()) +
+                (gen_lepton1_p4.Pz())*(gen_lepton1_p4.Pz()))), math::XYZPoint(gen_z_vtx.x(), gen_z_vtx.y(), gen_z_vtx.z()));
+            pat::CompositeCandidate pat_mcL1(mc_L1);
+
+            reco::CompositeCandidate mc_L2(1, math::XYZTLorentzVector(gen_lepton2_p4.Px(), gen_lepton2_p4.Py(), gen_lepton2_p4.Pz(),
+            sqrt((gen_lepton2_p4.M())*(gen_lepton2_p4.M()) + (gen_lepton2_p4.Px())*(gen_lepton2_p4.Px()) + (gen_lepton2_p4.Py())*(gen_lepton2_p4.Py()) +
+                (gen_lepton2_p4.Pz())*(gen_lepton2_p4.Pz()))), math::XYZPoint(gen_z_vtx.x(), gen_z_vtx.y(), gen_z_vtx.z()));
+            pat::CompositeCandidate pat_mcL2(mc_L2);
+
+            patZ.addDaughter(jpsi,"jpsi");
+            patZ.addDaughter(msrd_jpsi, "msrd_jpsi");
+            patZ.addDaughter(patL1,"lepton1");
+            patZ.addDaughter(patL2,"lepton2");
+            patZ.addDaughter(pat_msrdL1, "msrd_lepton1");
+            patZ.addDaughter(pat_msrdL2, "msrd_lepton2");
+            patZ.addDaughter(patMZ, "patMZ");
                 
-                patZ.addUserInt("Event_Cand_", Event_Cand);
-                Event_Cand++;
+            patZ.addDaughter(pat_mcZ, "mcZ");
+            patZ.addDaughter(pat_mcPsi, "mcPsi");
+            patZ.addDaughter(pat_mcM1, "mcM1");
+            patZ.addDaughter(pat_mcM2, "mcM2");
+            patZ.addDaughter(pat_mcL1, "mcL1");
+            patZ.addDaughter(pat_mcL2, "mcL2");
                 
-				ZCandColl->push_back(patZ);
-                std::cout<< "something has been pushed"	<< std::endl;
+            patZ.addUserInt("Event_Cand_", Event_Cand);
+            Event_Cand++;
+                
+            ZCandColl->push_back(patZ);
+            std::cout<< "something has been pushed"	<< std::endl;
 			
 			//} Z candidate is valid
 
 	    }
-
-   }
+      }//end lepton
+  }
   iEvent.put(std::move(ZCandColl),"ZCandidates");
   //std::cout << "is ZCandColl empty ?" << /*ZCandColl->empty() <<*/ std::endl; 
   //std::cout << "jpsiElecKmcFitter is working ok" << std::endl;
