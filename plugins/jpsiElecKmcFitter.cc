@@ -115,7 +115,8 @@ class jpsiElecKmcFitter : public edm::stream::EDProducer<>{
 
       // ----------member data ---------------------------
         edm::EDGetTokenT<pat::CompositeCandidateCollection> dimuon_Label;
-        edm::EDGetTokenT<pat::CompositeCandidateCollection> dielec_Label;
+        //edm::EDGetTokenT<pat::CompositeCandidateCollection> dielec_Label;
+        edm::EDGetTokenT<edm::View<pat::Electron>> leptonToken_;
         edm::EDGetTokenT<reco::VertexCollection> primaryVertices_Label;
     
         edm::EDGetTokenT<reco::GenParticleCollection> genCands_;
