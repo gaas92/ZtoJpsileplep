@@ -68,7 +68,7 @@ def main():
 
         config.General.requestName = None
         #config.General.workArea = 'ZMuondecay'
-        config.General.workArea = '2018DT_psi_mm_v7'
+        config.General.workArea = '2018DT_psi_mm_v7_resub'
 	config.General.transferOutputs = True
 	config.General.transferLogs = False
 
