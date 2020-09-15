@@ -241,7 +241,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 
   if(primaryVertices_handle->empty())return;  
   
-  /*
+  
   reco::VertexCollection::const_iterator PV = primaryVertices_handle->end();
   for (reco::VertexCollection::const_iterator vtx = primaryVertices_handle->begin(); vtx != primaryVertices_handle->end(); ++vtx, ++PV) {
     if ( !(vtx->isFake())
@@ -334,7 +334,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   int nmuons = dimuons->size()*2;
   int nelecs = leptons->size();
   int nPV    = primaryVertices_handle->size();
-  
+  /*
   for (pat::CompositeCandidateCollection::const_iterator dimuon = dimuons->begin(); dimuon != dimuons->end(); ++dimuon ) {
         //Jpsi Muons
     
