@@ -821,10 +821,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                                             ZVtxY_fit, ZVtxZ_fit), 23);
             pat::CompositeCandidate patMZ(msrdZ);
             pat::CompositeCandidate patZ(recoZ);
-            ///////DELETE WHEN POSIBLE
-            patZ.addUserInt("ZLe1Qid_", ZLe1Qid);
-            patZ.addUserInt("ZLe2Qid_", ZLe2Qid);
-            ////END DELETE
+            
             //New
             patZ.addUserInt("passFit_", passFit);
     
@@ -874,8 +871,12 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                 mu1Py_fit = fitMu1->currentState().kinematicParameters().momentum().y();
                 mu1Pz_fit = fitMu1->currentState().kinematicParameters().momentum().z();
             }
-            std::cout << "works 877" << std::endl;
-            /*
+            ///////DELETE WHEN POSIBLE
+            patZ.addUserInt("ZLe1Qid_", ZLe1Qid);
+            patZ.addUserInt("ZLe2Qid_", ZLe2Qid);
+            
+            ////END DELETE
+            
             //int muId ;
             //if (mu1Q_fit > 0 ) muId = 13;
             //else  muId = -13;
@@ -890,6 +891,9 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             pat::CompositeCandidate pat_msrdMu1(msrdMu1);
 
             pat::CompositeCandidate patMu1(recoMu1);
+            std::cout << "works 894" << std::endl;
+
+            /*
             //patMu1.addUserFloat("mu1Q_", muon1->charge());
             patMu1.addUserFloat("Dxy",mdxy1);
             patMu1.addUserFloat("Dz",mdz1);
