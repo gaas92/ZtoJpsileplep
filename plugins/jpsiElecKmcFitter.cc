@@ -460,7 +460,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
       //if (fabs(tkPVdist1.second.significance())>4.) continue;
       //if (fabs(tkPVdist2.second.significance())>4.) continue;
       //std::cout << "works for jpsimuons" << std::endl;
-      //std::cout << "diElectrons handle Size: " << dileptons->size() << " " << std::endl;
+      std::cout << "diElectrons handle Size: " << std::endl;
 	  for (View<pat::Electron>::const_iterator lepton1 = leptons->begin(); lepton1 != leptons->end(); ++lepton1 ) {
             reco::TrackRef track_1 = lepton1->track();
             if (track_1.isNull()) continue;
