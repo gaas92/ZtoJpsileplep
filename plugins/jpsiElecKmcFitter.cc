@@ -844,9 +844,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patZ.addUserFloat("dRl1m2",dRel1mu2);
             patZ.addUserFloat("dRl2m1",dRel2mu1);
             patZ.addUserFloat("dRl2m2",dRel2mu2);
-            std::cout << "works 822" << std::endl;
 
-            /*
+            
             ////////////////////////////////
             ///////// MY MUON Q ID /////////
             ////////////////////////////////
@@ -875,7 +874,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                 mu1Py_fit = fitMu1->currentState().kinematicParameters().momentum().y();
                 mu1Pz_fit = fitMu1->currentState().kinematicParameters().momentum().z();
             }
-
+            std::cout << "works 877" << std::endl;
+            /*
             //int muId ;
             //if (mu1Q_fit > 0 ) muId = 13;
             //else  muId = -13;
