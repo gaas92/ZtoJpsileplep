@@ -1217,6 +1217,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   pat::CompositeCandidate patZ(recoZ);
   ZCandColl->push_back(patZ);
   std::cout << "is ZCandColl empty ?" << ZCandColl->empty() << std::endl;
+  iEvent.put(std::move(ZCandColl),"ZCandidates");
   //std::cout << "jpsiElecKmcFitter is working ok" << std::endl;
 }
 
