@@ -828,11 +828,11 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             ////END DELETE
             //New
             patZ.addUserInt("passFit_", passFit);
-            /*
+    
             patZ.addUserInt("nonia_", nonia );
             patZ.addUserInt("nmuons_",nmuons);
             patZ.addUserInt("nPV_",   nPV   );
-            */
+                
             patZ.addUserFloat("vProb",ZVtxP_fit);/*
             patZ.addUserFloat("vChi2",ZDecayVertex->chiSquared());
             patZ.addUserFloat("ZvtxX",ZVtxX_fit);
