@@ -363,11 +363,10 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
         //catch ( ... ){
         //     std::cout << "Esta madre no jala" << std::endl;
         //     }
-       //UNCOMMENT WHEN POSIBLE
-	  //float jpsiVprob=0;
-	  //float jpsiChi2=0;
-	  //jpsiVprob = dimuon->userFloat("vProb");
-	  //jpsiChi2  = dimuon->userFloat("vNChi2");
+	  float jpsiVprob=0;
+	  float jpsiChi2=0;
+	  jpsiVprob = dimuon->userFloat("vProb");
+	  jpsiChi2  = dimuon->userFloat("vNChi2");
       
       
       //////////// MY MUON ID ///////////////
