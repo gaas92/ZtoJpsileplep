@@ -984,9 +984,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             msrd_jpsi.addUserFloat("vProb",jpsiVprob);
             msrd_jpsi.addUserFloat("vChi2",jpsiChi2);
                     
-            std::cout << "works 988" << std::endl;
-
-            /*
+            
             //get Lepton
             child = ZTree->movePointerToTheNextChild();
             RefCountedKinematicParticle fitL1 = ZTree->currentParticle();
@@ -1047,7 +1045,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
           
             patL1.addUserFloat("dIP3D"	,tkPVdistel1.second.value());
             patL1.addUserFloat("dIP3DErr"	,tkPVdistel1.second.error());
-                
+            std::cout << "works 1048" << std::endl;
+            /*
             patL1.addUserFloat("dRIsoEA", ElectronRelIso(*lept1));
             patL1.addUserFloat("trackMomentumAtVtx"   , (float)sqrt(lept1->trackMomentumAtVtx().mag2()));
             patL1.addUserFloat("ecalEnergy"           , (float)lept1->ecalEnergy());
