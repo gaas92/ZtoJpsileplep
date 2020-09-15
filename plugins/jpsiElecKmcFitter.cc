@@ -478,6 +478,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                      
                 int lept1Mu8DiEle12 = 0;
                 int lept2Mu8DiEle12 = 0;
+                std::cout << "works " << std::endl;
                 /*
                 //const pat::Electron* lept1 = dynamic_cast<const pat::Electron*>(dilepton->daughter("lepton1"));
                 //const pat::Electron* lept2 = dynamic_cast<const pat::Electron*>(dilepton->daughter("lepton2"));
@@ -1209,6 +1210,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             reco::CompositeCandidate recoZ(0, math::XYZTLorentzVector(1, 1, 1, sqrt(3)), math::XYZPoint(0, 0, 0), 23);
             pat::CompositeCandidate patZ(recoZ);
             ZCandColl->push_back(patZ);
+            std::cout << "Fill "<< std::endl;
 			//} Z candidate is valid
 
 	    }
