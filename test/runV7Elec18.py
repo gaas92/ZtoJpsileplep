@@ -38,9 +38,8 @@ process.TFileService = cms.Service("TFileService",
 
 #from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
 from EgammaUser.EgammaPostRecoTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
-setupEgammaPostRecoSeq(process,
-runEnergyCorrections=False, #corrections by default are fine so no need to re-run
-era='2018-Prompt')
+from EgammaUser.EgammaPostRecoTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
+setupEgammaPostRecoSeq(process,era='2018-Prompt')  
 
 #update for v7
 ####this apply de BF cuts to dimuon & dilepton 1, 3, 4 & 7
