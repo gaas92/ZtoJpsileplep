@@ -37,7 +37,7 @@ process.TFileService = cms.Service("TFileService",
 
 #from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
 from EgammaUser.EgammaPostRecoTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
-setupEgammaPostRecoSeq(process, runVID=False, #if you want the Fall17V2 IDs, set this to True or remove (default is True)
+setupEgammaPostRecoSeq(process, runVID=True, #if you want the Fall17V2 IDs, set this to True or remove (default is True)
                        era='2017-Nov17ReReco')  #era is new to select between 2016 / 2017,  it defaults to 2017
 
 #update for v7
