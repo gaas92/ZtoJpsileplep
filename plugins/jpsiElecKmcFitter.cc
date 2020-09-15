@@ -870,11 +870,6 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                 mu1Py_fit = fitMu1->currentState().kinematicParameters().momentum().y();
                 mu1Pz_fit = fitMu1->currentState().kinematicParameters().momentum().z();
             }
-            ///////DELETE WHEN POSIBLE
-            patZ.addUserInt("ZLe1Qid_", ZLe1Qid);
-            patZ.addUserInt("ZLe2Qid_", ZLe2Qid);
-            
-            ////END DELETE
             
             //int muId ;
             //if (mu1Q_fit > 0 ) muId = 13;
@@ -1067,8 +1062,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             //patL1.addUserInt("ElecMissHits" , lept1->gsfTrack()->hitPattern().numberOfAllHits(reco::HitPattern::MISSING_INNER_HITS) );
             //Due to changes in function names from 80X to 94X, the function numberOfHits
             // MY Muon ID
-            std::cout << "works 1071" << std::endl;
-            /*
+            
             patL1.addUserInt("ZLe1Qid_", ZLe1Qid);
                 
             
@@ -1170,7 +1164,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patL2.addUserFloat("lept2Ele25wpT_", lept2Ele25wpT);
             patL2.addUserFloat("lept2Ele23_12_", lept2Ele23_12);
             patL2.addUserFloat("lept2Mu8DiEle12_", lept2Mu8DiEle12);
-                
+            std::cout << "works 1071" << std::endl;
+            /*
             ///MONTECARLO
             reco::CompositeCandidate mc_Z(0, math::XYZTLorentzVector(gen_z_p4.Px(), gen_z_p4.Py(), gen_z_p4.Pz(),
                 sqrt((gen_z_p4.M())*(gen_z_p4.M()) + (gen_z_p4.Px())*(gen_z_p4.Px()) + (gen_z_p4.Py())*(gen_z_p4.Py()) +
