@@ -1210,9 +1210,9 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 
 	    }
       }//end lepton
-  }*/
+  }
   iEvent.put(std::move(ZCandColl),"ZCandidates");
-  
+  */
   std::cout << "is ZCandColl empty ?" << ZCandColl->empty() << std::endl;
   //std::cout << "jpsiElecKmcFitter is working ok" << std::endl;
 }
