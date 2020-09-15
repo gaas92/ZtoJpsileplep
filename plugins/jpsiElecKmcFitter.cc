@@ -650,8 +650,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             int ZLe2_TrackerLWM = lept2->gsfTrack()->hitPattern().trackerLayersWithMeasurement();
             int ZLe2_PixelLWM   = lept2->gsfTrack()->hitPattern().pixelLayersWithMeasurement();
             int ZLe2_ValPixHit  = lept2->gsfTrack()->hitPattern().numberOfValidPixelHits();
-            std::cout << "works " << std::endl;
-            /*
+            
             //int ZLe1_ElecMissHits = 0;
             //int ZLe2_ElecMissHits = 0;
             int ZLe1_ElecMissHits = lept1->gsfTrack()->hitPattern().numberOfAllHits(reco::HitPattern::MISSING_INNER_HITS);
@@ -759,7 +758,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 			ZTree->movePointerToTheTop();
             RefCountedKinematicParticle fitZ = ZTree->currentParticle();
 			RefCountedKinematicVertex ZDecayVertex = ZTree->currentDecayVertex();
-
+            
             //std::cout << "is FitZ Valid ??" << fitZ->currentState().isValid() << std::endl;
             int passFit = 0;
             float ZM_fit    = 0;
@@ -820,6 +819,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                                             ZVtxY_fit, ZVtxZ_fit), 23);
             pat::CompositeCandidate patMZ(msrdZ);
             pat::CompositeCandidate patZ(recoZ);
+            std::cout << "works 822" << std::endl;
+            /*
             //New
             patZ.addUserInt("passFit_", passFit);
             patZ.addUserInt("nonia_", nonia );
@@ -1208,8 +1209,6 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             ZCandColl->push_back(patZ);
             std::cout<< "something has been pushed"	<< std::endl;
             */
-            reco::CompositeCandidate recoZ(0, math::XYZTLorentzVector(1, 1, 1, sqrt(3)), math::XYZPoint(0, 0, 0), 23);
-            pat::CompositeCandidate patZ(recoZ);
             ZCandColl->push_back(patZ);
             std::cout << "Fill "<< std::endl;
 			//} Z candidate is valid
