@@ -337,6 +337,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   
   for (pat::CompositeCandidateCollection::const_iterator dimuon = dimuons->begin(); dimuon != dimuons->end(); ++dimuon ) {
         //Jpsi Muons
+    /*
 	const pat::Muon* muon1 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon1"));
 	const pat::Muon* muon2 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon2"));
 
@@ -369,7 +370,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 	  //jpsiVprob = dimuon->userFloat("vProb");
 	  //jpsiChi2  = dimuon->userFloat("vNChi2");
       
-      /*
+      
       //////////// MY MUON ID ///////////////
       ///////////////////////////////////////
       int ZMu1Qid = 0;
