@@ -770,7 +770,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             float ZVtxX_fit = 0;
             float ZVtxY_fit = 0;
             float ZVtxZ_fit = 0;
-            float ZVtxP_fit = 0; 
+            float ZVtxP_fit = 0;
 			if (fitZ->currentState().isValid()) {
                 //if (ZDecayVertex->chiSquared() < 0) continue;
                 ZM_fit  = fitZ->currentState().mass();
@@ -822,14 +822,18 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             pat::CompositeCandidate patMZ(msrdZ);
             pat::CompositeCandidate patZ(recoZ);
             std::cout << "works 822" << std::endl;
-            /*
+            ///////DELETE WHEN POSIBLE
+            patZ.addUserInt("ZLe1Qid_", ZLe1Qid);
+            patZ.addUserInt("ZLe2Qid_", ZLe2Qid);
+            ////END DELETE
             //New
             patZ.addUserInt("passFit_", passFit);
+            /*
             patZ.addUserInt("nonia_", nonia );
             patZ.addUserInt("nmuons_",nmuons);
             patZ.addUserInt("nPV_",   nPV   );
-          
-            patZ.addUserFloat("vProb",ZVtxP_fit);
+            */
+            patZ.addUserFloat("vProb",ZVtxP_fit);/*
             patZ.addUserFloat("vChi2",ZDecayVertex->chiSquared());
             patZ.addUserFloat("ZvtxX",ZVtxX_fit);
             patZ.addUserFloat("ZvtxY",ZVtxY_fit);
@@ -1001,6 +1005,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                     L1Py_fit =     fitL1->currentState().kinematicParameters().momentum().y();
                     L1Pz_fit =     fitL1->currentState().kinematicParameters().momentum().z();
             }
+            
             reco::CompositeCandidate recoL1(L1Q_fit, math::XYZTLorentzVector(L1Px_fit, L1Py_fit, L1Pz_fit,
                                             sqrt(L1M_fit*L1M_fit + L1Px_fit*L1Px_fit + L1Py_fit*L1Py_fit +
                                             L1Pz_fit*L1Pz_fit)), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
@@ -1008,7 +1013,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                                             sqrt((lept1->mass())*(lept1->mass()) + (lept1->px())*(lept1->px()) + (lept1->py())*(lept1->py()) +
                                             (lept1->pz())*(lept1->pz()))), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
             pat::CompositeCandidate pat_msrdL1(msrdL1);
-	
+	        
+            //reco::CompositeCandidate recoL1(1, math::XYZTLorentzVector(1, 1, 1, sqrt(2)), math::XYZPoint(0, 0, 0));
             pat::CompositeCandidate patL1(recoL1);
             patL1.addUserFloat("Dxy"	,ldxy1);
             patL1.addUserFloat("Dz"		,ldz1);
@@ -1057,9 +1063,10 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             //patL1.addUserInt("ElecMissHits" , lept1->gsfTrack()->hitPattern().numberOfAllHits(reco::HitPattern::MISSING_INNER_HITS) );
             //Due to changes in function names from 80X to 94X, the function numberOfHits
             // MY Muon ID
-                
+            
             patL1.addUserInt("ZLe1Qid_", ZLe1Qid);
-                        
+                
+            
             //patL1.addUserFloat("ZLe1Qid_TP_", ZLe1Qid_TP);
 
             patL1.addUserFloat("ZLe1_TrackerLWM_", ZLe1_TrackerLWM);
