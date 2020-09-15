@@ -18,10 +18,9 @@ process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
        #'/store/data/Run2016G/DoubleMuon/MINIAOD/17Jul2018-v1/50000/7A20CF7C-4D8C-E811-99B9-0242AC1C0501.root'
-        '/store/data/Run2018C/MuonEG/MINIAOD/17Sep2018-v1/80000/ACED0351-B365-4E4D-8A4A-B23DD48A4081.root' ### 2018MC
+        '/store/data/Run2017B/MuonEG/MINIAOD/31Mar2018-v1/610000/86B6E7A3-8739-E811-96AF-002590DE6E52.root' ### 2017
         #'/store/data/Run2016D/DoubleMuon/MINIAOD/03Feb2017-v1/1110000/E2C423A9-E3F1-E611-8EA4-047D7BD6DE30.root'
    )
-
 )
 
 
