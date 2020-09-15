@@ -241,7 +241,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 
   if(primaryVertices_handle->empty())return;  
   
-
+  /*
   reco::VertexCollection::const_iterator PV = primaryVertices_handle->end();
   for (reco::VertexCollection::const_iterator vtx = primaryVertices_handle->begin(); vtx != primaryVertices_handle->end(); ++vtx, ++PV) {
     if ( !(vtx->isFake())
@@ -328,7 +328,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
      }//end for
 
   } //end pruned
-  /*
+  
   //NEW for muons and psi pairs
   int nonia = dimuons->size();
   int nmuons = dimuons->size()*2;
