@@ -334,7 +334,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   int nmuons = dimuons->size()*2;
   int nelecs = leptons->size();
   int nPV    = primaryVertices_handle->size();
-  /*
+  
   for (pat::CompositeCandidateCollection::const_iterator dimuon = dimuons->begin(); dimuon != dimuons->end(); ++dimuon ) {
         //Jpsi Muons
     
@@ -1211,8 +1211,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 	    }
       }//end lepton
   }
-  iEvent.put(std::move(ZCandColl),"ZCandidates");
-  */
+  //iEvent.put(std::move(ZCandColl),"ZCandidates");
+  
   std::cout << "is ZCandColl empty ?" << ZCandColl->empty() << std::endl;
   //std::cout << "jpsiElecKmcFitter is working ok" << std::endl;
 }
