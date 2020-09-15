@@ -334,7 +334,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   int nmuons = dimuons->size()*2;
   int nelecs = leptons->size();
   int nPV    = primaryVertices_handle->size();
-  /*
+  
   for (pat::CompositeCandidateCollection::const_iterator dimuon = dimuons->begin(); dimuon != dimuons->end(); ++dimuon ) {
         //Jpsi Muons
 	const pat::Muon* muon1 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon1"));
@@ -476,7 +476,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                      
                 int lept1Mu8DiEle12 = 0;
                 int lept2Mu8DiEle12 = 0;
-          
+                /*
                 //const pat::Electron* lept1 = dynamic_cast<const pat::Electron*>(dilepton->daughter("lepton1"));
                 //const pat::Electron* lept2 = dynamic_cast<const pat::Electron*>(dilepton->daughter("lepton2"));
                 const pat::Electron* lept1 = 0;
@@ -1203,14 +1203,14 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                 
             ZCandColl->push_back(patZ);
             std::cout<< "something has been pushed"	<< std::endl;
-			
+			*/
 			//} Z candidate is valid
 
 	    }
       }//end lepton
   }
   iEvent.put(std::move(ZCandColl),"ZCandidates");
-  */
+  
   std::cout << "is ZCandColl empty ?" << ZCandColl->empty() << std::endl;
   //std::cout << "jpsiElecKmcFitter is working ok" << std::endl;
 }
