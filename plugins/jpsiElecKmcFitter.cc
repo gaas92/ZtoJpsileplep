@@ -144,7 +144,8 @@ class jpsiElecKmcFitter : public edm::stream::EDProducer<>{
 jpsiElecKmcFitter::jpsiElecKmcFitter(const edm::ParameterSet& iConfig){
 	dimuon_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter< edm::InputTag>("dimuon"));
 	//dielec_Label = consumes<pat::CompositeCandidateCollection>(iConfig.getParameter<edm::InputTag>("dilepton"));
-    leptonToken_ = consumes<edm::View<pat::Electron>>(iConfig.getParameter<edm::InputTag>("leptons"));
+    //leptonToken_ = consumes<edm::View<pat::Electron>>(iConfig.getParameter<edm::InputTag>("leptons"));
+    leptonToken_ = mayConsume<edm::View<pat::Electron>>(iConfig.getParameter<edm::InputTag>("leptons"));
 
 	primaryVertices_Label = consumes<reco::VertexCollection>(iConfig.getParameter< edm::InputTag>("primaryVertices"));
     
