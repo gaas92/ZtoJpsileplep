@@ -334,7 +334,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   int nmuons = dimuons->size()*2;
   int nelecs = leptons->size();
   int nPV    = primaryVertices_handle->size();
-    
+  /*
   for (pat::CompositeCandidateCollection::const_iterator dimuon = dimuons->begin(); dimuon != dimuons->end(); ++dimuon ) {
         //Jpsi Muons
 	const pat::Muon* muon1 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon1"));
@@ -342,28 +342,28 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 
         int muon1Mu8DiEle12 = 0;
         int muon2Mu8DiEle12 = 0;
-        /*
-        try {
-           const pat::TriggerObjectStandAloneCollection muon1HLT_Mu8DiEle12 = muon1->triggerObjectMatchesByFilter("HLTMu8DiEle12CaloIdLTrackIdLElectronlegSequence");
-           const pat::TriggerObjectStandAloneCollection muon2HLT_Mu8DiEle12 = muon2->triggerObjectMatchesByFilter("HLTMu8DiEle12CaloIdLTrackIdLElectronlegSequence");
-           
-           //std::cout << "IT WORKS ... for now" << std::endl;
-           //std::cout << "Sise of muon1: " << muon1HLT_Mu8DiEle12.size()  << std::endl;
-           //std::cout << "Sise of muon2: " << muon2HLT_Mu8DiEle12.size()  << std::endl;
-                     
-           if (muon1HLT_Mu8DiEle12.size() > 0 ){
-               //std::cout << "muon1 IsoMu HLT matched" << std::endl;
-               muon1Mu8DiEle12 = 1;
-               }
-           if (muon2HLT_Mu8DiEle12.size() > 0 ){
-               //std::cout << "muon2 IsoMu HLT matched" << std::endl;
-               muon2Mu8DiEle12 = 1;
-              }
-        }
-        catch ( ... ){
-             std::cout << "Esta madre no jala" << std::endl;
-             }
-		*/
+        
+        //try {
+        //   const pat::TriggerObjectStandAloneCollection muon1HLT_Mu8DiEle12 = muon1->triggerObjectMatchesByFilter("HLTMu8DiEle12CaloIdLTrackIdLElectronlegSequence");
+        //   const pat::TriggerObjectStandAloneCollection muon2HLT_Mu8DiEle12 = muon2->triggerObjectMatchesByFilter("HLTMu8DiEle12CaloIdLTrackIdLElectronlegSequence");
+        //
+        //   //std::cout << "IT WORKS ... for now" << std::endl;
+        //   //std::cout << "Sise of muon1: " << muon1HLT_Mu8DiEle12.size()  << std::endl;
+        //   //std::cout << "Sise of muon2: " << muon2HLT_Mu8DiEle12.size()  << std::endl;
+        //
+        //   if (muon1HLT_Mu8DiEle12.size() > 0 ){
+        //       //std::cout << "muon1 IsoMu HLT matched" << std::endl;
+        //       muon1Mu8DiEle12 = 1;
+        //       }
+        //   if (muon2HLT_Mu8DiEle12.size() > 0 ){
+        //       //std::cout << "muon2 IsoMu HLT matched" << std::endl;
+        //       muon2Mu8DiEle12 = 1;
+        //      }
+        //}
+        //catch ( ... ){
+        //     std::cout << "Esta madre no jala" << std::endl;
+        //     }
+    
 	  float jpsiVprob=0;
 	  float jpsiChi2=0;
 	  jpsiVprob = dimuon->userFloat("vProb");
@@ -484,53 +484,52 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                 if(lepton1->charge() == -1 && lepton2->charge() == 1){ lept1 = &(*lepton1); lept2 = &(*lepton2);}
                 else if (lepton1->charge() == 1 && lepton2->charge() == -1) {lept1 = &(*lepton2); lept2 = &(*lepton1);}
                 else continue;
-          /*
-                try {
-                     const pat::TriggerObjectStandAloneCollection lept1HLT_Ele25wpT = lept1->triggerObjectMatchesByFilter("HLTEle25WPTightGsfSequence");
-                     const pat::TriggerObjectStandAloneCollection lept2HLT_Ele25wpT = lept2->triggerObjectMatchesByFilter("HLTEle25WPTightGsfSequence");
-                     
-                     const pat::TriggerObjectStandAloneCollection lept1HLT_Ele23_12 = lept1->triggerObjectMatchesByFilter("hltEle23Ele12CaloIdLTrackIdLIsoVLDZFilter");
-                     const pat::TriggerObjectStandAloneCollection lept2HLT_Ele23_12 = lept2->triggerObjectMatchesByFilter("hltEle23Ele12CaloIdLTrackIdLIsoVLDZFilter");
-                     
-                     const pat::TriggerObjectStandAloneCollection lept1HLT_Mu8DiEle12 = lept1->triggerObjectMatchesByFilter("HLTMu8DiEle12CaloIdLTrackIdLElectronlegSequence");
-                     const pat::TriggerObjectStandAloneCollection lept2HLT_Mu8DiEle12 = lept2->triggerObjectMatchesByFilter("HLTMu8DiEle12CaloIdLTrackIdLElectronlegSequence");
-                     
-                     //const pat::TriggerObjectStandAloneCollection muHLTMatches1_t2 = iMuon1->triggerObjectMatchesByFilter("hltJpsiTkVertexFilter");
-                     //std::cout << "IT WORKS ... for now" << std::endl;
-                     //std::cout << "Sise of lept1: " << lept1HLT_IsoMu24.size()  << std::endl;
-                     //std::cout << "Sise of lept2: " << lept2HLT_IsoMu24.size()  << std::endl;
-                     //
-                    //
-                     if (lept1HLT_Ele25wpT.size() > 0 ){
-                         std::cout << "lept1 Ele25 HLT matched" << std::endl;
-                         lept1Ele25wpT = 1;
-                         }
-                     if (lept2HLT_Ele25wpT.size() > 0 ){
-                         std::cout << "lept2 Ele25 HLT matched" << std::endl;
-                         lept2Ele25wpT = 1;
-                         }
-                     if (lept1HLT_Ele23_12.size() > 0 ){
-                         std::cout << "lept1 Ele23_12 HLT matched" << std::endl;
-                         lept1Ele23_12 = 1;
-                         }
-                     if (lept2HLT_Ele23_12.size() > 0 ){
-                         std::cout << "lept2 Ele23_12 HLT matched" << std::endl;
-                         lept2Ele23_12 = 1;
-                         }
-                     if (lept1HLT_Mu8DiEle12.size() > 0 ){
-                         std::cout << "lept1 Mu8DiEle12 HLT matched" << std::endl;
-                         lept1Mu8DiEle12 = 1;
-                         }
-                     if (lept2HLT_Mu8DiEle12.size() > 0 ) {
-                         std::cout << "lept2 Mu8DiEle12 HLT matched" << std::endl;
-                         lept2Mu8DiEle12 = 1 ;
-                         } 
-                     }
-                catch ( ... ){
-                     std::cout << "Esta madre no jala" << std::endl;
-                    }
-          */
-		//if (lept1 == muon1 || lept1==muon2 || lept2 == muon1 || lept2== muon2  ) continue; //realmente no importa porque ahora son electrones y muones
+          
+                //try {
+                //     const pat::TriggerObjectStandAloneCollection lept1HLT_Ele25wpT = lept1->triggerObjectMatchesByFilter("HLTEle25WPTightGsfSequence");
+                //     const pat::TriggerObjectStandAloneCollection lept2HLT_Ele25wpT = lept2->triggerObjectMatchesByFilter("HLTEle25WPTightGsfSequence");
+                //
+                //     const pat::TriggerObjectStandAloneCollection lept1HLT_Ele23_12 = lept1->triggerObjectMatchesByFilter("hltEle23Ele12CaloIdLTrackIdLIsoVLDZFilter");
+                //     const pat::TriggerObjectStandAloneCollection lept2HLT_Ele23_12 = lept2->triggerObjectMatchesByFilter("hltEle23Ele12CaloIdLTrackIdLIsoVLDZFilter");
+                //
+                //     const pat::TriggerObjectStandAloneCollection lept1HLT_Mu8DiEle12 = lept1->triggerObjectMatchesByFilter("HLTMu8DiEle12CaloIdLTrackIdLElectronlegSequence");
+                //     const pat::TriggerObjectStandAloneCollection lept2HLT_Mu8DiEle12 = lept2->triggerObjectMatchesByFilter("HLTMu8DiEle12CaloIdLTrackIdLElectronlegSequence");
+                //
+                //     //const pat::TriggerObjectStandAloneCollection muHLTMatches1_t2 = iMuon1->triggerObjectMatchesByFilter("hltJpsiTkVertexFilter");
+                //     //std::cout << "IT WORKS ... for now" << std::endl;
+                //     //std::cout << "Sise of lept1: " << lept1HLT_IsoMu24.size()  << std::endl;
+                //     //std::cout << "Sise of lept2: " << lept2HLT_IsoMu24.size()  << std::endl;
+                //     //
+                //    //
+                //     if (lept1HLT_Ele25wpT.size() > 0 ){
+                //         std::cout << "lept1 Ele25 HLT matched" << std::endl;
+                //         lept1Ele25wpT = 1;
+                //         }
+                //     if (lept2HLT_Ele25wpT.size() > 0 ){
+                //         std::cout << "lept2 Ele25 HLT matched" << std::endl;
+                //         lept2Ele25wpT = 1;
+                //         }
+                //     if (lept1HLT_Ele23_12.size() > 0 ){
+                //         std::cout << "lept1 Ele23_12 HLT matched" << std::endl;
+                //         lept1Ele23_12 = 1;
+                //         }
+                //     if (lept2HLT_Ele23_12.size() > 0 ){
+                //         std::cout << "lept2 Ele23_12 HLT matched" << std::endl;
+                //         lept2Ele23_12 = 1;
+                //         }
+                //     if (lept1HLT_Mu8DiEle12.size() > 0 ){
+                //         std::cout << "lept1 Mu8DiEle12 HLT matched" << std::endl;
+                //         lept1Mu8DiEle12 = 1;
+                //         }
+                //     if (lept2HLT_Mu8DiEle12.size() > 0 ) {
+                //         std::cout << "lept2 Mu8DiEle12 HLT matched" << std::endl;
+                //         lept2Mu8DiEle12 = 1 ;
+                //         }
+                //     }
+                //catch ( ... ){
+                //     std::cout << "Esta madre no jala" << std::endl;
+                //    }
+          
 	        ///////////////////////////////////////
                 //////////// MY ELECTRON ID ///////////////
 	        ///////////////////////////////////////
@@ -657,14 +656,14 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             //int ZLe2_ElecMissHits = lept2->gsfTrack()->hitPattern().numberOfHits(reco::HitPattern::MISSING_INNER_HITS);
             //std::cout<< "ZLe1_ElecMissHits: " << ZLe1_ElecMissHits << std::endl;
             //std::cout<< "ZLe2_ElecMissHits: " << ZLe2_ElecMissHits << std::endl;
-            /*
-            double dR1 = deltaR(*(lept1->innerTrack()), *(muon1->innerTrack()));
-		    double dR2 = deltaR(*(lept1->innerTrack()), *(muon2->innerTrack()));
-		    double dR3 = deltaR(*(lept2->innerTrack()), *(muon1->innerTrack()));
-		    double dR4 = deltaR(*(lept2->innerTrack()), *(muon2->innerTrack()));
-		    double dR5 = deltaR(*(lept1->innerTrack()), *(lept2->innerTrack()));
-		    double dR6 = deltaR(*(muon1->innerTrack()), *(muon2->innerTrack()));
-	        */
+            
+            //double dR1 = deltaR(*(lept1->innerTrack()), *(muon1->innerTrack()));
+		    //double dR2 = deltaR(*(lept1->innerTrack()), *(muon2->innerTrack()));
+		    //double dR3 = deltaR(*(lept2->innerTrack()), *(muon1->innerTrack()));
+		    //double dR4 = deltaR(*(lept2->innerTrack()), *(muon2->innerTrack()));
+		    //double dR5 = deltaR(*(lept1->innerTrack()), *(lept2->innerTrack()));
+		    //double dR6 = deltaR(*(muon1->innerTrack()), *(muon2->innerTrack()));
+	        
             double dRm1m2   = deltaR(*(muon1->innerTrack()), *(muon2->innerTrack()));
             double dRel1el2 = deltaR(*(lept1->gsfTrack()), *(lept2->gsfTrack())    );
             double dRel1mu1 = deltaR(*(lept1->gsfTrack()), *(muon1->innerTrack()));
@@ -1211,6 +1210,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
       }//end lepton
   }
   iEvent.put(std::move(ZCandColl),"ZCandidates");
+  */
   std::cout << "is ZCandColl empty ?" << ZCandColl->empty() << std::endl;
   //std::cout << "jpsiElecKmcFitter is working ok" << std::endl;
 }
