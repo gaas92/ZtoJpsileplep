@@ -466,6 +466,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             if (track_1.isNull()) continue;
             //std::cout << "PASS MU 1, LOOPING OVER MU 2" << std::endl;
             for (View<pat::Electron>::const_iterator lepton2 = leptons->begin() ; lepton2 !=  leptons->end(); ++lepton2 ) {
+                std::cout<< " elecs fhncdsknclkdnclkdsn " << std::endl;
+
                 if((lepton1->charge() * lepton2->charge()) != -1) continue;
                 if(lepton1==lepton2) continue; //v7 add
                 std::cout<< " elecs " << std::endl;
