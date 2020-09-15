@@ -821,7 +821,6 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                                             ZVtxY_fit, ZVtxZ_fit), 23);
             pat::CompositeCandidate patMZ(msrdZ);
             pat::CompositeCandidate patZ(recoZ);
-            std::cout << "works 822" << std::endl;
             ///////DELETE WHEN POSIBLE
             patZ.addUserInt("ZLe1Qid_", ZLe1Qid);
             patZ.addUserInt("ZLe2Qid_", ZLe2Qid);
@@ -838,14 +837,16 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patZ.addUserFloat("ZvtxX",ZVtxX_fit);
             patZ.addUserFloat("ZvtxY",ZVtxY_fit);
             patZ.addUserFloat("ZvtxZ",ZVtxZ_fit);
-            /*
+            
             patZ.addUserFloat("dRm1m2",dRm1m2);
             patZ.addUserFloat("dRl1l2",dRel1el2);
             patZ.addUserFloat("dRl1m1",dRel1mu1);
             patZ.addUserFloat("dRl1m2",dRel1mu2);
             patZ.addUserFloat("dRl2m1",dRel2mu1);
             patZ.addUserFloat("dRl2m2",dRel2mu2);
+            std::cout << "works 822" << std::endl;
 
+            /*
             ////////////////////////////////
             ///////// MY MUON Q ID /////////
             ////////////////////////////////
