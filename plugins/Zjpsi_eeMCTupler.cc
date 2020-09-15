@@ -145,6 +145,7 @@ class Zjpsi_eeMCTupler:public edm::EDAnalyzer {
         UInt_t    ismatched;
         UInt_t    nonia;
         UInt_t    nmuons;
+        UInt_t    nelecs;
         UInt_t    trigger;
         UInt_t    triggersingle;
         //New
@@ -369,6 +370,7 @@ Zjpsi_eeMCTupler::Zjpsi_eeMCTupler(const edm::ParameterSet & iConfig):
     //new
     Z_tree->Branch("nonia",    &nonia,    "nonia/i");
     Z_tree->Branch("nmuons",   &nmuons,   "nmuons/i");
+    Z_tree->Branch("nelecs",   &nelecs,   "nelecs/i");
     Z_tree->Branch("nPV",      &nPV,      "nPV/i");
     Z_tree->Branch("passFit",  &passFit,  "passFit/i");
     Z_tree->Branch("nCands",   &nCands,   "nCands/i");
@@ -751,6 +753,7 @@ void Zjpsi_eeMCTupler::analyze(const edm::Event & iEvent, const edm::EventSetup 
        //new
        nonia  = z_Cand.userInt("nonia_");
        nmuons = z_Cand.userInt("nmuons_");
+       nelecs = z_Cand.userInt("nelecs_");
        nPV    = z_Cand.userInt("nPV_");
        passFit = z_Cand.userInt("passFit_");
        nCands  = csize;

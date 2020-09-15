@@ -826,6 +826,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
     
             patZ.addUserInt("nonia_", nonia );
             patZ.addUserInt("nmuons_",nmuons);
+            patZ.addUserInt("nelecs_",nelecs);
             patZ.addUserInt("nPV_",   nPV   );
                 
             patZ.addUserFloat("vProb",ZVtxP_fit);
