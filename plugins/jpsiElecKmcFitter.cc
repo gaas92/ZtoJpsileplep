@@ -891,9 +891,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             pat::CompositeCandidate pat_msrdMu1(msrdMu1);
 
             pat::CompositeCandidate patMu1(recoMu1);
-            std::cout << "works 894" << std::endl;
 
-            /*
+            /
             //patMu1.addUserFloat("mu1Q_", muon1->charge());
             patMu1.addUserFloat("Dxy",mdxy1);
             patMu1.addUserFloat("Dz",mdz1);
@@ -986,8 +985,9 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             msrd_jpsi.addUserFloat("vProb",jpsiVprob);
             msrd_jpsi.addUserFloat("vChi2",jpsiChi2);
                     
+            std::cout << "works 988" << std::endl;
 
-
+            /*
             //get Lepton
             child = ZTree->movePointerToTheNextChild();
             RefCountedKinematicParticle fitL1 = ZTree->currentParticle();
