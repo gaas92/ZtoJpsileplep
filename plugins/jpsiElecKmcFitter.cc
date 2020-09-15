@@ -1041,7 +1041,11 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
           
             patL1.addUserFloat("dIP3D"	,tkPVdistel1.second.value());
             patL1.addUserFloat("dIP3DErr"	,tkPVdistel1.second.error());
-            
+                
+            if (ElectronRelIso(*lept1) > (0.5 + 0.506/lept1->pt())) continue;
+            if (ElectronRelIso(*lept2) > (0.5 + 0.506/lept2->pt())) continue;
+
+                
             patL1.addUserFloat("dRIsoEA", ElectronRelIso(*lept1));
             
             patL1.addUserFloat("trackMomentumAtVtx"   , (float)sqrt(lept1->trackMomentumAtVtx().mag2()));
