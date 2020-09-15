@@ -833,11 +833,12 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patZ.addUserInt("nmuons_",nmuons);
             patZ.addUserInt("nPV_",   nPV   );
                 
-            patZ.addUserFloat("vProb",ZVtxP_fit);/*
+            patZ.addUserFloat("vProb",ZVtxP_fit);
             patZ.addUserFloat("vChi2",ZDecayVertex->chiSquared());
             patZ.addUserFloat("ZvtxX",ZVtxX_fit);
             patZ.addUserFloat("ZvtxY",ZVtxY_fit);
             patZ.addUserFloat("ZvtxZ",ZVtxZ_fit);
+            /*
             patZ.addUserFloat("dRm1m2",dRm1m2);
             patZ.addUserFloat("dRl1l2",dRel1el2);
             patZ.addUserFloat("dRl1m1",dRel1mu1);
