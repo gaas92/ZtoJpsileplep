@@ -761,7 +761,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             
             //std::cout << "is FitZ Valid ??" << fitZ->currentState().isValid() << std::endl;
         
-            //int passFit = 0; UNCOMMENT WHEN POSIBLE
+            int passFit = 0;
                 
             float ZM_fit    = 0;
             float ZPx_fit   = 0;
@@ -770,7 +770,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             float ZVtxX_fit = 0;
             float ZVtxY_fit = 0;
             float ZVtxZ_fit = 0;
-            //float ZVtxP_fit = 0; UNCOMMENT WHEN POSSIBLE
+            float ZVtxP_fit = 0; 
 			if (fitZ->currentState().isValid()) {
                 //if (ZDecayVertex->chiSquared() < 0) continue;
                 ZM_fit  = fitZ->currentState().mass();
