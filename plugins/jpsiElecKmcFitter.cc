@@ -337,7 +337,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   
   for (pat::CompositeCandidateCollection::const_iterator dimuon = dimuons->begin(); dimuon != dimuons->end(); ++dimuon ) {
         //Jpsi Muons
-    
+      std::cout<< " muons " << std::endl;
 	const pat::Muon* muon1 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon1"));
 	const pat::Muon* muon2 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon2"));
 
@@ -1216,7 +1216,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 	    }
       }//end lepton
   }
-  std::cout << "is ZCandColl empty ?" << ZCandColl->empty() << std::endl;
+  //std::cout << "is ZCandColl empty ?" << ZCandColl->empty() << std::endl;
   iEvent.put(std::move(ZCandColl),"ZCandidates");
   
   
