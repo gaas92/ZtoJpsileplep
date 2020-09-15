@@ -463,7 +463,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
       std::cout << "diElectrons handle Size: " << std::endl;
 	  for (View<pat::Electron>::const_iterator lepton1 = leptons->begin(); lepton1 != leptons->end(); ++lepton1 ) {
             reco::TrackRef track_1 = lepton1->track();
-            if (track_1.isNull()) continue;
+            //if (track_1.isNull()) continue;
             //std::cout << "PASS MU 1, LOOPING OVER MU 2" << std::endl;
             for (View<pat::Electron>::const_iterator lepton2 = leptons->begin() ; lepton2 !=  leptons->end(); ++lepton2 ) {
                 std::cout<< " elecs fhncdsknclkdnclkdsn " << std::endl;
@@ -473,7 +473,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                 std::cout<< " elecs " << std::endl;
 
                 reco::TrackRef track_2 = lepton2->track();
-                if (track_2.isNull()) continue;
+                //if (track_2.isNull()) continue;
                 int lept1Ele25wpT = 0;
                 int lept2Ele25wpT = 0;
                      
