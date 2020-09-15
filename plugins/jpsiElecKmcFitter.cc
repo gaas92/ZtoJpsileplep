@@ -1056,8 +1056,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patL1.addUserFloat("HoE"                  , (float)lept1->hadronicOverEm());
             patL1.addUserFloat("ooEmooP"              , (float)fabs(1/lept1->ecalEnergy() - 1/sqrt(lept1->trackMomentumAtVtx().mag2())));
             patL1.addUserFloat("passConversionVeto"   , (float)lept1->passConversionVeto());
-            std::cout << "works 1059" << std::endl;
-            /*
+            
             patL1.addUserFloat("dPhiInSeed" , lept1->deltaPhiSuperClusterTrackAtVtx());
             patL1.addUserFloat("dEtaInSeed" , getEtaInSeed( *lept1 )) ;
             patL1.addUserFloat("SigmaIEtaIEta" ,lept1->full5x5_sigmaIetaIeta());
@@ -1068,7 +1067,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             //patL1.addUserInt("ElecMissHits" , lept1->gsfTrack()->hitPattern().numberOfAllHits(reco::HitPattern::MISSING_INNER_HITS) );
             //Due to changes in function names from 80X to 94X, the function numberOfHits
             // MY Muon ID
-            
+            std::cout << "works 1071" << std::endl;
+            /*
             patL1.addUserInt("ZLe1Qid_", ZLe1Qid);
                 
             
