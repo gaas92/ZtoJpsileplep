@@ -363,12 +363,13 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
         //catch ( ... ){
         //     std::cout << "Esta madre no jala" << std::endl;
         //     }
-    
-	  float jpsiVprob=0;
-	  float jpsiChi2=0;
-	  jpsiVprob = dimuon->userFloat("vProb");
-	  jpsiChi2  = dimuon->userFloat("vNChi2");
-    
+       //UNCOMMENT WHEN POSIBLE
+	  //float jpsiVprob=0;
+	  //float jpsiChi2=0;
+	  //jpsiVprob = dimuon->userFloat("vProb");
+	  //jpsiChi2  = dimuon->userFloat("vNChi2");
+      
+      /*
       //////////// MY MUON ID ///////////////
       ///////////////////////////////////////
       int ZMu1Qid = 0;
@@ -476,7 +477,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                      
                 int lept1Mu8DiEle12 = 0;
                 int lept2Mu8DiEle12 = 0;
-                /*
+                
                 //const pat::Electron* lept1 = dynamic_cast<const pat::Electron*>(dilepton->daughter("lepton1"));
                 //const pat::Electron* lept2 = dynamic_cast<const pat::Electron*>(dilepton->daughter("lepton2"));
                 const pat::Electron* lept1 = 0;
