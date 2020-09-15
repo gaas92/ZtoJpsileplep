@@ -460,17 +460,14 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
       //if (fabs(tkPVdist1.second.significance())>4.) continue;
       //if (fabs(tkPVdist2.second.significance())>4.) continue;
       //std::cout << "works for jpsimuons" << std::endl;
-      std::cout << "diElectrons handle Size: " << std::endl;
 	  for (View<pat::Electron>::const_iterator lepton1 = leptons->begin(); lepton1 != leptons->end(); ++lepton1 ) {
             reco::TrackRef track_1 = lepton1->track();
             //if (track_1.isNull()) continue;
             //std::cout << "PASS MU 1, LOOPING OVER MU 2" << std::endl;
             for (View<pat::Electron>::const_iterator lepton2 = leptons->begin() ; lepton2 !=  leptons->end(); ++lepton2 ) {
-                std::cout<< " elecs fhncdsknclkdnclkdsn " << std::endl;
 
                 if((lepton1->charge() * lepton2->charge()) != -1) continue;
                 if(lepton1==lepton2) continue; //v7 add
-                std::cout<< " elecs " << std::endl;
 
                 reco::TrackRef track_2 = lepton2->track();
                 //if (track_2.isNull()) continue;
@@ -482,8 +479,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                      
                 int lept1Mu8DiEle12 = 0;
                 int lept2Mu8DiEle12 = 0;
-                std::cout << "works " << std::endl;
-                /*
+                
                 //const pat::Electron* lept1 = dynamic_cast<const pat::Electron*>(dilepton->daughter("lepton1"));
                 //const pat::Electron* lept2 = dynamic_cast<const pat::Electron*>(dilepton->daughter("lepton2"));
                 const pat::Electron* lept1 = 0;
@@ -654,7 +650,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             int ZLe2_TrackerLWM = lept2->gsfTrack()->hitPattern().trackerLayersWithMeasurement();
             int ZLe2_PixelLWM   = lept2->gsfTrack()->hitPattern().pixelLayersWithMeasurement();
             int ZLe2_ValPixHit  = lept2->gsfTrack()->hitPattern().numberOfValidPixelHits();
-
+            std::cout << "works " << std::endl;
+            /*
             //int ZLe1_ElecMissHits = 0;
             //int ZLe2_ElecMissHits = 0;
             int ZLe1_ElecMissHits = lept1->gsfTrack()->hitPattern().numberOfAllHits(reco::HitPattern::MISSING_INNER_HITS);
