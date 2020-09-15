@@ -1165,7 +1165,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patL2.addUserFloat("lept2Ele23_12_", lept2Ele23_12);
             patL2.addUserFloat("lept2Mu8DiEle12_", lept2Mu8DiEle12);
             std::cout << "works 1071" << std::endl;
-            /*
+            
             ///MONTECARLO
             reco::CompositeCandidate mc_Z(0, math::XYZTLorentzVector(gen_z_p4.Px(), gen_z_p4.Py(), gen_z_p4.Pz(),
                 sqrt((gen_z_p4.M())*(gen_z_p4.M()) + (gen_z_p4.Px())*(gen_z_p4.Px()) + (gen_z_p4.Py())*(gen_z_p4.Py()) +
@@ -1217,7 +1217,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                 
             ZCandColl->push_back(patZ);
             std::cout<< "something has been pushed"	<< std::endl;
-            */
+            
             ZCandColl->push_back(patZ);
             std::cout << "Fill "<< std::endl;
 			//} Z candidate is valid
