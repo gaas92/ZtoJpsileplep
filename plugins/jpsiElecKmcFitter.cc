@@ -455,8 +455,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
        
       std::pair<bool,Measurement1D> tkPVdist1 = IPTools::absoluteImpactParameter3D(MuMuTTks.at(0),*PV);
       std::pair<bool,Measurement1D> tkPVdist2 = IPTools::absoluteImpactParameter3D(MuMuTTks.at(1),*PV);
-      std::cout<< " muons " << std::endl;
-
+      
       if (!tkPVdist1.first|| !tkPVdist2.first ) continue;
       //if (fabs(tkPVdist1.second.significance())>4.) continue;
       //if (fabs(tkPVdist2.second.significance())>4.) continue;
@@ -464,6 +463,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
       //std::cout << "diElectrons handle Size: " << dileptons->size() << " " << std::endl;
 	  for (View<pat::Electron>::const_iterator lepton1 = leptons->begin(); lepton1 != leptons->end(); ++lepton1 ) {
             reco::TrackRef track_1 = lepton1->track();
+            std::cout<< " elecs " << std::endl;
             if (track_1.isNull()) continue;
             //std::cout << "PASS MU 1, LOOPING OVER MU 2" << std::endl;
             for (View<pat::Electron>::const_iterator lepton2 = leptons->begin() ; lepton2 !=  leptons->end(); ++lepton2 ) {
