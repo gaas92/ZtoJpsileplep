@@ -1080,16 +1080,16 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             //float corrMass = mass * std::sqrt( ele1.userFloat("<energyToUse>")/ele1.energy * ele2.userFloat("<energyToUse>")/ele2.energy() );
             //auto  corrP4   = pat::Electron::p4() * pat::Electron::userFloat("<energyToUse>") / pat::Electron::energy();
             
-            float = l1_ecalEnergyPreCorr;          //ecalEnergy before scale & smearing corrections
-            float = l1_ecalEnergyErrPreCorr;       //resolution estimate on the ecalEnergy before scale & smearing corrections
-            float = l1_ecalEnergyPostCorr;         //ecalEnergy of electron after scale & smearing corrections
-            float = l1_ecalEnergyErrPostCorr;      //resolution estimate on the ecalEnergy after scale & smearing corrections
-            float = l1_ecalTrkEnergyPreCorr;       //ECAL-Trk combined electron energy before scale & smearing corrections
-            float = l1_ecalTrkEnergyErrPreCorr;    //resolution estimate of the ECAL-Trk combined electron energy before scale & smearing corrections
-            float = l1_ecalTrkEnergyPostCorr;      //ECAL-Trk combined electron energy after scale & smearing corrections
-            float = l1_ecalTrkEnergyErrPostCorr;   //resolution estimate of the ECAL-Trk combined electron energy after scale & smearing corrections
-            float = l1_energyScaleValue;           //value of the scale correction, MC ignores this value and takes 1
-            float = l1_energySigmaValue;           //value of the resolution correction
+            float l1_ecalEnergyPreCorr;          //ecalEnergy before scale & smearing corrections
+            float l1_ecalEnergyErrPreCorr;       //resolution estimate on the ecalEnergy before scale & smearing corrections
+            float l1_ecalEnergyPostCorr;         //ecalEnergy of electron after scale & smearing corrections
+            float l1_ecalEnergyErrPostCorr;      //resolution estimate on the ecalEnergy after scale & smearing corrections
+            float l1_ecalTrkEnergyPreCorr;       //ECAL-Trk combined electron energy before scale & smearing corrections
+            float l1_ecalTrkEnergyErrPreCorr;    //resolution estimate of the ECAL-Trk combined electron energy before scale & smearing corrections
+            float l1_ecalTrkEnergyPostCorr;      //ECAL-Trk combined electron energy after scale & smearing corrections
+            float l1_ecalTrkEnergyErrPostCorr;   //resolution estimate of the ECAL-Trk combined electron energy after scale & smearing corrections
+            float l1_energyScaleValue;           //value of the scale correction, MC ignores this value and takes 1
+            float l1_energySigmaValue;           //value of the resolution correction
             
             try {        l1_ecalEnergyPreCorr    = lept1->userFloat("ecalEnergyPreCorr");}
             catch (...){ l1_ecalEnergyPreCorr = 0;}
@@ -1211,16 +1211,16 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patL2.addUserFloat("Dxy_gsf"        , lept2->gsfTrack()->dxy(PV->position()));
             patL2.addUserFloat("Dz_gsf"         , lept2->gsfTrack()->dz(PV->position()));
                 
-            float = l2_ecalEnergyPreCorr;          //ecalEnergy before scale & smearing corrections
-            float = l2_ecalEnergyErrPreCorr;       //resolution estimate on the ecalEnergy before scale & smearing corrections
-            float = l2_ecalEnergyPostCorr;         //ecalEnergy of electron after scale & smearing corrections
-            float = l2_ecalEnergyErrPostCorr;      //resolution estimate on the ecalEnergy after scale & smearing corrections
-            float = l2_ecalTrkEnergyPreCorr;       //ECAL-Trk combined electron energy before scale & smearing corrections
-            float = l2_ecalTrkEnergyErrPreCorr;    //resolution estimate of the ECAL-Trk combined electron energy before scale & smearing corrections
-            float = l2_ecalTrkEnergyPostCorr;      //ECAL-Trk combined electron energy after scale & smearing corrections
-            float = l2_ecalTrkEnergyErrPostCorr;   //resolution estimate of the ECAL-Trk combined electron energy after scale & smearing corrections
-            float = l2_energyScaleValue;           //value of the scale correction, MC ignores this value and takes 1
-            float = l2_energySigmaValue;           //value of the resolution correction
+            float l2_ecalEnergyPreCorr;          //ecalEnergy before scale & smearing corrections
+            float l2_ecalEnergyErrPreCorr;       //resolution estimate on the ecalEnergy before scale & smearing corrections
+            float l2_ecalEnergyPostCorr;         //ecalEnergy of electron after scale & smearing corrections
+            float l2_ecalEnergyErrPostCorr;      //resolution estimate on the ecalEnergy after scale & smearing corrections
+            float l2_ecalTrkEnergyPreCorr;       //ECAL-Trk combined electron energy before scale & smearing corrections
+            float l2_ecalTrkEnergyErrPreCorr;    //resolution estimate of the ECAL-Trk combined electron energy before scale & smearing corrections
+            float l2_ecalTrkEnergyPostCorr;      //ECAL-Trk combined electron energy after scale & smearing corrections
+            float l2_ecalTrkEnergyErrPostCorr;   //resolution estimate of the ECAL-Trk combined electron energy after scale & smearing corrections
+            float l2_energyScaleValue;           //value of the scale correction, MC ignores this value and takes 1
+            float l2_energySigmaValue;           //value of the resolution correction
             
             try {        l2_ecalEnergyPreCorr    = lept2->userFloat("ecalEnergyPreCorr");}
             catch (...){ l2_ecalEnergyPreCorr = 0;}
