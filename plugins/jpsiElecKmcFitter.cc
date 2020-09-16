@@ -676,36 +676,36 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             double dRel2mu1 = deltaR(*(lept2->gsfTrack()), *(muon1->innerTrack()));
             double dRel2mu2 = deltaR(*(lept2->gsfTrack()), *(muon2->innerTrack()));
 
-            double dRm1m2 = -1, dRl1l2 = -1, dRm1l1 = -1, dRm1l2 = -1, dRm2l1 = -1, dRm2l2 = -1;
+            double dRm1m2_ = -1, dRl1l2 = -1, dRm1l1 = -1, dRm1l2 = -1, dRm2l1 = -1, dRm2l2 = -1;
 
-            dRm1m2 = dR6;
-            dRl1l2 = dR5;
+            dRm1m2_ = dRm1m2;
+            dRl1l2 = dRel1el2;
             if (lept1->pt() > lept2->pt()){
                 if(muon1->pt() > muon2->pt()){
-                    dRm1l1 = deltaR(*(lept1->innerTrack()), *(muon1->innerTrack()));
-                    dRm2l1 = deltaR(*(lept1->innerTrack()), *(muon2->innerTrack()));
-                    dRm1l2 = deltaR(*(lept2->innerTrack()), *(muon1->innerTrack()));
-                    dRm2l2 = deltaR(*(lept2->innerTrack()), *(muon2->innerTrack()));
+                    dRm1l1 = deltaR(*(lept1->gsfTrack()), *(muon1->innerTrack()));
+                    dRm2l1 = deltaR(*(lept1->gsfTrack()), *(muon2->innerTrack()));
+                    dRm1l2 = deltaR(*(lept2->gsfTrack()), *(muon1->innerTrack()));
+                    dRm2l2 = deltaR(*(lept2->gsfTrack()), *(muon2->innerTrack()));
                 }
                 else{
-                    dRm1l1 = deltaR(*(lept1->innerTrack()), *(muon2->innerTrack()));
-                    dRm2l1 = deltaR(*(lept1->innerTrack()), *(muon1->innerTrack()));
-                    dRm1l2 = deltaR(*(lept2->innerTrack()), *(muon2->innerTrack()));
-                    dRm2l2 = deltaR(*(lept2->innerTrack()), *(muon1->innerTrack()));
+                    dRm1l1 = deltaR(*(lept1->gsfTrack()), *(muon2->innerTrack()));
+                    dRm2l1 = deltaR(*(lept1->gsfTrack()), *(muon1->innerTrack()));
+                    dRm1l2 = deltaR(*(lept2->gsfTrack()), *(muon2->innerTrack()));
+                    dRm2l2 = deltaR(*(lept2->gsfTrack()), *(muon1->innerTrack()));
                 }
             }
             else{
                 if(muon1->pt() > muon2->pt()){
-                    dRm1l1 = deltaR(*(lept2->innerTrack()), *(muon1->innerTrack()));
-                    dRm2l1 = deltaR(*(lept2->innerTrack()), *(muon2->innerTrack()));
-                    dRm1l2 = deltaR(*(lept1->innerTrack()), *(muon1->innerTrack()));
-                    dRm2l2 = deltaR(*(lept1->innerTrack()), *(muon2->innerTrack()));
+                    dRm1l1 = deltaR(*(lept2->gsfTrack()), *(muon1->innerTrack()));
+                    dRm2l1 = deltaR(*(lept2->gsfTrack()), *(muon2->innerTrack()));
+                    dRm1l2 = deltaR(*(lept1->gsfTrack()), *(muon1->innerTrack()));
+                    dRm2l2 = deltaR(*(lept1->gsfTrack()), *(muon2->innerTrack()));
                 }
                 else{
-                    dRm1l1 = deltaR(*(lept2->innerTrack()), *(muon2->innerTrack()));
-                    dRm2l1 = deltaR(*(lept2->innerTrack()), *(muon1->innerTrack()));
-                    dRm1l2 = deltaR(*(lept1->innerTrack()), *(muon2->innerTrack()));
-                    dRm2l2 = deltaR(*(lept1->innerTrack()), *(muon1->innerTrack()));
+                    dRm1l1 = deltaR(*(lept2->gsfTrack()), *(muon2->innerTrack()));
+                    dRm2l1 = deltaR(*(lept2->gsfTrack()), *(muon1->innerTrack()));
+                    dRm1l2 = deltaR(*(lept1->gsfTrack()), *(muon2->innerTrack()));
+                    dRm2l2 = deltaR(*(lept1->gsfTrack()), *(muon1->innerTrack()));
                 }
             }
                 
