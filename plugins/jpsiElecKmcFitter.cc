@@ -1070,8 +1070,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patL1.addUserFloat("Dz_gsf"         , lept1->gsfTrack()->dz(PV->position()));
             
             //only data, no userFloat for mc
-            float corrEt_1;//  lept1->et() * lept1->userFloat("ecalTrkEnergyPostCorr")/lept1->energy();
-            float corrfactor_1;// lept1->userFloat("ecalTrkEnergyPostCorr") / lept1->energy();
+            //float corrEt_1;//  lept1->et() * lept1->userFloat("ecalTrkEnergyPostCorr")/lept1->energy();
+            //float corrfactor_1;// lept1->userFloat("ecalTrkEnergyPostCorr") / lept1->energy();
                 
             //guide to all this shit https://twiki.cern.ch/twiki/bin/view/CMS/EgammaMiniAODV2
 

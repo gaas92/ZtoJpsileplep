@@ -625,11 +625,11 @@ Zjpsi_eeMCTupler::Zjpsi_eeMCTupler(const edm::ParameterSet & iConfig):
     
     
     
-    Z_tree->Branch("ZLe1CorrEt",         &ZLe1CorrEt,     "ZLe1CorrEt/F");
-    Z_tree->Branch("ZLe1CorrFact",       &ZLe1CorrFact,   "ZLe1CorrFact/F");
-    
-    Z_tree->Branch("ZLe2CorrEt",         &ZLe2CorrEt,     "ZLe2CorrEt/F");
-    Z_tree->Branch("ZLe2CorrFact",       &ZLe2CorrFact,   "ZLe2CorrFact/F");
+    //Z_tree->Branch("ZLe1CorrEt",         &ZLe1CorrEt,     "ZLe1CorrEt/F");
+    //Z_tree->Branch("ZLe1CorrFact",       &ZLe1CorrFact,   "ZLe1CorrFact/F");
+   
+    //Z_tree->Branch("ZLe2CorrEt",         &ZLe2CorrEt,     "ZLe2CorrEt/F");
+    //Z_tree->Branch("ZLe2CorrFact",       &ZLe2CorrFact,   "ZLe2CorrFact/F");
     
     Z_tree->Branch("Event_Cand", &Event_Cand, "Event_Cand_/i");
 
@@ -1083,10 +1083,10 @@ verE
        ZLe2ooEmooP               =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("ooEmooP");
        ZLe2passConversionVeto    =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("passConversionVeto");
           
-       ZLe1CorrEt    =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("corrEt_");
-       ZLe1CorrFact  =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("corrfactor_");
-       ZLe2CorrEt    =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("corrEt_");
-       ZLe2CorrFact  =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("corrfactor_");
+       //ZLe1CorrEt    =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("corrEt_");
+       //ZLe1CorrFact  =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("corrfactor_");
+       //ZLe2CorrEt    =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("corrEt_");
+       //ZLe2CorrFact  =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("corrfactor_");
 
        l1_ecalEnergyPreCorr         = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("ecalEnergyPreCorr_");
        l1_ecalEnergyErrPreCorr      = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("ecalEnergyErrPreCorr_");
