@@ -271,7 +271,7 @@ ZjpsiMCTupler::ZjpsiMCTupler(const edm::ParameterSet& iConfig):
    Z_tree->Branch("run",      &run,      "run/i");
    Z_tree->Branch("event",    &event,    "event/l");
    Z_tree->Branch("lumiblock",&lumiblock,"lumiblock/i");
-   Z_tree->Branch("vertex_i", &vertex_i, "vertex_i/i")
+   Z_tree->Branch("vertex_i", &vertex_i, "vertex_i/i");
 
  //  if (!OnlyGen_) {
 
