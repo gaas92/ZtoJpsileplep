@@ -605,20 +605,20 @@ Zjpsi_eeMCTupler::Zjpsi_eeMCTupler(const edm::ParameterSet & iConfig):
     Z_tree->Branch("l1_ecalTrkEnergyPreCorr",     &l1_ecalTrkEnergyPreCorr,     "l1_ecalTrkEnergyPreCorr/F"    );
     Z_tree->Branch("l1_ecalTrkEnergyErrPreCorr",  &l1_ecalTrkEnergyErrPreCorr,  "l1_ecalTrkEnergyErrPreCorr/F" );
     Z_tree->Branch("l1_ecalTrkEnergyPostCorr",    &l1_ecalTrkEnergyPostCorr,    "l1_ecalTrkEnergyPostCorr/F"   );
-    Z_tree->Branch("l1_ecalTrkEnergyErrPostCorr", &l1_ecalTrkEnergyErrPostCorr, "l1_ecalTrkEnergyErrPostCorr",);
-    Z_tree->Branch("l1_energyScaleValue",         &l1_energyScaleValue,         "l1_energyScaleValue",        );
-    Z_tree->Branch("l1_energySigmaValue",         &l1_energySigmaValue,         "l1_energySigmaValue",        );
+    Z_tree->Branch("l1_ecalTrkEnergyErrPostCorr", &l1_ecalTrkEnergyErrPostCorr, "l1_ecalTrkEnergyErrPostCorr"  );
+    Z_tree->Branch("l1_energyScaleValue",         &l1_energyScaleValue,         "l1_energyScaleValue"          );
+    Z_tree->Branch("l1_energySigmaValue",         &l1_energySigmaValue,         "l1_energySigmaValue"          );
     
-    Z_tree->Branch("l2_ecalEnergyPreCorr",        &l2_ecalEnergyPreCorr,        "l2_ecalEnergyPreCorr",       );
-    Z_tree->Branch("l2_ecalEnergyErrPreCorr",     &l2_ecalEnergyErrPreCorr,     "l2_ecalEnergyErrPreCorr",    );
-    Z_tree->Branch("l2_ecalEnergyPostCorr",       &l2_ecalEnergyPostCorr,       "l2_ecalEnergyPostCorr",      );
-    Z_tree->Branch("l2_ecalEnergyErrPostCorr",    &l2_ecalEnergyErrPostCorr,    "l2_ecalEnergyErrPostCorr",   );
-    Z_tree->Branch("l2_ecalTrkEnergyPreCorr",     &l2_ecalTrkEnergyPreCorr,     "l2_ecalTrkEnergyPreCorr",    );
-    Z_tree->Branch("l2_ecalTrkEnergyErrPreCorr",  &l2_ecalTrkEnergyErrPreCorr,  "l2_ecalTrkEnergyErrPreCorr", );
-    Z_tree->Branch("l2_ecalTrkEnergyPostCorr",    &l2_ecalTrkEnergyPostCorr,    "l2_ecalTrkEnergyPostCorr",   );
-    Z_tree->Branch("l2_ecalTrkEnergyErrPostCorr", &l2_ecalTrkEnergyErrPostCorr, "l2_ecalTrkEnergyErrPostCorr",);
-    Z_tree->Branch("l2_energyScaleValue",         &l2_energyScaleValue,         "l2_energyScaleValue",        );
-    Z_tree->Branch("l2_energySigmaValue",         &l2_energySigmaValue,         "l2_energySigmaValue",        );
+    Z_tree->Branch("l2_ecalEnergyPreCorr",        &l2_ecalEnergyPreCorr,        "l2_ecalEnergyPreCorr"         );
+    Z_tree->Branch("l2_ecalEnergyErrPreCorr",     &l2_ecalEnergyErrPreCorr,     "l2_ecalEnergyErrPreCorr"      );
+    Z_tree->Branch("l2_ecalEnergyPostCorr",       &l2_ecalEnergyPostCorr,       "l2_ecalEnergyPostCorr"        );
+    Z_tree->Branch("l2_ecalEnergyErrPostCorr",    &l2_ecalEnergyErrPostCorr,    "l2_ecalEnergyErrPostCorr"     );
+    Z_tree->Branch("l2_ecalTrkEnergyPreCorr",     &l2_ecalTrkEnergyPreCorr,     "l2_ecalTrkEnergyPreCorr"      );
+    Z_tree->Branch("l2_ecalTrkEnergyErrPreCorr",  &l2_ecalTrkEnergyErrPreCorr,  "l2_ecalTrkEnergyErrPreCorr"   );
+    Z_tree->Branch("l2_ecalTrkEnergyPostCorr",    &l2_ecalTrkEnergyPostCorr,    "l2_ecalTrkEnergyPostCorr"     );
+    Z_tree->Branch("l2_ecalTrkEnergyErrPostCorr", &l2_ecalTrkEnergyErrPostCorr, "l2_ecalTrkEnergyErrPostCorr"  );
+    Z_tree->Branch("l2_energyScaleValue",         &l2_energyScaleValue,         "l2_energyScaleValue"          );
+    Z_tree->Branch("l2_energySigmaValue",         &l2_energySigmaValue,         "l2_energySigmaValue"          );
  
     
     

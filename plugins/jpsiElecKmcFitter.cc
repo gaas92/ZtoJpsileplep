@@ -884,7 +884,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patZ.addUserFloat("dRl2m1",dRel2mu1);
             patZ.addUserFloat("dRl2m2",dRel2mu2);
 
-            patZ.addUserFloat("dRm1m2_",dRm1m2);
+            patZ.addUserFloat("dRm1m2_",dRm1m2_);
             patZ.addUserFloat("dRl1l2_",dRl1l2);
             patZ.addUserFloat("dRl1m1_",dRm1l1);
             patZ.addUserFloat("dRl1m2_",dRm2l1);
