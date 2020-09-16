@@ -740,7 +740,7 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
            patZ.addUserFloat("vChi2",ZDecayVertex->chiSquared());
             
            patZ.addUserFloat("pvChi2_", pvChi2);
-           patZ.addUserFloat("pvIndex", vertexRef_i);
+           patZ.addUserInt("pvIndex", vertexRef_i);
 		   patZ.addUserFloat("ZvtxX",ZVtxX_fit);
 		   patZ.addUserFloat("ZvtxY",ZVtxY_fit);
 		   patZ.addUserFloat("ZvtxZ",ZVtxZ_fit);
