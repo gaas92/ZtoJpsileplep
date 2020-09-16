@@ -241,13 +241,16 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 
   if(primaryVertices_handle->empty())return;  
   
-  
+  int vertexRef_i = -1;
+  double pvChi2 = -1;
   reco::VertexCollection::const_iterator PV = primaryVertices_handle->end();
   for (reco::VertexCollection::const_iterator vtx = primaryVertices_handle->begin(); vtx != primaryVertices_handle->end(); ++vtx, ++PV) {
+    vertexRef_i++;
     if ( !(vtx->isFake())
          && vtx->ndof()>=4. && vtx->position().Rho() < 2.0
          && fabs(vtx->position().Z()) < 24.0) {
       PV = vtx;
+      pvChi2 = vtx->normalizedChi2();
       break;
     }
   }  
@@ -673,6 +676,43 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             double dRel2mu1 = deltaR(*(lept2->gsfTrack()), *(muon1->innerTrack()));
             double dRel2mu2 = deltaR(*(lept2->gsfTrack()), *(muon2->innerTrack()));
 
+            double dRm1m2 = -1, dRl1l2 = -1, dRm1l1 = -1, dRm1l2 = -1, dRm2l1 = -1, dRm2l2 = -1;
+
+            dRm1m2 = dR6;
+            dRl1l2 = dR5;
+            if (lept1->pt() > lept2->pt()){
+                if(muon1->pt() > muon2->pt()){
+                    dRm1l1 = deltaR(*(lept1->innerTrack()), *(muon1->innerTrack()));
+                    dRm2l1 = deltaR(*(lept1->innerTrack()), *(muon2->innerTrack()));
+                    dRm1l2 = deltaR(*(lept2->innerTrack()), *(muon1->innerTrack()));
+                    dRm2l2 = deltaR(*(lept2->innerTrack()), *(muon2->innerTrack()));
+                }
+                else{
+                    dRm1l1 = deltaR(*(lept1->innerTrack()), *(muon2->innerTrack()));
+                    dRm2l1 = deltaR(*(lept1->innerTrack()), *(muon1->innerTrack()));
+                    dRm1l2 = deltaR(*(lept2->innerTrack()), *(muon2->innerTrack()));
+                    dRm2l2 = deltaR(*(lept2->innerTrack()), *(muon1->innerTrack()));
+                }
+            }
+            else{
+                if(muon1->pt() > muon2->pt()){
+                    dRm1l1 = deltaR(*(lept2->innerTrack()), *(muon1->innerTrack()));
+                    dRm2l1 = deltaR(*(lept2->innerTrack()), *(muon2->innerTrack()));
+                    dRm1l2 = deltaR(*(lept1->innerTrack()), *(muon1->innerTrack()));
+                    dRm2l2 = deltaR(*(lept1->innerTrack()), *(muon2->innerTrack()));
+                }
+                else{
+                    dRm1l1 = deltaR(*(lept2->innerTrack()), *(muon2->innerTrack()));
+                    dRm2l1 = deltaR(*(lept2->innerTrack()), *(muon1->innerTrack()));
+                    dRm1l2 = deltaR(*(lept1->innerTrack()), *(muon2->innerTrack()));
+                    dRm2l2 = deltaR(*(lept1->innerTrack()), *(muon1->innerTrack()));
+                }
+            }
+                
+                
+                
+                
+                
 		    //////////////////////////////////////////////////////
 		    //  I m p a c t   P a ra m e t e r s                //
 		    //////////////////////////////////////////////////////
@@ -830,6 +870,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patZ.addUserInt("nPV_",   nPV   );
                 
             patZ.addUserFloat("vProb",ZVtxP_fit);
+            patZ.addUserFloat("pvChi2_", pvChi2);
+            patZ.addUserFloat("pvIndex", vertexRef_i);
             patZ.addUserFloat("vChi2",ZDecayVertex->chiSquared());
             patZ.addUserFloat("ZvtxX",ZVtxX_fit);
             patZ.addUserFloat("ZvtxY",ZVtxY_fit);
@@ -842,7 +884,13 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patZ.addUserFloat("dRl2m1",dRel2mu1);
             patZ.addUserFloat("dRl2m2",dRel2mu2);
 
-            
+            patZ.addUserFloat("dRm1m2_",dRm1m2);
+            patZ.addUserFloat("dRl1l2_",dRl1l2);
+            patZ.addUserFloat("dRl1m1_",dRm1l1);
+            patZ.addUserFloat("dRl1m2_",dRm2l1);
+            patZ.addUserFloat("dRl2m1_",dRm1l2);
+            patZ.addUserFloat("dRl2m2_",dRm2l2);
+                
             ////////////////////////////////
             ///////// MY MUON Q ID /////////
             ////////////////////////////////
@@ -1020,20 +1068,65 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 
             patL1.addUserFloat("Dxy_gsf"        , lept1->gsfTrack()->dxy(PV->position()));
             patL1.addUserFloat("Dz_gsf"         , lept1->gsfTrack()->dz(PV->position()));
-                
+            
             //only data, no userFloat for mc
             float corrEt_1;//  lept1->et() * lept1->userFloat("ecalTrkEnergyPostCorr")/lept1->energy();
             float corrfactor_1;// lept1->userFloat("ecalTrkEnergyPostCorr") / lept1->energy();
-            try {
-                corrEt_1 = lept1->et() * lept1->userFloat("ecalTrkEnergyPostCorr")/lept1->energy();
-                corrfactor_1 = lept1->userFloat("ecalTrkEnergyPostCorr") / lept1->energy();
-            }
-            catch (...) {
-                corrEt_1 = 0;
-                corrfactor_1 = 0;
-            }
-            patL1.addUserFloat("corrEt_", corrEt_1);
-            patL1.addUserFloat("corrfactor_", corrfactor_1);
+                
+            //guide to all this shit https://twiki.cern.ch/twiki/bin/view/CMS/EgammaMiniAODV2
+
+            //The scaled and/or smeared Et, p4, can be obtained in the following way. For photons, replace "electron" with "photon".
+            //float corrEt   = pat::Electron::et() * pat::Electron::userFloat("<energyToUse")/pat::Electron::energy();
+            //float corrMass = mass * std::sqrt( ele1.userFloat("<energyToUse>")/ele1.energy * ele2.userFloat("<energyToUse>")/ele2.energy() );
+            //auto  corrP4   = pat::Electron::p4() * pat::Electron::userFloat("<energyToUse>") / pat::Electron::energy();
+            
+            float = l1_ecalEnergyPreCorr;          //ecalEnergy before scale & smearing corrections
+            float = l1_ecalEnergyErrPreCorr;       //resolution estimate on the ecalEnergy before scale & smearing corrections
+            float = l1_ecalEnergyPostCorr;         //ecalEnergy of electron after scale & smearing corrections
+            float = l1_ecalEnergyErrPostCorr;      //resolution estimate on the ecalEnergy after scale & smearing corrections
+            float = l1_ecalTrkEnergyPreCorr;       //ECAL-Trk combined electron energy before scale & smearing corrections
+            float = l1_ecalTrkEnergyErrPreCorr;    //resolution estimate of the ECAL-Trk combined electron energy before scale & smearing corrections
+            float = l1_ecalTrkEnergyPostCorr;      //ECAL-Trk combined electron energy after scale & smearing corrections
+            float = l1_ecalTrkEnergyErrPostCorr;   //resolution estimate of the ECAL-Trk combined electron energy after scale & smearing corrections
+            float = l1_energyScaleValue;           //value of the scale correction, MC ignores this value and takes 1
+            float = l1_energySigmaValue;           //value of the resolution correction
+            
+            try {        l1_ecalEnergyPreCorr    = lept1->userFloat("ecalEnergyPreCorr");}
+            catch (...){ l1_ecalEnergyPreCorr = 0;}
+            try {        l1_ecalEnergyErrPreCorr = lept1->userFloat("ecalEnergyErrPreCorr");}
+            catch (...){ l1_ecalEnergyErrPreCorr = 0;}
+            try {        l1_ecalEnergyPostCorr = lept1->userFloat("ecalEnergyErrPreCorr");}
+            catch (...){ l1_ecalEnergyPostCorr = 0;}
+            try {        l1_ecalEnergyErrPostCorr = lept1->userFloat("ecalEnergyErrPostCorr");}
+            catch (...){ l1_ecalEnergyErrPostCorr = 0;}
+            try {        l1_ecalTrkEnergyPreCorr = lept1->userFloat("ecalEnergyErrPostCorr");}
+            catch (...){ l1_ecalTrkEnergyPreCorr = 0;}
+            try {        l1_ecalTrkEnergyErrPreCorr = lept1->userFloat("ecalTrkEnergyPreCorr");}
+            catch (...){ l1_ecalTrkEnergyErrPreCorr = 0;}
+            try {        l1_ecalTrkEnergyPostCorr = lept1->userFloat("ecalTrkEnergyErrPreCorr");}
+            catch (...){ l1_ecalTrkEnergyPostCorr = 0;}
+            try {        l1_ecalTrkEnergyErrPostCorr = lept1->userFloat("ecalTrkEnergyErrPostCorr");}
+            catch (...){ l1_ecalTrkEnergyErrPostCorr = 0;}
+            try {        l1_energyScaleValue = lept1->userFloat("energyScaleValue");}
+            catch (...){ l1_energyScaleValue = 0;}
+            try {        l1_energySigmaValue = lept1->userFloat("energySigmaValue");}
+            catch (...){ l1_energySigmaValue = 0;}
+
+                
+            patL1.addUserFloat("ecalEnergyPreCorr_",       l1_ecalEnergyPreCorr       );
+            patL1.addUserFloat("ecalEnergyErrPreCorr_",    l1_ecalEnergyErrPreCorr    );
+            patL1.addUserFloat("ecalEnergyPostCorr_",      l1_ecalEnergyPostCorr      );
+            patL1.addUserFloat("ecalEnergyErrPostCorr_",   l1_ecalEnergyErrPostCorr   );
+            patL1.addUserFloat("ecalTrkEnergyPreCorr_",    l1_ecalTrkEnergyPreCorr    );
+            patL1.addUserFloat("ecalTrkEnergyErrPreCorr_", l1_ecalTrkEnergyErrPreCorr );
+            patL1.addUserFloat("ecalTrkEnergyPostCorr_",   l1_ecalTrkEnergyPostCorr   );
+            patL1.addUserFloat("ecalTrkEnergyErrPostCorr_",l1_ecalTrkEnergyErrPostCorr);
+            patL1.addUserFloat("energyScaleValue_",        l1_energyScaleValue        );
+            patL1.addUserFloat("energySigmaValue_",        l1_energySigmaValue        );
+                
+                
+            //patL1.addUserFloat("corrEt_", corrEt_1);
+            //patL1.addUserFloat("corrfactor_", corrfactor_1);
                 
             patL1.addUserFloat("dRIso"	,getIsoVar( *lept1 ) );
             //New
@@ -1118,19 +1211,49 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patL2.addUserFloat("Dxy_gsf"        , lept2->gsfTrack()->dxy(PV->position()));
             patL2.addUserFloat("Dz_gsf"         , lept2->gsfTrack()->dz(PV->position()));
                 
-            //only data, no userFloat for mc
-            float corrEt_2;//lept2->et() * lept2->userFloat("ecalTrkEnergyPostCorr")/lept2->energy();
-            float corrfactor_2;//lept2->userFloat("ecalTrkEnergyPostCorr") / lept2->energy();
-            try {
-                corrEt_2 = lept2->et() * lept1->userFloat("ecalTrkEnergyPostCorr")/lept2->energy();
-                corrfactor_2 = lept2->userFloat("ecalTrkEnergyPostCorr") / lept2->energy();
-            }
-            catch (...) {
-                corrEt_2 = 0;
-                corrfactor_2 = 0;
-            }
-            patL2.addUserFloat("corrEt_", corrEt_2);
-            patL2.addUserFloat("corrfactor_", corrfactor_2);
+            float = l2_ecalEnergyPreCorr;          //ecalEnergy before scale & smearing corrections
+            float = l2_ecalEnergyErrPreCorr;       //resolution estimate on the ecalEnergy before scale & smearing corrections
+            float = l2_ecalEnergyPostCorr;         //ecalEnergy of electron after scale & smearing corrections
+            float = l2_ecalEnergyErrPostCorr;      //resolution estimate on the ecalEnergy after scale & smearing corrections
+            float = l2_ecalTrkEnergyPreCorr;       //ECAL-Trk combined electron energy before scale & smearing corrections
+            float = l2_ecalTrkEnergyErrPreCorr;    //resolution estimate of the ECAL-Trk combined electron energy before scale & smearing corrections
+            float = l2_ecalTrkEnergyPostCorr;      //ECAL-Trk combined electron energy after scale & smearing corrections
+            float = l2_ecalTrkEnergyErrPostCorr;   //resolution estimate of the ECAL-Trk combined electron energy after scale & smearing corrections
+            float = l2_energyScaleValue;           //value of the scale correction, MC ignores this value and takes 1
+            float = l2_energySigmaValue;           //value of the resolution correction
+            
+            try {        l2_ecalEnergyPreCorr    = lept2->userFloat("ecalEnergyPreCorr");}
+            catch (...){ l2_ecalEnergyPreCorr = 0;}
+            try {        l2_ecalEnergyErrPreCorr = lept2->userFloat("ecalEnergyErrPreCorr");}
+            catch (...){ l2_ecalEnergyErrPreCorr = 0;}
+            try {        l2_ecalEnergyPostCorr = lept2->userFloat("ecalEnergyErrPreCorr");}
+            catch (...){ l2_ecalEnergyPostCorr = 0;}
+            try {        l2_ecalEnergyErrPostCorr = lept2->userFloat("ecalEnergyErrPostCorr");}
+            catch (...){ l2_ecalEnergyErrPostCorr = 0;}
+            try {        l2_ecalTrkEnergyPreCorr = lept2->userFloat("ecalEnergyErrPostCorr");}
+            catch (...){ l2_ecalTrkEnergyPreCorr = 0;}
+            try {        l2_ecalTrkEnergyErrPreCorr = lept2->userFloat("ecalTrkEnergyPreCorr");}
+            catch (...){ l2_ecalTrkEnergyErrPreCorr = 0;}
+            try {        l2_ecalTrkEnergyPostCorr = lept2->userFloat("ecalTrkEnergyErrPreCorr");}
+            catch (...){ l2_ecalTrkEnergyPostCorr = 0;}
+            try {        l2_ecalTrkEnergyErrPostCorr = lept2->userFloat("ecalTrkEnergyErrPostCorr");}
+            catch (...){ l2_ecalTrkEnergyErrPostCorr = 0;}
+            try {        l2_energyScaleValue = lept2->userFloat("energyScaleValue");}
+            catch (...){ l2_energyScaleValue = 0;}
+            try {        l2_energySigmaValue = lept2->userFloat("energySigmaValue");}
+            catch (...){ l2_energySigmaValue = 0;}
+
+                
+            patL2.addUserFloat("ecalEnergyPreCorr_",       l2_ecalEnergyPreCorr       );
+            patL2.addUserFloat("ecalEnergyErrPreCorr_",    l2_ecalEnergyErrPreCorr    );
+            patL2.addUserFloat("ecalEnergyPostCorr_",      l2_ecalEnergyPostCorr      );
+            patL2.addUserFloat("ecalEnergyErrPostCorr_",   l2_ecalEnergyErrPostCorr   );
+            patL2.addUserFloat("ecalTrkEnergyPreCorr_",    l2_ecalTrkEnergyPreCorr    );
+            patL2.addUserFloat("ecalTrkEnergyErrPreCorr_", l2_ecalTrkEnergyErrPreCorr );
+            patL2.addUserFloat("ecalTrkEnergyPostCorr_",   l2_ecalTrkEnergyPostCorr   );
+            patL2.addUserFloat("ecalTrkEnergyErrPostCorr_",l2_ecalTrkEnergyErrPostCorr);
+            patL2.addUserFloat("energyScaleValue_",        l2_energyScaleValue        );
+            patL2.addUserFloat("energySigmaValue_",        l2_energySigmaValue        );
                 
             patL2.addUserFloat("dRIso"	,getIsoVar( *lept2 ) );
             patL2.addUserFloat("dIP3DSig",tkPVdistel2.second.significance());

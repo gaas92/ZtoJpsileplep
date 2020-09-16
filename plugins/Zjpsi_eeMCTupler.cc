@@ -13,7 +13,7 @@
 //
 // Original Author:  Rogelio Reyes Almanza
 //         Created:  Thu, 09 Aug 2018 10:10:36 GMT
-//
+//         Updated:  v7-12/09/20
 //
 
 //this is hardcoded from Rogelio's code, it is suposed to be used when que have no trigger selection of match
@@ -146,6 +146,8 @@ class Zjpsi_eeMCTupler:public edm::EDAnalyzer {
         UInt_t    nonia;
         UInt_t    nmuons;
         UInt_t    nelecs;
+        UInt_t    vertex_i;
+
         UInt_t    trigger;
         UInt_t    triggersingle;
         //New
@@ -195,6 +197,8 @@ class Zjpsi_eeMCTupler:public edm::EDAnalyzer {
 	    TVector3 Zvtx;
 	    Float_t ZvtxP;
         Float_t ZvtxC2;
+        Float_t pvChi2;
+
     
         Float_t psiVtxP;
         Float_t psiVtxC2;
@@ -231,6 +235,13 @@ class Zjpsi_eeMCTupler:public edm::EDAnalyzer {
         Float_t dR_m2_l1;
         Float_t dR_m2_l2;
 
+        Float_t dR_m1_m2_;
+        Float_t dR_l1_l2_;
+        Float_t dR_m1_l1_;
+        Float_t dR_m1_l2_;
+        Float_t dR_m2_l1_;
+        Float_t dR_m2_l2_;
+    
         //new
         Float_t ipSm1;
         Float_t ipSm2;
@@ -315,12 +326,28 @@ class Zjpsi_eeMCTupler:public edm::EDAnalyzer {
         float ZLe1HoverE;
         float ZLe1ElecMissHits;
     
-        float ZLe1CorrEt;
-        float ZLe1CorrFact;
-        float ZLe2CorrEt;
-        float ZLe2CorrFact;
-
-        
+        float l1_ecalEnergyPreCorr;
+        float l1_ecalEnergyErrPreCorr;
+        float l1_ecalEnergyPostCorr;
+        float l1_ecalEnergyErrPostCorr;
+        float l1_ecalTrkEnergyPreCorr;
+        float l1_ecalTrkEnergyErrPreCorr;
+        float l1_ecalTrkEnergyPostCorr;
+        float l1_ecalTrkEnergyErrPostCorr;
+        float l1_energyScaleValue;
+        float l1_energySigmaValue;
+    
+        float l2_ecalEnergyPreCorr;
+        float l2_ecalEnergyErrPreCorr;
+        float l2_ecalEnergyPostCorr;
+        float l2_ecalEnergyErrPostCorr;
+        float l2_ecalTrkEnergyPreCorr;
+        float l2_ecalTrkEnergyErrPreCorr;
+        float l2_ecalTrkEnergyPostCorr;
+        float l2_ecalTrkEnergyErrPostCorr;
+        float l2_energyScaleValue;
+        float l2_energySigmaValue;
+    
         // Electron Q_ID
         int ZLe2Qid;
     
@@ -366,6 +393,8 @@ Zjpsi_eeMCTupler::Zjpsi_eeMCTupler(const edm::ParameterSet & iConfig):
     Z_tree->Branch("event",    &event,    "event/l");
     Z_tree->Branch("lumiblock",&lumiblock,"lumiblock/i");
     Z_tree->Branch("ismatched",&ismatched,"ismatched/i");
+    Z_tree->Branch("vertex_i", &vertex_i, "vertex_i/i")
+
     //if (!OnlyGen_) {
     //new
     Z_tree->Branch("nonia",    &nonia,    "nonia/i");
@@ -419,6 +448,7 @@ Zjpsi_eeMCTupler::Zjpsi_eeMCTupler(const edm::ParameterSet & iConfig):
     Z_tree->Branch("msrd_lepton2_p4",  "TLorentzVector", &msrd_lepton2_p4);
     Z_tree->Branch("msrd_Z_p4", "TLorentzVector", &msrd_Z_p4);
 
+    Z_tree->Branch("pvChi2", &pvChi2, "pvChi2/F");
     Z_tree->Branch("Zvtx", "TVector3", &Zvtx);
     Z_tree->Branch("ZvtxP", &ZvtxP, "ZvtxP/F");
     Z_tree->Branch("ZvtxC2", &ZvtxC2, "ZvtxC2/F");
@@ -451,6 +481,13 @@ Zjpsi_eeMCTupler::Zjpsi_eeMCTupler(const edm::ParameterSet & iConfig):
     Z_tree->Branch("rIsoOverPtl2", &rIsoOverPtl2, "rIsoOverPtl2/F");
     Z_tree->Branch("rIsoOverPtm1", &rIsoOverPtm1, "rIsoOverPtm1/F");
     Z_tree->Branch("rIsoOverPtm2", &rIsoOverPtm2, "rIsoOverPtm2/F");
+    
+    Z_tree->Branch("dR_m1_m2_", &dR_m1_m2_, "dR_m1_m2_/F");
+    Z_tree->Branch("dR_l1_l2_", &dR_l1_l2_, "dR_l1_l2_/F");
+    Z_tree->Branch("dR_m1_l1_", &dR_m1_l1_, "dR_m1_l1_/F");
+    Z_tree->Branch("dR_m1_l2_", &dR_m1_l2_, "dR_m1_l2_/F");
+    Z_tree->Branch("dR_m2_l1_", &dR_m2_l1_, "dR_m2_l1_/F");
+    Z_tree->Branch("dR_m2_l2_", &dR_m2_l2_, "dR_m2_l2_/F");
     
     Z_tree->Branch("dR_m1_m2", &dR_m1_m2, "dR_m1_m2/F");
     Z_tree->Branch("dR_l1_l2", &dR_l1_l2, "dR_l1_l2/F");
@@ -560,6 +597,33 @@ Zjpsi_eeMCTupler::Zjpsi_eeMCTupler(const edm::ParameterSet & iConfig):
     Z_tree->Branch("ZLe2SigmaIPhiIPhi",      &ZLe2SigmaIPhiIPhi,  "ZLe2SigmaIPhiIPhi/F");
     Z_tree->Branch("ZLe2HoverE",             &ZLe2HoverE,         "ZLe2HoverE/F");
     Z_tree->Branch("ZLe2ElecMissHits",       &ZLe2ElecMissHits,   "ZLe2ElecMissHits/F");
+    
+    Z_tree->Branch("l1_ecalEnergyPreCorr",        &l1_ecalEnergyPreCorr,        "l1_ecalEnergyPreCorr/F"       );
+    Z_tree->Branch("l1_ecalEnergyErrPreCorr",     &l1_ecalEnergyErrPreCorr,     "l1_ecalEnergyErrPreCorr/F"    );
+    Z_tree->Branch("l1_ecalEnergyPostCorr",       &l1_ecalEnergyPostCorr,       "l1_ecalEnergyPostCorr/F"      );
+    Z_tree->Branch("l1_ecalEnergyErrPostCorr",    &l1_ecalEnergyErrPostCorr,    "l1_ecalEnergyErrPostCorr/F"   );
+    Z_tree->Branch("l1_ecalTrkEnergyPreCorr",     &l1_ecalTrkEnergyPreCorr,     "l1_ecalTrkEnergyPreCorr/F"    );
+    Z_tree->Branch("l1_ecalTrkEnergyErrPreCorr",  &l1_ecalTrkEnergyErrPreCorr,  "l1_ecalTrkEnergyErrPreCorr/F" );
+    Z_tree->Branch("l1_ecalTrkEnergyPostCorr",    &l1_ecalTrkEnergyPostCorr,    "l1_ecalTrkEnergyPostCorr/F"   );
+    Z_tree->Branch("l1_ecalTrkEnergyErrPostCorr", &l1_ecalTrkEnergyErrPostCorr, "l1_ecalTrkEnergyErrPostCorr",);
+    Z_tree->Branch("l1_energyScaleValue",         &l1_energyScaleValue,         "l1_energyScaleValue",        );
+    Z_tree->Branch("l1_energySigmaValue",         &l1_energySigmaValue,         "l1_energySigmaValue",        );
+    
+    Z_tree->Branch("l2_ecalEnergyPreCorr",        &l2_ecalEnergyPreCorr,        "l2_ecalEnergyPreCorr",       );
+    Z_tree->Branch("l2_ecalEnergyErrPreCorr",     &l2_ecalEnergyErrPreCorr,     "l2_ecalEnergyErrPreCorr",    );
+    Z_tree->Branch("l2_ecalEnergyPostCorr",       &l2_ecalEnergyPostCorr,       "l2_ecalEnergyPostCorr",      );
+    Z_tree->Branch("l2_ecalEnergyErrPostCorr",    &l2_ecalEnergyErrPostCorr,    "l2_ecalEnergyErrPostCorr",   );
+    Z_tree->Branch("l2_ecalTrkEnergyPreCorr",     &l2_ecalTrkEnergyPreCorr,     "l2_ecalTrkEnergyPreCorr",    );
+    Z_tree->Branch("l2_ecalTrkEnergyErrPreCorr",  &l2_ecalTrkEnergyErrPreCorr,  "l2_ecalTrkEnergyErrPreCorr", );
+    Z_tree->Branch("l2_ecalTrkEnergyPostCorr",    &l2_ecalTrkEnergyPostCorr,    "l2_ecalTrkEnergyPostCorr",   );
+    Z_tree->Branch("l2_ecalTrkEnergyErrPostCorr", &l2_ecalTrkEnergyErrPostCorr, "l2_ecalTrkEnergyErrPostCorr",);
+    Z_tree->Branch("l2_energyScaleValue",         &l2_energyScaleValue,         "l2_energyScaleValue",        );
+    Z_tree->Branch("l2_energySigmaValue",         &l2_energySigmaValue,         "l2_energySigmaValue",        );
+ 
+    
+    
+    
+    
     
     Z_tree->Branch("ZLe1CorrEt",         &ZLe1CorrEt,     "ZLe1CorrEt/F");
     Z_tree->Branch("ZLe1CorrFact",       &ZLe1CorrFact,   "ZLe1CorrFact/F");
@@ -756,6 +820,8 @@ void Zjpsi_eeMCTupler::analyze(const edm::Event & iEvent, const edm::EventSetup 
        nelecs = z_Cand.userInt("nelecs_");
        nPV    = z_Cand.userInt("nPV_");
        passFit = z_Cand.userInt("passFit_");
+       vertex_i = z_Cand.userInt("pvIndex");
+          
        nCands  = csize;
           
 	   Z_p4.SetPtEtaPhiM(z_Cand.pt(), z_Cand.eta(), z_Cand.phi(), z_Cand.mass());
@@ -878,7 +944,8 @@ void Zjpsi_eeMCTupler::analyze(const edm::Event & iEvent, const edm::EventSetup 
            //if (z_Cand.daughter("lepton1")->isTightMuon(*PV)) std::cout << "DSNVCOINEFBDVB" << std::endl;
            //std::cout <<  "Provando" << std::endl;
 
- 
+       pvChi2 = z_Cand.userFloat("pvChi2_");
+
 	   ZvtxP = z_Cand.userFloat("vProb") ;
        ZvtxC2 = z_Cand.userFloat("vChi2") ;
 	   Zvtx.SetXYZ(z_Cand.userFloat("ZvtxX") ,z_Cand.userFloat("ZvtxY"),z_Cand.userFloat("ZvtxZ")) ;
@@ -1021,6 +1088,28 @@ verE
        ZLe2CorrEt    =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("corrEt_");
        ZLe2CorrFact  =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("corrfactor_");
 
+       l1_ecalEnergyPreCorr         = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("ecalEnergyPreCorr_");
+       l1_ecalEnergyErrPreCorr      = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("ecalEnergyErrPreCorr_");
+       l1_ecalEnergyPostCorr        = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("ecalEnergyPostCorr_");
+       l1_ecalEnergyErrPostCorr     = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("ecalEnergyErrPostCorr_");
+       l1_ecalTrkEnergyPreCorr      = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("ecalTrkEnergyPreCorr_");
+       l1_ecalTrkEnergyErrPreCorr   = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("ecalTrkEnergyErrPreCorr_");
+       l1_ecalTrkEnergyPostCorr     = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("ecalTrkEnergyPostCorr_");
+       l1_ecalTrkEnergyErrPostCorr  = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("ecalTrkEnergyErrPostCorr_");
+       l1_energyScaleValue          = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("energyScaleValue_");
+       l1_energySigmaValue          = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("energySigmaValue_");
+ 
+       l2_ecalEnergyPreCorr         = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("ecalEnergyPreCorr_");
+       l2_ecalEnergyErrPreCorr      = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("ecalEnergyErrPreCorr_");
+       l2_ecalEnergyPostCorr        = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("ecalEnergyPostCorr_");
+       l2_ecalEnergyErrPostCorr     = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("ecalEnergyErrPostCorr_");
+       l2_ecalTrkEnergyPreCorr      = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("ecalTrkEnergyPreCorr_");
+       l2_ecalTrkEnergyErrPreCorr   = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("ecalTrkEnergyErrPreCorr_");
+       l2_ecalTrkEnergyPostCorr     = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("ecalTrkEnergyPostCorr_");
+       l2_ecalTrkEnergyErrPostCorr  = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("ecalTrkEnergyErrPostCorr_");
+       l2_energyScaleValue          = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("energyScaleValue_");
+       l2_energySigmaValue          = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("energySigmaValue_");
+          
        //ONLY WHEN Z->MU MU
        dR_m1_m2 = z_Cand.userFloat("dRm1m2");
        dR_l1_l2 = z_Cand.userFloat("dRl1l2");

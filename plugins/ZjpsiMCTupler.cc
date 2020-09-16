@@ -89,6 +89,7 @@ class ZjpsiMCTupler : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
       UInt_t    lumiblock;
       UInt_t    nonia;
       UInt_t    nmuons;
+      UInt_t    vertex_i;
       //New
       UInt_t    nPV;
       UInt_t    nCands;
@@ -270,6 +271,7 @@ ZjpsiMCTupler::ZjpsiMCTupler(const edm::ParameterSet& iConfig):
    Z_tree->Branch("run",      &run,      "run/i");
    Z_tree->Branch("event",    &event,    "event/l");
    Z_tree->Branch("lumiblock",&lumiblock,"lumiblock/i");
+   Z_tree->Branch("vertex_i", &vertex_i, "vertex_i/i")
 
  //  if (!OnlyGen_) {
 
@@ -494,6 +496,7 @@ ZjpsiMCTupler::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
            nmuons = z_Cand.userInt("nmuons_");
            nPV    = z_Cand.userInt("nPV_");
            passFit = z_Cand.userInt("passFit_");
+           vertex_i = z_Cand.userInt("pvIndex");
            nCands  = csize;
              
            Z_p4.SetPtEtaPhiM(z_Cand.pt(), z_Cand.eta(), z_Cand.phi(), z_Cand.mass());
