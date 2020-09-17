@@ -277,10 +277,10 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                 const reco::Candidate * dau = &(*packed)[k];
                 int stable_id = (*packed)[k].pdgId();
                 if(!isAncestor(23, dau)) continue;
-                if(stable_id ==  13 && temp_mu1N.M() == 0) gen_muon1_p4.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
-                else if(stable_id == -13 && temp_mu1P.M() == 0) gen_muon2_p4.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
-                else if(stable_id ==  11 && temp_mu2N.M() == 0) gen_lepton1_p4.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
-                else if(stable_id == -11 && temp_mu2P.M() == 0) gen_lepton2_p4.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
+                if(stable_id ==  13 && gen_muon1_p4.M() == 0) gen_muon1_p4.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
+                else if(stable_id == -13 && gen_muon2_p4.M() == 0) gen_muon2_p4.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
+                else if(stable_id ==  11 && gen_lepton1_p4.M() == 0) gen_lepton1_p4.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
+                else if(stable_id == -11 && gen_lepton2_p4.M() == 0) gen_lepton2_p4.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
             }//end for packed
 
             gen_z_p4 = gen_lepton1_p4 + gen_lepton2_p4 + gen_muon1_p4 + gen_muon2_p4;
