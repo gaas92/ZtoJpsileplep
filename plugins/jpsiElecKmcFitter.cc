@@ -271,55 +271,18 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   int Event_Cand = 1;
    //std::cout << "test" << std::endl;
   if (isMC4l_){
-        TLorentzVector temp_mu1P, temp_mu2P, temp_mu1N, temp_mu2N, temp_di1, temp_di2, temp_di3, temp_di4;
-        temp_mu1P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
-        temp_mu1N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
-        temp_mu2P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
-        temp_mu2N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+        // 2 is for electrons
         if (packed.isValid()) {
             for(size_t k=0; k<packed->size(); k++){
                 const reco::Candidate * dau = &(*packed)[k];
                 int stable_id = (*packed)[k].pdgId();
                 if(!isAncestor(23, dau)) continue;
-                if(stable_id ==  13 && temp_mu1N.M() == 0) temp_mu1N.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
-                else if(stable_id == -13 && temp_mu1P.M() == 0) temp_mu1P.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
-                else if(stable_id ==  13 && temp_mu2N.M() == 0) temp_mu2N.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
-                else if(stable_id == -13 && temp_mu2P.M() == 0) temp_mu2P.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
+                if(stable_id ==  13 && temp_mu1N.M() == 0) gen_muon1_p4.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
+                else if(stable_id == -13 && temp_mu1P.M() == 0) gen_muon2_p4.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
+                else if(stable_id ==  11 && temp_mu2N.M() == 0) gen_lepton1_p4.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
+                else if(stable_id == -11 && temp_mu2P.M() == 0) gen_lepton2_p4.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
             }//end for packed
-            std::cout << temp_mu1N.Pt() << " | " << temp_mu2N.Pt() << " | " << temp_mu1P.Pt() << " | " << temp_mu2P.Pt() << std::endl;
-            temp_di1 = temp_mu1P + temp_mu1N;
-            temp_di2 = temp_mu2P + temp_mu2N;
-            
-            temp_di3 = temp_mu1P + temp_mu2N;
-            temp_di4 = temp_mu2P + temp_mu1N;
-            if (abs(temp_di1.M() - temp_di2.M()) > abs(temp_di3.M() - temp_di4.M())) {
-                if (temp_di1.M() > temp_di2.M()){
-                    gen_lepton1_p4 = temp_mu1N;
-                    gen_lepton2_p4 = temp_mu1P;
-                    gen_muon1_p4 = temp_mu2N;
-                    gen_muon2_p4 = temp_mu2P;
-                }
-                else{
-                    gen_lepton1_p4 = temp_mu2N;
-                    gen_lepton2_p4 = temp_mu2P;
-                    gen_muon1_p4 = temp_mu1N;
-                    gen_muon2_p4 = temp_mu1P;
-                }
-            }
-            else{
-                if (temp_di3.M() > temp_di4.M()){
-                    gen_lepton1_p4 = temp_mu2N;
-                    gen_lepton2_p4 = temp_mu1P;
-                    gen_muon1_p4 = temp_mu1N;
-                    gen_muon2_p4 = temp_mu2P;
-                }
-                else{
-                    gen_lepton1_p4 = temp_mu1N;
-                    gen_lepton2_p4 = temp_mu2P;
-                    gen_muon1_p4 = temp_mu1N;
-                    gen_muon2_p4 = temp_mu2P;
-                }
-            }
+
             gen_z_p4 = gen_lepton1_p4 + gen_lepton2_p4 + gen_muon1_p4 + gen_muon2_p4;
             gen_jpsi_p4 = gen_muon1_p4 + gen_muon2_p4;
         }// end if packed valid
