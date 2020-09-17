@@ -101,7 +101,7 @@ def main():
  
         for inDS in inputDatasets:
              # inDS is of the form /A/B/C. Since B is unique for each inDS, use this in the CRAB request name.
-            config.General.requestName = (inDS.split('/')[2]).split('-')[0]+(inDS.split('/')[2]).split('-')[-1]
+            config.General.requestName = (inDS.split('/')[2]).split('-')[0]+(inDS.split('/')[2]).split('_')[-1]
             config.Data.inputDataset = inDS
             config.Data.outputDatasetTag = '%s_%s' % (config.General.workArea, config.General.requestName)
             # Submit.
