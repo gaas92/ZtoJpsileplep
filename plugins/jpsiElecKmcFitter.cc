@@ -270,68 +270,124 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   int n_Z_dau = 0;
   int Event_Cand = 1;
    //std::cout << "test" << std::endl;
-   if ( pruned.isValid() ) {
-     int foundit = 0;
-     //std::cout << "MC ok " << std::endl;
-
-     for (size_t i=0; i<pruned->size(); i++) {
-        foundit = 0;
-        const reco::Candidate *dau = &(*pruned)[i];
-        ///ndau = dau->numberOfDaughters();
-
-        if ( (abs(dau->pdgId()) == 23) ) { //&& (dau->status() == 2) ) { //found Z
-           foundit++;
-           //const reco::Candidate * Zboson = dau;
-           gen_z_p4.SetPtEtaPhiM(dau->pt(),dau->eta(),dau->phi(),dau->mass());
-           //std::cout << " Z mass : " << dau->mass() << std::endl;
-           gen_z_vtx.SetXYZ(dau->vx(),dau->vy(),dau->vz());
-           n_Z_dau = dau->numberOfDaughters();
-           if (n_Z_dau!=3) continue;
-           //std::cout << " Z daugh: " << dau->numberOfDaughters() << std::endl;
-           for (size_t k=0; k<dau->numberOfDaughters(); k++) {
-             const reco::Candidate *gdau = dau->daughter(k);
-             //std::cout << "MC Z daughter pdgID: " << gdau->pdgId() << "mass: " << gdau->mass() << std::endl;
-             if (gdau->pdgId()==443 ) { //&& gdau->status()==2) {   //found jpsi
-               foundit++;
-               gen_jpsi_vtx.SetXYZ(gdau->vx(),gdau->vy(),gdau->vz());
-               gen_jpsi_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
-               int nm = 0;
-               for (size_t k=0; k<packed->size(); k++) {
-                  //const reco::Candidate * dauInPrunedColl = (*packed)[k].mother(0);
-                  const reco::Candidate * dauInPrunedColl = &(*packed)[k];
-                  int stable_id = (*packed)[k].pdgId();
-                  if (dauInPrunedColl != nullptr && isAncestor(gdau,dauInPrunedColl)) {
-                     //if (ndau<1) std::cout << (*packed)[k].pdgId() << " ";
-                     //std::cout<<" psi = "<< gdau->pdgId()<< " daughter ID " << stable_id << std::endl;
-                     if(stable_id == 13) { //found muon-
-                         gen_muon1_p4.SetPtEtaPhiM(dauInPrunedColl->pt(),dauInPrunedColl->eta(),dauInPrunedColl->phi(),dauInPrunedColl->mass());
-                         nm++;
-                         //std::cout<< "works m- "<< dauInPrunedColl->mass() <<std::endl;
-                     }
-                      if(stable_id == -13){ //found muon+
-                        gen_muon2_p4.SetPtEtaPhiM(dauInPrunedColl->pt(),dauInPrunedColl->eta(),dauInPrunedColl->phi(),dauInPrunedColl->mass());
-                        nm++;
-                        //std::cout<< "works m+ "<< dauInPrunedColl->mass() << std::endl;
-                     }
-                  }
-               }
-                 
-             }//end found psi
-             if (gdau->pdgId()==11 ) {// pdgid for electron=11
-                foundit++;
-            gen_lepton1_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
-                 
+  if (isMC4l){
+        TLorentzVector temp_mu1P, temp_mu2P, temp_mu1N, temp_mu2N, temp_di1, temp_di2, temp_di3, temp_di4;
+        temp_mu1P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+        temp_mu1N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+        temp_mu2P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+        temp_mu2N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
+        if (packed.isValid()) {
+            for(size_t k=0; k<packed->size(); k++){
+                const reco::Candidate * dau = &(*packed)[k];
+                int stable_id = (*packed)[k].pdgId();
+                if(!isAncestor(23, dau)) continue;
+                if(stable_id ==  13 && temp_mu1N.M() == 0) temp_mu1N.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
+                else if(stable_id == -13 && temp_mu1P.M() == 0) temp_mu1P.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
+                else if(stable_id ==  13 && temp_mu2N.M() == 0) temp_mu2N.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
+                else if(stable_id == -13 && temp_mu2P.M() == 0) temp_mu2P.SetPtEtaPhiM(dau->pt(), dau->eta(), dau->phi(), dau->mass());
+            }//end for packed
+            std::cout << temp_mu1N.Pt() << " | " << temp_mu2N.Pt() << " | " << temp_mu1P.Pt() << " | " << temp_mu2P.Pt() << std::endl;
+            temp_di1 = temp_mu1P + temp_mu1N;
+            temp_di2 = temp_mu2P + temp_mu2N;
+            
+            temp_di3 = temp_mu1P + temp_mu2N;
+            temp_di4 = temp_mu2P + temp_mu1N;
+            if (abs(temp_di1.M() - temp_di2.M()) > abs(temp_di3.M() - temp_di4.M())) {
+                if (temp_di1.M() > temp_di2.M()){
+                    gen_lepton1_p4 = temp_mu1N;
+                    gen_lepton2_p4 = temp_mu1P;
+                    gen_muon1_p4 = temp_mu2N;
+                    gen_muon2_p4 = temp_mu2P;
+                }
+                else{
+                    gen_lepton1_p4 = temp_mu2N;
+                    gen_lepton2_p4 = temp_mu2P;
+                    gen_muon1_p4 = temp_mu1N;
+                    gen_muon2_p4 = temp_mu1P;
+                }
             }
-             if (gdau->pdgId()==-11 ) {// pdgid for muon+=13
-                foundit++;
-                gen_lepton2_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
+            else{
+                if (temp_di3.M() > temp_di4.M()){
+                    gen_lepton1_p4 = temp_mu2N;
+                    gen_lepton2_p4 = temp_mu1P;
+                    gen_muon1_p4 = temp_mu1N;
+                    gen_muon2_p4 = temp_mu2P;
+                }
+                else{
+                    gen_lepton1_p4 = temp_mu1N;
+                    gen_lepton2_p4 = temp_mu2P;
+                    gen_muon1_p4 = temp_mu1N;
+                    gen_muon2_p4 = temp_mu2P;
+                }
             }
-           }// end number of daughters
-        } //endif found Z
-     }//end for
+            gen_z_p4 = gen_lepton1_p4 + gen_lepton2_p4 + gen_muon1_p4 + gen_muon2_p4;
+            gen_jpsi_p4 = gen_muon1_p4 + gen_muon2_p4;
+        }// end if packed valid
+        std::cout << "found Z: "<< gen_z_p4.M() << std::endl;
+  }
+  else {
+        if ( pruned.isValid() ) {
+          int foundit = 0;
+          //std::cout << "MC ok " << std::endl;
 
-  } //end pruned
-  
+          for (size_t i=0; i<pruned->size(); i++) {
+             foundit = 0;
+             const reco::Candidate *dau = &(*pruned)[i];
+             ///ndau = dau->numberOfDaughters();
+
+             if ( (abs(dau->pdgId()) == 23) ) { //&& (dau->status() == 2) ) { //found Z
+                foundit++;
+                //const reco::Candidate * Zboson = dau;
+                gen_z_p4.SetPtEtaPhiM(dau->pt(),dau->eta(),dau->phi(),dau->mass());
+                //std::cout << " Z mass : " << dau->mass() << std::endl;
+                gen_z_vtx.SetXYZ(dau->vx(),dau->vy(),dau->vz());
+                n_Z_dau = dau->numberOfDaughters();
+                if (n_Z_dau!=3) continue;
+                //std::cout << " Z daugh: " << dau->numberOfDaughters() << std::endl;
+                for (size_t k=0; k<dau->numberOfDaughters(); k++) {
+                  const reco::Candidate *gdau = dau->daughter(k);
+                  //std::cout << "MC Z daughter pdgID: " << gdau->pdgId() << "mass: " << gdau->mass() << std::endl;
+                  if (gdau->pdgId()==443 ) { //&& gdau->status()==2) {   //found jpsi
+                    foundit++;
+                    gen_jpsi_vtx.SetXYZ(gdau->vx(),gdau->vy(),gdau->vz());
+                    gen_jpsi_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
+                    int nm = 0;
+                    for (size_t k=0; k<packed->size(); k++) {
+                       //const reco::Candidate * dauInPrunedColl = (*packed)[k].mother(0);
+                       const reco::Candidate * dauInPrunedColl = &(*packed)[k];
+                       int stable_id = (*packed)[k].pdgId();
+                       if (dauInPrunedColl != nullptr && isAncestor(gdau,dauInPrunedColl)) {
+                          //if (ndau<1) std::cout << (*packed)[k].pdgId() << " ";
+                          //std::cout<<" psi = "<< gdau->pdgId()<< " daughter ID " << stable_id << std::endl;
+                          if(stable_id == 13) { //found muon-
+                              gen_muon1_p4.SetPtEtaPhiM(dauInPrunedColl->pt(),dauInPrunedColl->eta(),dauInPrunedColl->phi(),dauInPrunedColl->mass());
+                              nm++;
+                              //std::cout<< "works m- "<< dauInPrunedColl->mass() <<std::endl;
+                          }
+                           if(stable_id == -13){ //found muon+
+                             gen_muon2_p4.SetPtEtaPhiM(dauInPrunedColl->pt(),dauInPrunedColl->eta(),dauInPrunedColl->phi(),dauInPrunedColl->mass());
+                             nm++;
+                             //std::cout<< "works m+ "<< dauInPrunedColl->mass() << std::endl;
+                          }
+                       }
+                    }
+        
+                  }//end found psi
+                  if (gdau->pdgId()==11 ) {// pdgid for electron=11
+                     foundit++;
+                 gen_lepton1_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
+        
+                 }
+                  if (gdau->pdgId()==-11 ) {// pdgid for muon+=13
+                     foundit++;
+                     gen_lepton2_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
+                 }
+                }// end number of daughters
+             } //endif found Z
+          }//end for
+
+      } //end pruned
+  }
   //NEW for muons and psi pairs
   int nonia = dimuons->size();
   int nmuons = dimuons->size()*2;
