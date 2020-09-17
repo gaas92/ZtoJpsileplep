@@ -270,7 +270,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   int n_Z_dau = 0;
   int Event_Cand = 1;
    //std::cout << "test" << std::endl;
-  if (isMC4l){
+  if (isMC4l_){
         TLorentzVector temp_mu1P, temp_mu2P, temp_mu1N, temp_mu2N, temp_di1, temp_di2, temp_di3, temp_di4;
         temp_mu1P.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
         temp_mu1N.SetPtEtaPhiM(0.0, 0.0, 0.0, 0.0);
