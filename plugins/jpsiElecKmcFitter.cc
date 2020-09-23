@@ -135,8 +135,8 @@ class jpsiElecKmcFitter : public edm::stream::EDProducer<>{
         double dxyl_      = 0;
         double dzm_       = 0;
         double dzl_       = 0;
-        double tlwm_         = 0;
-        double plwm_         = 0;
+        double tlwm_      = 0;
+        double plwm_      = 0;
 
 };
 
@@ -467,7 +467,10 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
       int psiM2_TrackerLWM = muon2->muonBestTrack()->hitPattern().trackerLayersWithMeasurement();
       int psiM2_PixelLWM   = muon2->muonBestTrack()->hitPattern().pixelLayersWithMeasurement();
       int psiM2_ValPixHit  = muon2->muonBestTrack()->hitPattern().numberOfValidPixelHits();
- 	
+ 	  if (psiM1_TrackerLWM < tlwm_) continue;
+      if (psiM2_TrackerLWM < tlwm_) continue;
+      if (psiM1_PixelLWM < plwm_) continue;
+      if (psiM2_PixelLWM < plwm_) continue;
       reco::TrackRef JpsiTk[2] = {muon1->innerTrack(), muon2->innerTrack()};
 	
       std::vector<reco::TransientTrack> MuMuTTks;
@@ -478,8 +481,9 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
       std::pair<bool,Measurement1D> tkPVdist2 = IPTools::absoluteImpactParameter3D(MuMuTTks.at(1),*PV);
       
       if (!tkPVdist1.first|| !tkPVdist2.first ) continue;
-      //if (fabs(tkPVdist1.second.significance())>4.) continue;
-      //if (fabs(tkPVdist2.second.significance())>4.) continue;
+      if (fabs(tkPVdist1.second.significance())> ImparSigm_) continue;
+      if (fabs(tkPVdist2.second.significance())> ImparSigm_) continue;
+      
       //std::cout << "works for jpsimuons" << std::endl;
 	  for (View<pat::Electron>::const_iterator lepton1 = leptons->begin(); lepton1 != leptons->end(); ++lepton1 ) {
             reco::TrackRef track_1 = lepton1->track();
@@ -671,7 +675,10 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             int ZLe2_TrackerLWM = lept2->gsfTrack()->hitPattern().trackerLayersWithMeasurement();
             int ZLe2_PixelLWM   = lept2->gsfTrack()->hitPattern().pixelLayersWithMeasurement();
             int ZLe2_ValPixHit  = lept2->gsfTrack()->hitPattern().numberOfValidPixelHits();
-            
+            if (ZLe1_TrackerLWM < tlwm_) continue;
+            if (ZLe2_TrackerLWM < tlwm_) continue;
+            if (ZLe1_PixelLWM < plwm_) continue;
+            if (ZLe2_PixelLWM < plwm_) continue;
             //int ZLe1_ElecMissHits = 0;
             //int ZLe2_ElecMissHits = 0;
             int ZLe1_ElecMissHits = lept1->gsfTrack()->hitPattern().numberOfAllHits(reco::HitPattern::MISSING_INNER_HITS);
@@ -746,8 +753,14 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 		
  		    float ldxy2 = lept2->bestTrack()->dxy(PV->position());
            	float ldz2 = lept2->bestTrack()->dz(PV->position());	
-		
-
+		    if (abs(ldxy1) > dxyl_) continue;
+            if (abs(ldxy2) > dxyl_) continue;
+            if (abs(ldz1)  > dzl_ ) continue;
+            if (abs(ldz2)  > dzl_ ) continue;
+            if (abs(mdxy1) > dxym_ ) continue;
+            if (abs(mdxy2) > dxym_) continue;
+            if (abs(mdz1)  > dzm_ ) continue;
+            if (abs(mdz2)  > dzm_ ) continue;
             //std::cout<< "enters cycle for non resonant electrons" << std::endl;
        
   		    //if ( dR1<0.02 || dR2<0.02 || dR3<0.02 ||dR4<0.02 ) continue; // agregar corte en R5 y R6
@@ -786,7 +799,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             std::pair<bool,Measurement1D> tkPVdistel2 = IPTools::absoluteImpactParameter3D(LLTTks.at(1),*PV);
           
             if (!tkPVdistel1.first || !tkPVdistel2.first) continue;
-
+            if (fabs(tkPVdistel1.second.significance())> ImparSigl_) continue;
+            if (fabs(tkPVdistel2.second.significance())> ImparSigl_) continue; 
             //std::cout << "pass Track builder " << std::endl;
 		        
             /////////////////////////////////////////////////////
@@ -868,7 +882,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             //std::cout << "Z Fit diff: " << ZM_fit - gen_z_p4.M() << std::endl;
             //std::cout << "Z msrd diff: "<< theZ.M() - gen_z_p4.M() << std::endl;
             if (theZ.M() < 60.0) continue;
-            if (theZ.M() > 150.0) continue;
+            if (theZ.M() > 220.0) continue;
             reco::CompositeCandidate recoZ(0, math::XYZTLorentzVector(ZPx_fit, ZPy_fit, ZPz_fit,
                                             sqrt(ZM_fit*ZM_fit + ZPx_fit*ZPx_fit + ZPy_fit*ZPy_fit +
                                             ZPz_fit*ZPz_fit)), math::XYZPoint(ZVtxX_fit,

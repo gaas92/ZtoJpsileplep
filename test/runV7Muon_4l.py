@@ -57,7 +57,7 @@ process.onia2MuMuPAT.beamSpotTag=cms.InputTag('offlineBeamSpot')
 process.onia2MuMuPAT.higherPuritySelection=cms.string("isGlobalMuon")
 process.onia2MuMuPAT.lowerPuritySelection=cms.string("isGlobalMuon")
 #process.onia2MuMuPAT.dimuonSelection=cms.string("2.55 < mass && mass < 3.65") ## linea 149
-process.onia2MuMuPAT.dimuonSelection=cms.string("2.0 < mass && mass < 100.0") ## linea 149
+process.onia2MuMuPAT.dimuonSelection=cms.string("2.5 < mass && mass < 80.0") ## linea 149
 process.onia2MuMuPAT.addMCTruth = cms.bool(False)
 
 
@@ -66,7 +66,7 @@ process.onia2MuMuPAT.addMCTruth = cms.bool(False)
 ####this apply de BF cuts to dimuon & dilepton 5 & 6
 process.Zfitter    = cms.EDProducer("jpsiLepLepKmcFitter",
                           dimuon = cms.InputTag("onia2MuMuPAT"),
-			              leptons = cms.InputTag("muonFilter"),
+			                 leptons = cms.InputTag("muonFilter"),
                           primaryVertices     = cms.InputTag("offlineSlimmedPrimaryVertices"),
                           GenParticles        = cms.InputTag("prunedGenParticles"),
                           packedGenParticles  = cms.InputTag("packedGenParticles"),
@@ -74,8 +74,8 @@ process.Zfitter    = cms.EDProducer("jpsiLepLepKmcFitter",
                           ImparSigm           = cms.double(4.5),
                           ImparSigl           = cms.double(4.5),
                           dxym                = cms.double(0.5),
-                          dxyl                = cms.double(1.0),
-                          dzm                 = cms.double(0.5),
+                          dxyl                = cms.double(0.5),
+                          dzm                 = cms.double(1.0),
                           dzl                 = cms.double(1.0),
                           trackerLayersWithMeasurement = cms.double(4),
                           pixelLayersWithMeasurement   = cms.double(1)

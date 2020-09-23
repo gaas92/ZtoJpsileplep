@@ -111,8 +111,8 @@ class jpsiLepLepKmcFitter : public edm::stream::EDProducer<> {
       double dxyl_      = 0;
       double dzm_       = 0;
       double dzl_       = 0;
-      double tlwm_         = 0;
-      double plwm_         = 0;
+      double tlwm_      = 0;
+      double plwm_      = 0;
 };
 
 //
@@ -686,9 +686,8 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
             std::pair<bool,Measurement1D> tkPVdist1 = IPTools::absoluteImpactParameter3D(MuMuTTks.at(0),*PV);
             std::pair<bool,Measurement1D> tkPVdist2 = IPTools::absoluteImpactParameter3D(MuMuTTks.at(1),*PV);
             if (!tkPVdist1.first || !tkPVdist2.first ) continue;
-            //if (fabs(tkPVdist1.second.significance())>4.) continue;
-            //if (fabs(tkPVdist2.second.significance())>4.) continue;
-             
+            if (fabs(tkPVdist1.second.significance())> ImparSigm_) continue;
+            if (fabs(tkPVdist2.second.significance())> ImparSigm_) continue;
             reco::TrackRef dilepTk[2]={
             lept1->innerTrack(),
             lept2->innerTrack()};
@@ -699,6 +698,8 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
             std::pair<bool,Measurement1D> tkPVdistel1 = IPTools::absoluteImpactParameter3D(LLTTks.at(0),*PV);
             std::pair<bool,Measurement1D> tkPVdistel2 = IPTools::absoluteImpactParameter3D(LLTTks.at(1),*PV);
             if (!tkPVdistel1.first || !tkPVdistel2.first) continue;
+            if (fabs(tkPVdistel1.second.significance())> ImparSigl_) continue;
+            if (fabs(tkPVdistel2.second.significance())> ImparSigl_) continue;
             const ParticleMass muMass    = 0.10565837;
             float muSigma                = muMass*1.e-6;
              
@@ -770,12 +771,17 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
   		   float mdxy1 = -1, mdz1 = -1, mdxy2 = -1, mdz2 = -1;
 
            mdxy1 = muon1->muonBestTrack()->dxy(PV->position());
-           mdz1 =  muon1->muonBestTrack()->dz(PV->position());
+           mdz1  = muon1->muonBestTrack()->dz(PV->position());
 		   mdxy2 = muon2->muonBestTrack()->dxy(PV->position());
-           mdz2 =  muon2->muonBestTrack()->dz(PV->position());
-	
+           mdz2  = muon2->muonBestTrack()->dz(PV->position());
+
+	       if (abs(mdxy1) > dxym_ ) continue;
+           if (abs(mdxy2) > dxym_) continue;
+           if (abs(mdz1)  > dzm_ ) continue;
+           if (abs(mdz2)  > dzm_ ) continue;
+
            if (ZM_fit < 60.0) continue;
-           if (ZM_fit > 150.0) continue;
+           if (ZM_fit > 220.0) continue;
 		   reco::CompositeCandidate recoZ(0, math::XYZTLorentzVector(ZPx_fit, ZPy_fit, ZPz_fit,
 			      sqrt(ZM_fit*ZM_fit + ZPx_fit*ZPx_fit + ZPy_fit*ZPy_fit +
 			      ZPz_fit*ZPz_fit)), math::XYZPoint(ZVtxX_fit,

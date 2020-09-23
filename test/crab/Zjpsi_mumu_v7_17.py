@@ -68,7 +68,7 @@ def main():
 
         config.General.requestName = None
         #config.General.workArea = 'ZMuondecay'
-        config.General.workArea = '2017DT_psi_mm_v7'
+        config.General.workArea = '2017DT_psi_mm_v7_1'
 	config.General.transferOutputs = True
 	config.General.transferLogs = False
 
@@ -87,7 +87,7 @@ def main():
 	config.Data.lumiMask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions17/13TeV/Final/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON_MuonPhys.txt' #has nosence in Mc
 	config.Data.publication = True
         config.Data.outputDatasetTag = None
-	config.Data.outLFNDirBase = '/store/user/%s/Zpsi_mm17_v7/' % ("gayalasa")
+	config.Data.outLFNDirBase = '/store/user/%s/Zpsi_mm17_v7_1/' % ("gayalasa")
 	config.Site.storageSite = 'T3_US_FNALLPC'
         #config.Site.storageSite = None # Choose your site. 
         #--------------------------------------------------------

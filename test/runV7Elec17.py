@@ -70,7 +70,7 @@ process.onia2MuMuPAT.primaryVertexTag=cms.InputTag('offlineSlimmedPrimaryVertice
 process.onia2MuMuPAT.beamSpotTag=cms.InputTag('offlineBeamSpot')
 process.onia2MuMuPAT.higherPuritySelection=cms.string("isGlobalMuon")
 process.onia2MuMuPAT.lowerPuritySelection=cms.string("isGlobalMuon")
-process.onia2MuMuPAT.dimuonSelection=cms.string("2.0 < mass && mass < 100") ## linea 149
+process.onia2MuMuPAT.dimuonSelection=cms.string("2.5 < mass && mass < 80.0") ## linea 149
 process.onia2MuMuPAT.addMCTruth = cms.bool(False)
 
 
@@ -86,8 +86,8 @@ process.Zfitter    = cms.EDProducer("jpsiElecKmcFitter",
                           ImparSigm           = cms.double(4.5),
                           ImparSigl           = cms.double(4.5),
                           dxym                = cms.double(0.5),
-                          dxyl                = cms.double(1.0),
-                          dzm                 = cms.double(0.5),
+                          dxyl                = cms.double(0.5),
+                          dzm                 = cms.double(1.0),
                           dzl                 = cms.double(1.0),
                           trackerLayersWithMeasurement = cms.double(4),
                           pixelLayersWithMeasurement   = cms.double(1)
