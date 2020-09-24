@@ -481,8 +481,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
       std::pair<bool,Measurement1D> tkPVdist2 = IPTools::absoluteImpactParameter3D(MuMuTTks.at(1),*PV);
       
       if (!tkPVdist1.first|| !tkPVdist2.first ) continue;
-      if (fabs(tkPVdist1.second.significance())> ImparSigm_) continue;
-      if (fabs(tkPVdist2.second.significance())> ImparSigm_) continue;
+      if (fabs(tkPVdist1.second.significance()) > ImparSigm_) continue;
+      if (fabs(tkPVdist2.second.significance()) > ImparSigm_) continue;
       
       //std::cout << "works for jpsimuons" << std::endl;
 	  for (View<pat::Electron>::const_iterator lepton1 = leptons->begin(); lepton1 != leptons->end(); ++lepton1 ) {
@@ -799,8 +799,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             std::pair<bool,Measurement1D> tkPVdistel2 = IPTools::absoluteImpactParameter3D(LLTTks.at(1),*PV);
           
             if (!tkPVdistel1.first || !tkPVdistel2.first) continue;
-            if (fabs(tkPVdistel1.second.significance())> ImparSigl_) continue;
-            if (fabs(tkPVdistel2.second.significance())> ImparSigl_) continue; 
+            if (fabs(tkPVdistel1.second.significance()) > ImparSigl_) continue;
+            if (fabs(tkPVdistel2.second.significance()) > ImparSigl_) continue; 
             //std::cout << "pass Track builder " << std::endl;
 		        
             /////////////////////////////////////////////////////

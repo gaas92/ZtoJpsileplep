@@ -532,14 +532,13 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
         if(glbTrack2->quality(reco::TrackBase::highPurity)) {trackPurity2 += 100;}
 	
         // Check if pair of leptons (muons) is coming from our Primary Vertex
-        std::vector<reco::TransientTrack> LLTTks;
-        LLTTks.push_back(theTTB->build(lept1->innerTrack()));
-        LLTTks.push_back(theTTB->build(lept2->innerTrack()));
-        std::pair<bool,Measurement1D> tkPVdistel1 = IPTools::absoluteImpactParameter3D(LLTTks.at(0),*PV);
-        std::pair<bool,Measurement1D> tkPVdistel2 = IPTools::absoluteImpactParameter3D(LLTTks.at(1),*PV);
-        if (!tkPVdistel1.first|| !tkPVdistel2.first ) continue;
-        if (abs(tkPVdistel1.second.significance()) < ImparSigl_) continue;
-        if (abs(tkPVdistel2.second.significance()) < ImparSigl_) continue;
+        
+        //std::vector<reco::TransientTrack> LLTTks;
+        //LLTTks.push_back(theTTB->build(lept1->innerTrack()));
+        //LLTTks.push_back(theTTB->build(lept2->innerTrack()));
+        //std::pair<bool,Measurement1D> tkPVdistel1 = IPTools::absoluteImpactParameter3D(LLTTks.at(0),*PV);
+        //std::pair<bool,Measurement1D> tkPVdistel2 = IPTools::absoluteImpactParameter3D(LLTTks.at(1),*PV);
+        //if (!tkPVdistel1.first|| !tkPVdistel2.first ) continue;
 
         for (pat::CompositeCandidateCollection::const_iterator dimuon = dimuons->begin(); dimuon != dimuons->end() /*test && breaker < 10*/; ++dimuon){
             const pat::Muon* muon1 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon1"));
@@ -686,11 +685,9 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
             std::pair<bool,Measurement1D> tkPVdist1 = IPTools::absoluteImpactParameter3D(MuMuTTks.at(0),*PV);
             std::pair<bool,Measurement1D> tkPVdist2 = IPTools::absoluteImpactParameter3D(MuMuTTks.at(1),*PV);
             if (!tkPVdist1.first || !tkPVdist2.first ) continue;
-            if (fabs(tkPVdist1.second.significance())> ImparSigm_) continue;
-            if (fabs(tkPVdist2.second.significance())> ImparSigm_) continue;
-            reco::TrackRef dilepTk[2]={
-            lept1->innerTrack(),
-            lept2->innerTrack()};
+            if (fabs(tkPVdist1.second.significance()) > ImparSigm_) continue;
+            if (fabs(tkPVdist2.second.significance()) > ImparSigm_) continue;
+            reco::TrackRef dilepTk[2]={lept1->innerTrack(), lept2->innerTrack()};
             //build the dimuon secondary vertex
             std::vector<reco::TransientTrack> LLTTks;
             LLTTks.push_back(theTTB->build(&dilepTk[0]));
@@ -698,8 +695,8 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
             std::pair<bool,Measurement1D> tkPVdistel1 = IPTools::absoluteImpactParameter3D(LLTTks.at(0),*PV);
             std::pair<bool,Measurement1D> tkPVdistel2 = IPTools::absoluteImpactParameter3D(LLTTks.at(1),*PV);
             if (!tkPVdistel1.first || !tkPVdistel2.first) continue;
-            if (fabs(tkPVdistel1.second.significance())> ImparSigl_) continue;
-            if (fabs(tkPVdistel2.second.significance())> ImparSigl_) continue;
+            if (fabs(tkPVdistel1.second.significance()) > ImparSigl_) continue;
+            if (fabs(tkPVdistel2.second.significance()) > ImparSigl_) continue;
             const ParticleMass muMass    = 0.10565837;
             float muSigma                = muMass*1.e-6;
              
@@ -884,10 +881,10 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 		   int psiM2_PixelLWM   = muon2->muonBestTrack()->hitPattern().pixelLayersWithMeasurement();
 		   int psiM2_ValPixHit  = muon2->muonBestTrack()->hitPattern().numberOfValidPixelHits();
 
-           if (psiM1_TrackerLWM < tlwm_) continue;
-           if (psiM2_TrackerLWM < tlwm_) continue;
-           if (psiM1_PixelLWM < plwm_) continue;
-           if (psiM2_PixelLWM < plwm_) continue;
+           if (psiM1_TrackerLWM <= tlwm_) continue;
+           if (psiM2_TrackerLWM <= tlwm_) continue;
+           if (psiM1_PixelLWM <= plwm_) continue;
+           if (psiM2_PixelLWM <= plwm_) continue;
            patM1.addUserInt("ZMu1Qid_", ZMu1Qid);
 		   patM1.addUserFloat("psiM1_TrackerLWM_", psiM1_TrackerLWM);
 		   patM1.addUserFloat("psiM1_PixelLWM_",  psiM1_PixelLWM);
