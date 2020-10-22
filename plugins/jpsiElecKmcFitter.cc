@@ -776,9 +776,11 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             //reco::TransientTrack tt2 = theTTBuilder->build(lept2->gsfTrack());
             //std::pair<bool,Measurement1D> tkPVdistel1 = IPTools::absoluteImpactParameter3D(tt1,*PV);
              //std::pair<bool,Measurement1D> tkPVdistel2 = IPTools::absoluteImpactParameter3D(tt2,*PV);
-            
+
+            //reco::TrackRef dilepTk[2]={lept1->gsfTrack(), lept2->gsfTrack()};
+
             ////NEW CODE
-            reco::TrackRef dilepTk[2]={lept1->gsfTrack(), lept2->gsfTrack()};
+            reco::GsfTrackRef dilepTk[2]={lept1->gsfTrack(), lept2->gsfTrack()};
 
             //reco::TrackRef dilepTk[2]={lept1->closestCtfTrackRef(), lept2->closestCtfTrackRef()};
 
