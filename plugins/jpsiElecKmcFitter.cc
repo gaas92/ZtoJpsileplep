@@ -13,7 +13,7 @@
 //
 // Original Author:  Rogelio Reyes Almanza
 //         Created:  Tue, 04 Sep 2018 09:41:00 GMT
-//         Updated:  v7-12/09/2020
+//         Updated:  v7-22/10/2020
 //
 
 
@@ -286,7 +286,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             gen_z_p4 = gen_lepton1_p4 + gen_lepton2_p4 + gen_muon1_p4 + gen_muon2_p4;
             gen_jpsi_p4 = gen_muon1_p4 + gen_muon2_p4;
         }// end if packed valid
-        std::cout << "found Z: "<< gen_z_p4.M() << std::endl;
+        //std::cout << "found Z: "<< gen_z_p4.M() << std::endl;
   }
   else {
         if ( pruned.isValid() ) {
@@ -748,11 +748,11 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
  		    float mdxy2 = muon2->muonBestTrack()->dxy(PV->position());
            	float mdz2 = muon2->muonBestTrack()->dz(PV->position());	
 		
-		    float ldxy1 = lept1->bestTrack()->dxy(PV->position());
-           	float ldz1 = lept1->bestTrack()->dz(PV->position());	
+		    float ldxy1 = lept1->gsfTrack()->dxy(PV->position());
+           	float ldz1 = lept1->gsfTrack()->dz(PV->position());
 		
- 		    float ldxy2 = lept2->bestTrack()->dxy(PV->position());
-           	float ldz2 = lept2->bestTrack()->dz(PV->position());	
+ 		    float ldxy2 = lept2->gsfTrack()->dxy(PV->position());
+           	float ldz2 = lept2->gsfTrack()->dz(PV->position());
 		    if (abs(ldxy1) > dxyl_) continue;
             if (abs(ldxy2) > dxyl_) continue;
             if (abs(ldz1)  > dzl_ ) continue;
@@ -778,9 +778,9 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
              //std::pair<bool,Measurement1D> tkPVdistel2 = IPTools::absoluteImpactParameter3D(tt2,*PV);
             
             ////NEW CODE
-            //reco::TrackRef dilepTk[2]={lept1->gsfTrack(), lept2->gsfTrack()};
+            reco::TrackRef dilepTk[2]={lept1->gsfTrack(), lept2->gsfTrack()};
 
-            reco::TrackRef dilepTk[2]={lept1->closestCtfTrackRef(), lept2->closestCtfTrackRef()};
+            //reco::TrackRef dilepTk[2]={lept1->closestCtfTrackRef(), lept2->closestCtfTrackRef()};
 
             ///https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideGsfElectronObject#Other_tracks
           
