@@ -780,9 +780,9 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             //reco::TrackRef dilepTk[2]={lept1->gsfTrack(), lept2->gsfTrack()};
 
             ////NEW CODE
-            //reco::GsfTrackRef dilepTk[2]={lept1->gsfTrack(), lept2->gsfTrack()};
+            reco::GsfTrackRef dilepTk[2]={lept1->gsfTrack(), lept2->gsfTrack()};
 
-            reco::TrackRef dilepTk[2]={lept1->closestCtfTrackRef(), lept2->closestCtfTrackRef()};
+            //reco::TrackRef dilepTk[2]={lept1->closestCtfTrackRef(), lept2->closestCtfTrackRef()};
 
             ///https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideGsfElectronObject#Other_tracks
           
