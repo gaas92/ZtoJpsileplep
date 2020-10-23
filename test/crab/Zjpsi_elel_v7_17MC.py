@@ -68,12 +68,12 @@ def main():
 
         config.General.requestName = None
         #config.General.workArea = 'ZMuondecay'
-        config.General.workArea = '2017MC_psi_ee_v7_1'
+        config.General.workArea = '2017MC_psi_ee_v7_2'
 	config.General.transferOutputs = True
 	config.General.transferLogs = False
 
         config.JobType.pluginName = 'Analysis'
-	config.JobType.psetName = '/afs/cern.ch/work/g/gayalasa/public/Zll/z_sl7/ZtoJpsill/CMSSW_10_6_3/src/AnalizeZll/ZtoJpsileplep/test/runV7Elec17.py' #2018 DT configfile
+	config.JobType.psetName = '/afs/cern.ch/work/g/gayalasa/public/Zll/z_sl7/ZtoJpsill/CMSSW_10_6_3/src/AnalizeZll/ZtoJpsileplep/test/runV7Elec17MC.py' #2018 DT configfile
 	config.JobType.allowUndistributedCMSSW = True
 
         config.Data.inputDataset = None
@@ -87,7 +87,7 @@ def main():
    #config.Data.lumiMask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions17/13TeV/Final/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt'
 	config.Data.publication = True
         config.Data.outputDatasetTag = None
-	config.Data.outLFNDirBase = '/store/user/%s/Zpsi_ee17mc_v7_1/' % ("gayalasa")
+	config.Data.outLFNDirBase = '/store/user/%s/Zpsi_ee17mc_v7_2/' % ("gayalasa")
 	config.Site.storageSite = 'T3_US_FNALLPC'
         #config.Site.storageSite = None # Choose your site. 
         #--------------------------------------------------------
