@@ -1128,20 +1128,28 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             
             try {        l1_ecalEnergyPreCorr    = lept1->userFloat("ecalEnergyPreCorr");}
             catch (...){ l1_ecalEnergyPreCorr = 0;}
+                
             try {        l1_ecalEnergyErrPreCorr = lept1->userFloat("ecalEnergyErrPreCorr");}
             catch (...){ l1_ecalEnergyErrPreCorr = 0;}
-            try {        l1_ecalEnergyPostCorr = lept1->userFloat("ecalEnergyErrPreCorr");}
+                
+            try {        l1_ecalEnergyPostCorr = lept1->userFloat("ecalEnergyPostCorr");}
             catch (...){ l1_ecalEnergyPostCorr = 0;}
+                
             try {        l1_ecalEnergyErrPostCorr = lept1->userFloat("ecalEnergyErrPostCorr");}
             catch (...){ l1_ecalEnergyErrPostCorr = 0;}
-            try {        l1_ecalTrkEnergyPreCorr = lept1->userFloat("ecalEnergyErrPostCorr");}
+                
+            try {        l1_ecalTrkEnergyPreCorr = lept1->userFloat("ecalTrkEnergyPreCorr");}
             catch (...){ l1_ecalTrkEnergyPreCorr = 0;}
-            try {        l1_ecalTrkEnergyErrPreCorr = lept1->userFloat("ecalTrkEnergyPreCorr");}
+                
+            try {        l1_ecalTrkEnergyErrPreCorr = lept1->userFloat("ecalTrkEnergyErrPreCorr");}
             catch (...){ l1_ecalTrkEnergyErrPreCorr = 0;}
-            try {        l1_ecalTrkEnergyPostCorr = lept1->userFloat("ecalTrkEnergyErrPreCorr");}
+                
+            try {        l1_ecalTrkEnergyPostCorr = lept1->userFloat("ecalTrkEnergyPostCorr");}
             catch (...){ l1_ecalTrkEnergyPostCorr = 0;}
+                
             try {        l1_ecalTrkEnergyErrPostCorr = lept1->userFloat("ecalTrkEnergyErrPostCorr");}
             catch (...){ l1_ecalTrkEnergyErrPostCorr = 0;}
+                
             try {        l1_energyScaleValue = lept1->userFloat("energyScaleValue");}
             catch (...){ l1_energyScaleValue = 0;}
             try {        l1_energySigmaValue = lept1->userFloat("energySigmaValue");}
@@ -1259,24 +1267,33 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             
             try {        l2_ecalEnergyPreCorr    = lept2->userFloat("ecalEnergyPreCorr");}
             catch (...){ l2_ecalEnergyPreCorr = 0;}
+                
             try {        l2_ecalEnergyErrPreCorr = lept2->userFloat("ecalEnergyErrPreCorr");}
             catch (...){ l2_ecalEnergyErrPreCorr = 0;}
-            try {        l2_ecalEnergyPostCorr = lept2->userFloat("ecalEnergyErrPreCorr");}
+                
+            try {        l2_ecalEnergyPostCorr = lept2->userFloat("ecalEnergyPostCorr");}
             catch (...){ l2_ecalEnergyPostCorr = 0;}
+                
             try {        l2_ecalEnergyErrPostCorr = lept2->userFloat("ecalEnergyErrPostCorr");}
             catch (...){ l2_ecalEnergyErrPostCorr = 0;}
-            try {        l2_ecalTrkEnergyPreCorr = lept2->userFloat("ecalEnergyErrPostCorr");}
+                
+            try {        l2_ecalTrkEnergyPreCorr = lept2->userFloat("ecalTrkEnergyPreCorr");}
             catch (...){ l2_ecalTrkEnergyPreCorr = 0;}
-            try {        l2_ecalTrkEnergyErrPreCorr = lept2->userFloat("ecalTrkEnergyPreCorr");}
+                
+            try {        l2_ecalTrkEnergyErrPreCorr = lept2->userFloat("ecalTrkEnergyErrPreCorr");}
             catch (...){ l2_ecalTrkEnergyErrPreCorr = 0;}
-            try {        l2_ecalTrkEnergyPostCorr = lept2->userFloat("ecalTrkEnergyErrPreCorr");}
+                
+            try {        l2_ecalTrkEnergyPostCorr = lept2->userFloat("ecalTrkEnergyPostCorr");}
             catch (...){ l2_ecalTrkEnergyPostCorr = 0;}
+                
             try {        l2_ecalTrkEnergyErrPostCorr = lept2->userFloat("ecalTrkEnergyErrPostCorr");}
             catch (...){ l2_ecalTrkEnergyErrPostCorr = 0;}
+                
             try {        l2_energyScaleValue = lept2->userFloat("energyScaleValue");}
             catch (...){ l2_energyScaleValue = 0;}
             try {        l2_energySigmaValue = lept2->userFloat("energySigmaValue");}
             catch (...){ l2_energySigmaValue = 0;}
+
 
                 
             patL2.addUserFloat("ecalEnergyPreCorr_",       l2_ecalEnergyPreCorr       );
