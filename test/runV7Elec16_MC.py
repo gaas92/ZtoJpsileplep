@@ -13,15 +13,16 @@ process.load("TrackingTools/TransientTrack/TransientTrackBuilder_cfi")
 
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, '94X_mc2017_realistic_v14')
+process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc')
 
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
        #'/store/data/Run2016G/DoubleMuon/MINIAOD/17Jul2018-v1/50000/7A20CF7C-4D8C-E811-99B9-0242AC1C0501.root'
-        '/store/data/Run2017B/MuonEG/MINIAOD/31Mar2018-v1/610000/86B6E7A3-8739-E811-96AF-002590DE6E52.root' ### 2017
+        '/store/data/Run2016C/MuonEG/MINIAOD/17Jul2018-v1/50000/D6532CAB-B48C-E811-975F-0090FAA58544.root' ### 2016
         #'/store/data/Run2016D/DoubleMuon/MINIAOD/03Feb2017-v1/1110000/E2C423A9-E3F1-E611-8EA4-047D7BD6DE30.root'
    )
+
 )
 
 
@@ -38,8 +39,8 @@ process.TFileService = cms.Service("TFileService",
 
 #from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
 from EgammaUser.EgammaPostRecoTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
-setupEgammaPostRecoSeq(process, runVID=True, #if you want the Fall17V2 IDs, set this to True or remove (default is True)
-                       era='2017-Nov17ReReco')  #era is new to select between 2016 / 2017,  it defaults to 2017
+setupEgammaPostRecoSeq(process, runVID=True, runEnergyCorrections=False, #no point in re-running them, they are already fine
+                       era='2016-Legacy')  #era is new to select between 2016 / 2017,  it defaults to 2017
 
 #update for v7
 ####this apply de BF cuts to dimuon & dilepton 1, 3, 4 & 7
