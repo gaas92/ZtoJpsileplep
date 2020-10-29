@@ -29,7 +29,7 @@
 #include "DataFormats/PatCandidates/interface/Tau.h"
 #include "CondFormats/JetMETObjects/interface/FactorizedJetCorrector.h"
 //#include "EgammaAnalysis/ElectronTools/interface/EnergyScaleCorrection_class.h"
-#include "HiggsAnalysis/HiggsTo2photons/interface/CiCPhotonID.h"
+//#include "HiggsAnalysis/HiggsTo2photons/interface/CiCPhotonID.h"
 #include "JetMETCorrections/Modules/interface/JetResolution.h"
 //#include "PhysicsTools/SelectorUtils/interface/PFJetIDSelectionFunctor.h"
 #include "HLTrigger/HLTcore/interface/HLTPrescaleProvider.h"
@@ -166,7 +166,7 @@ class ggNtuplizer : public edm::EDAnalyzer {
   TH1F    *hGenWeight_;
   TH1F    *hSumGenWeight_;
 
-  CiCPhotonID                 *cicPhotonId_;
+  //CiCPhotonID                 *cicPhotonId_;
   //EnergyScaleCorrection_class *egmScaler_;
 
   JME::JetResolution            jetResolution_;
