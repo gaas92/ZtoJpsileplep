@@ -1184,15 +1184,33 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                 
             patL1.addUserFloat("dRIsoEA", ElectronRelIso(*lept1));
             
-            patL1.addUserFloat("trackMomentumAtVtx"   , (float)sqrt(lept1->trackMomentumAtVtx().mag2()));
-            patL1.addUserFloat("ecalEnergy"           , (float)lept1->ecalEnergy());
-            patL1.addUserFloat("full5x5_sigmaIetaIeta", (float)lept1->full5x5_sigmaIetaIeta());
-            patL1.addUserFloat("dEtaIn"               , (float)lept1->deltaEtaSuperClusterTrackAtVtx());
-            patL1.addUserFloat("dPhiIn"               , (float)lept1->deltaPhiSuperClusterTrackAtVtx());
-            patL1.addUserFloat("HoE"                  , (float)lept1->hadronicOverEm());
-            patL1.addUserFloat("ooEmooP"              , (float)fabs(1/lept1->ecalEnergy() - 1/sqrt(lept1->trackMomentumAtVtx().mag2())));
-            patL1.addUserFloat("passConversionVeto"   , (float)lept1->passConversionVeto());
+            //patL1.addUserFloat("trackMomentumAtVtx"   , (float)sqrt(lept1->trackMomentumAtVtx().mag2()));
+            //patL1.addUserFloat("ecalEnergy"           , (float)lept1->ecalEnergy());
+            //patL1.addUserFloat("full5x5_sigmaIetaIeta", (float)lept1->full5x5_sigmaIetaIeta());
+            //patL1.addUserFloat("dEtaIn"               , (float)lept1->deltaEtaSuperClusterTrackAtVtx());
+            //patL1.addUserFloat("dPhiIn"               , (float)lept1->deltaPhiSuperClusterTrackAtVtx());
+            //patL1.addUserFloat("HoE"                  , (float)lept1->hadronicOverEm());
+            //patL1.addUserFloat("ooEmooP"              , (float)fabs(1/lept1->ecalEnergy() - 1/sqrt(lept1->trackMomentumAtVtx().mag2())));
+            //patL1.addUserFloat("passConversionVeto"   , (float)lept1->passConversionVeto());
+
+            // info for vars: https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedElectronIdentificationRun2
+            patL1.addUserFloat("etaSC", lept1->superCluster()->position().eta());
+            patL1.addUserFloat("full5x5_sigmaIetaIeta", lept1->full5x5_sigmaIetaIeta()); //https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleFull5x5SigmaIEtaIEtaCut.cc#L45
+            patL1.addUserFloat("dEtaIn"               , lept1->superCluster().isNonnull() && lept1->superCluster()->seed().isNonnull() ? lept1->deltaEtaSuperClusterTrackAtVtx() - lept1->superCluster()->eta() + lept1->superCluster()->seed()->eta() : std::numeric_limits<float>::max()); //https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleDEtaInSeedCut.cc#L30-L33
+            patL1.addUserFloat("dPhiIn"               , lept1->deltaPhiSuperClusterTrackAtVtx()); //https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleDPhiInCut.cc#L41
+            patL1.addUserFloat("E_sc"                 , lept1->superCluster()->energy());
+            patL1.addUserFloat("rho"                  , *rhoH);
+            std::cout << " RHO " << (float)(*rhoH) << std::endl;
+            patL1.addUserFloat("HoE"                  , lept1->hadronicOverEm()); // https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleHadronicOverEMEnergyScaledCut.cc#L58
             
+            //new isoEA needed, work in progress https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleRelPFIsoScaledCut.cc#L57
+
+            patL1.addUserFloat("ooEmooP"              , std::abs(1.0 - lept1->eSuperClusterOverP())*(1.0/lept1->ecalEnergy())); //https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleEInverseMinusPInverseCut.cc#L43-L45
+            patL1.addUserFloat("trackMomentumAtVtx"   , sqrt(lept1->trackMomentumAtVtx().mag2()));
+            patL1.addUserFloat("ecalEnergy"           , lept1->ecalEnergy());
+            patL1.addUserFloat("passConversionVeto"   , lept1->passConversionVeto());
+
+
             patL1.addUserFloat("dPhiInSeed" , lept1->deltaPhiSuperClusterTrackAtVtx());
             patL1.addUserFloat("dEtaInSeed" , getEtaInSeed( *lept1 )) ;
             patL1.addUserFloat("SigmaIEtaIEta" ,lept1->full5x5_sigmaIetaIeta());
@@ -1313,15 +1331,33 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patL2.addUserFloat("dIP3DErr"	,tkPVdistel2.second.error());
           
             patL2.addUserFloat("dRIsoEA", ElectronRelIso(*lept2));
-            patL2.addUserFloat("trackMomentumAtVtx"   , (float)sqrt(lept2->trackMomentumAtVtx().mag2()));
-            patL2.addUserFloat("ecalEnergy"           , (float)lept2->ecalEnergy());
-            patL2.addUserFloat("full5x5_sigmaIetaIeta", (float)lept2->full5x5_sigmaIetaIeta());
-            patL2.addUserFloat("dEtaIn"               , (float)lept2->deltaEtaSuperClusterTrackAtVtx());
-            patL2.addUserFloat("dPhiIn"               , (float)lept2->deltaPhiSuperClusterTrackAtVtx());
-            patL2.addUserFloat("HoE"                  , (float)lept2->hadronicOverEm());
-            patL2.addUserFloat("ooEmooP"              , (float)fabs(1/lept2->ecalEnergy() - 1/sqrt(lept2->trackMomentumAtVtx().mag2())));
-            patL2.addUserFloat("passConversionVeto"   , (float)lept2->passConversionVeto());
-          
+            
+            //patL2.addUserFloat("trackMomentumAtVtx"   , (float)sqrt(lept2->trackMomentumAtVtx().mag2()));
+            //patL2.addUserFloat("ecalEnergy"           , (float)lept2->ecalEnergy());
+            //patL2.addUserFloat("full5x5_sigmaIetaIeta", (float)lept2->full5x5_sigmaIetaIeta());
+            //patL2.addUserFloat("dEtaIn"               , (float)lept2->deltaEtaSuperClusterTrackAtVtx());
+            //patL2.addUserFloat("dPhiIn"               , (float)lept2->deltaPhiSuperClusterTrackAtVtx());
+            //patL2.addUserFloat("HoE"                  , (float)lept2->hadronicOverEm());
+            //patL2.addUserFloat("ooEmooP"              , (float)fabs(1/lept2->ecalEnergy() - 1/sqrt(lept2->trackMomentumAtVtx().mag2())));
+            //patL2.addUserFloat("passConversionVeto"   , (float)lept2->passConversionVeto());
+            
+            // info for vars: https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedElectronIdentificationRun2
+            patL2.addUserFloat("etaSC", lept2->superCluster()->position().eta());
+            patL2.addUserFloat("full5x5_sigmaIetaIeta", lept2->full5x5_sigmaIetaIeta()); //https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleFull5x5SigmaIEtaIEtaCut.cc#L45
+            patL2.addUserFloat("dEtaIn"               , lept2->superCluster().isNonnull() && lept2->superCluster()->seed().isNonnull() ? lept2->deltaEtaSuperClusterTrackAtVtx() - lept2->superCluster()->eta() + lept2->superCluster()->seed()->eta() : std::numeric_limits<float>::max()); //https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleDEtaInSeedCut.cc#L30-L33
+            patL2.addUserFloat("dPhiIn"               , lept2->deltaPhiSuperClusterTrackAtVtx()); //https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleDPhiInCut.cc#L41
+            patL2.addUserFloat("E_sc"                 , lept2->superCluster()->energy());
+            patL2.addUserFloat("rho"                  , *rhoH);
+            patL2.addUserFloat("HoE"                  , lept2->hadronicOverEm()); // https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleHadronicOverEMEnergyScaledCut.cc#L58
+            
+            //new isoEA needed, work in progress https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleRelPFIsoScaledCut.cc#L57
+
+            patL2.addUserFloat("ooEmooP"              ,  std::abs(1.0 - lept2->eSuperClusterOverP())*(1.0/lept2->ecalEnergy())); //https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleEInverseMinusPInverseCut.cc#L43-L45
+            patL2.addUserFloat("trackMomentumAtVtx"   , sqrt(lept2->trackMomentumAtVtx().mag2()));
+            patL2.addUserFloat("ecalEnergy"           , lept2->ecalEnergy());
+            patL2.addUserFloat("passConversionVeto"   , lept2->passConversionVeto());
+
+
             patL2.addUserFloat("dPhiInSeed" , lept2->deltaPhiSuperClusterTrackAtVtx());
             patL2.addUserFloat("dEtaInSeed" , getEtaInSeed( *lept2 )) ;
             patL2.addUserFloat("SigmaIEtaIEta" ,lept2->full5x5_sigmaIetaIeta());
