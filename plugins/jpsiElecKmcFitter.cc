@@ -97,6 +97,7 @@ class jpsiElecKmcFitter : public edm::stream::EDProducer<>{
       Float_t getEtaInSeed(const pat::Electron&);
     
       Float_t ElectronRelIso(const pat::Electron&);
+      Float_t GsfEleRelPFIsoScaledCut(const pat::Electron&);
     
       bool IsTheSame(const pat::GenericParticle& tk, const pat::Muon& mu);
       bool IsTheSame2(const reco::TrackRef& tk, const pat::Muon& mu);
@@ -1570,6 +1571,21 @@ Float_t jpsiElecKmcFitter::ElectronRelIso(const pat::Electron& el)
 
     return relIsoWithEA;
 }
+Float_t jpsiElecKmcFitter::GsfEleRelPFIsoScaledCut(const pat::Electron& el){
 
+  // Establish the cut value
+  reco::GsfElectronPtr ele(cand);
+  double absEta = std::abs(ele->superCluster()->eta());
+  
+  // Compute the combined isolation with effective area correction
+  auto pfIso = el->pfIsolationVariables();
+  const float chad = pfIso.sumChargedHadronPt;
+  const float nhad = pfIso.sumNeutralHadronEt;
+  const float pho  = pfIso.sumPhotonEt;
+  const float  eA  = 1;//effectiveAreas_.getEffectiveArea(absEta);
+  const float rho  = rhoH.isValid() ? (float)(*rhoH) : 0; // std::max likes float arguments
+  const float iso  = chad + std::max(0.0f, nhad + pho - rho*eA);
+  return iso;
+}
 //define this as a plug-in
 DEFINE_FWK_MODULE(jpsiElecKmcFitter);
