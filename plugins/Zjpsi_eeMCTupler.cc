@@ -1168,9 +1168,9 @@ verE
        ZLe2ecalEnergy            = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("ecalEnergy");
        ZLe2passConversionVeto    = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("passConversionVeto"); 
 
-       std::cout<< "iso/pT 1 in tupler : " << ZLe1dRIsoEA_v2 << std::endl;
-       std::cout<< "iso/pT 2 in tupler : " << ZLe2dRIsoEA_v2 <<std::endl;
-       std::cout<< "========================================" << std::endl;
+       //std::cout<< "iso/pT 1 in tupler : " << ZLe1dRIsoEA_v2 << std::endl;
+       //std::cout<< "iso/pT 2 in tupler : " << ZLe2dRIsoEA_v2 <<std::endl;
+       //std::cout<< "========================================" << std::endl;
        //ZLe1CorrEt    =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("corrEt_");
        //ZLe1CorrFact  =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton1")))->userFloat("corrfactor_");
        //ZLe2CorrEt    =(dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("lepton2")))->userFloat("corrEt_");

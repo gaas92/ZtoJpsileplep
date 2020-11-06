@@ -572,49 +572,49 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
  	        // Lepton 1 (from Z) 2016 promt & legacy
  	        if ( lept1->electronID("cutBasedElectronID-Summer16-80X-V1-veto")==1 ){
                    ZLe1Qid_n += 1;
-                   //std::cout << "1L is  80X veto Electron" << std::endl;
+                   std::cout << "1L is  80X veto Electron" << std::endl;
                 }
 	        if ( lept1->electronID("cutBasedElectronID-Summer16-80X-V1-loose")==1 ){
                    ZLe1Qid_n += 10;
-                   //std::cout << "1L is 80X loose " << std::endl;
+                   std::cout << "1L is 80X loose " << std::endl;
                 }
             if ( lept1->electronID("cutBasedElectronID-Summer16-80X-V1-medium")==1 ){
                    ZLe1Qid_n += 100;
-                   //std::cout << "1L is 80X Medium " << std::endl;
+                   std::cout << "1L is 80X Medium " << std::endl;
                 }
 		    if ( lept1->electronID("cutBasedElectronID-Summer16-80X-V1-tight")==1 ){
                    ZLe1Qid_n += 1000;
-                   //std::cout << "1L is 80X Tight " << std::endl;
+                   std::cout << "1L is 80X Tight " << std::endl;
                 }
           
             if ( lept1->electronID("mvaEleID-Spring16-GeneralPurpose-V1-wp80")==1 ){
                    ZLe1Qid_n += 10000;
-                   //std::cout << "1L is  80X V1 wp80" << std::endl;
+                   std::cout << "1L is  80X V1 wp80" << std::endl;
                 }
             if ( lept1->electronID("mvaEleID-Spring16-GeneralPurpose-V1-wp90")==1 ){
                    ZLe1Qid_n += 100000;
-                   //std::cout << "1L is 80X V1 wp90 " << std::endl;
+                   std::cout << "1L is 80X V1 wp90 " << std::endl;
                 }
             // 2016 Legacy MiniAOD V2
             if ( lept1->electronID("cutBasedElectronID-Fall17-94X-V2-loose")==1 ){
                    ZLe1Qid_n += 1000000;
-                   //std::cout << "1L is 94X loose " << std::endl;
+                   std::cout << "1L is 94X loose " << std::endl;
                 }
             if ( lept1->electronID("cutBasedElectronID-Fall17-94X-V2-medium")==1 ){
                    ZLe1Qid_n += 10000000;
-                   //std::cout << "1L is 94X medium " << std::endl;
+                   std::cout << "1L is 94X medium " << std::endl;
                 }
             if ( lept1->electronID("cutBasedElectronID-Fall17-94X-V2-tight")==1 ){
                    ZLe1Qid_n += 100000000;
-                   //std::cout << "1L is 94X tight " << std::endl;
+                   std::cout << "1L is 94X tight " << std::endl;
                 }
             if ( lept1->electronID("mvaEleID-Fall17-iso-V2-wp80")==1 ){
                    ZLe1Qid_n += 1000000000;
-                   //std::cout << "1L is 94X iso V2 wp80 " << std::endl;
+                   std::cout << "1L is 94X iso V2 wp80 " << std::endl;
                 }
             if ( lept1->electronID("mvaEleID-Fall17-iso-V2-wp90")==1 ){
                    ZLe1Qid_n += 1000000000;
-                   //std::cout << "1L is 94X iso V2 wp90 " << std::endl;
+                   std::cout << "1L is 94X iso V2 wp90 " << std::endl;
                 }
 //////////////////////////////////////////////////////////////////////////////////////////
  	        // Lepton 2 (from Z)
@@ -666,6 +666,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                      ZLe2Qid_n += 1000000000;
                      //std::cout << "2L is 94X iso V2 wp90 " << std::endl;
                 }
+            std::cout << "Binary is  : " << ZLe1Qid_n << std::endl;
+            std::cout << "Decimal is : " << ZLe1Qid   << std::endl;    
             ZLe1Qid = convertBinaryToDecimal(ZLe1Qid_n);
             ZLe2Qid = convertBinaryToDecimal(ZLe2Qid_n);
           
@@ -1354,8 +1356,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patL2.addUserFloat("ecalEnergy"           , lept2->ecalEnergy());
             patL2.addUserFloat("passConversionVeto"   , lept2->passConversionVeto());
             
-            std::cout << "iso/pT 1: " << GsfEleRelPFIsoScaledCut(*lept1)/lept1->pt() << std::endl;
-            std::cout << "iso/pT 2: " << GsfEleRelPFIsoScaledCut(*lept2)/lept2->pt() << "\n" << std::endl;
+            //std::cout << "iso/pT 1: " << GsfEleRelPFIsoScaledCut(*lept1)/lept1->pt() << std::endl;
+            //std::cout << "iso/pT 2: " << GsfEleRelPFIsoScaledCut(*lept2)/lept2->pt() << "\n" << std::endl;
             patL2.addUserFloat("dPhiInSeed" , lept2->deltaPhiSuperClusterTrackAtVtx());
             patL2.addUserFloat("dEtaInSeed" , getEtaInSeed( *lept2 )) ;
             patL2.addUserFloat("SigmaIEtaIEta" ,lept2->full5x5_sigmaIetaIeta());
