@@ -1574,10 +1574,10 @@ Float_t jpsiElecKmcFitter::ElectronRelIso(const pat::Electron& el)
 Float_t jpsiElecKmcFitter::GsfEleRelPFIsoScaledCut(const pat::Electron& el){
 
   // Establish the cut value
-  double absEta = std::abs(el->superCluster()->eta());
+  double absEta = std::abs(el.uperCluster().eta());
   
   // Compute the combined isolation with effective area correction
-  auto pfIso = el->pfIsolationVariables();
+  auto pfIso = el.pfIsolationVariables();
   const float chad = pfIso.sumChargedHadronPt;
   const float nhad = pfIso.sumNeutralHadronEt;
   const float pho  = pfIso.sumPhotonEt;
