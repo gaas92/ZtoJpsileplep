@@ -1431,7 +1431,6 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             ZCandColl->push_back(patZ);
             //std::cout<< "something has been pushed"	<< std::endl;
             
-            ZCandColl->push_back(patZ);
             //std::cout << "Fill "<< std::endl;
 			//} Z candidate is valid
 
