@@ -1598,7 +1598,7 @@ Float_t jpsiElecKmcFitter::GsfEleRelPFIsoScaledCut(const pat::Electron& el){
   const float chad = pfIso.sumChargedHadronPt;
   const float nhad = pfIso.sumNeutralHadronEt;
   const float pho  = pfIso.sumPhotonEt;
-  const float  eA;//effectiveAreas_.getEffectiveArea(absEta);
+  float  eA;//effectiveAreas_.getEffectiveArea(absEta);
   if (absEta < 1) eA = 0.1566;
   else if (absEta < 1.4790) eA = 0.1626;
   else if (absEta < 2.0000) eA = 0.1073;
