@@ -1352,7 +1352,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patL2.addUserFloat("trackMomentumAtVtx"   , sqrt(lept2->trackMomentumAtVtx().mag2()));
             patL2.addUserFloat("ecalEnergy"           , lept2->ecalEnergy());
             patL2.addUserFloat("passConversionVeto"   , lept2->passConversionVeto());
-
+ 
+            std::cout << "iso: " << GsfEleRelPFIsoScaledCut(*lept2)/lept->pt() << std::endl;
 
             patL2.addUserFloat("dPhiInSeed" , lept2->deltaPhiSuperClusterTrackAtVtx());
             patL2.addUserFloat("dEtaInSeed" , getEtaInSeed( *lept2 )) ;
