@@ -627,7 +627,7 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
                 //std::cout << "1L is 94X iso V2 wp80 " << std::endl;
             }
         if ( lept1->electronID("mvaEleID-Fall17-iso-V2-wp90")==1 ){
-                ZLe1Qid_n += 1000000000;
+                ZLe1Qid_n += 10000000000;
                 //std::cout << "1L is 94X iso V2 wp90 " << std::endl;
             }
          
@@ -677,8 +677,8 @@ void jpsiElec4l_KmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iS
                 //std::cout << "2L is 94X iso V2 wp80 " << std::endl;
             }
         if ( lept2->electronID("mvaEleID-Fall17-iso-V2-wp90")==1 ){
-                    ZLe2Qid_n += 1000000000;
-                    //std::cout << "2L is 94X iso V2 wp90 " << std::endl;
+                ZLe2Qid_n += 10000000000;
+                //std::cout << "2L is 94X iso V2 wp90 " << std::endl;
             }
         ZLe1Qid = convertBinaryToDecimal(ZLe1Qid_n);
         ZLe2Qid = convertBinaryToDecimal(ZLe2Qid_n);

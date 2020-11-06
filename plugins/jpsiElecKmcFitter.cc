@@ -613,7 +613,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                    std::cout << "1L is 94X iso V2 wp80 " << std::endl;
                 }
             if ( lept1->electronID("mvaEleID-Fall17-iso-V2-wp90")==1 ){
-                   ZLe1Qid_n += 1000000000;
+                   ZLe1Qid_n += 10000000000;
                    std::cout << "1L is 94X iso V2 wp90 " << std::endl;
                 }
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -663,14 +663,14 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                     //std::cout << "2L is 94X iso V2 wp80 " << std::endl;
                 }
             if ( lept2->electronID("mvaEleID-Fall17-iso-V2-wp90")==1 ){
-                     ZLe2Qid_n += 1000000000;
-                     //std::cout << "2L is 94X iso V2 wp90 " << std::endl;
+                    ZLe2Qid_n += 10000000000;
+                    //std::cout << "2L is 94X iso V2 wp90 " << std::endl;
                 }
-            std::cout << "Binary is  : " << ZLe1Qid_n << std::endl;
-            std::cout << "Decimal is : " << ZLe1Qid   << std::endl;    
+   
             ZLe1Qid = convertBinaryToDecimal(ZLe1Qid_n);
             ZLe2Qid = convertBinaryToDecimal(ZLe2Qid_n);
-          
+            std::cout << "Binary is  : " << ZLe1Qid_n << std::endl;
+            std::cout << "Decimal is : " << ZLe1Qid   << std::endl; 
             int ZLe1_TrackerLWM = lept1->gsfTrack()->hitPattern().trackerLayersWithMeasurement();
             int ZLe1_PixelLWM   = lept1->gsfTrack()->hitPattern().pixelLayersWithMeasurement();
             int ZLe1_ValPixHit  = lept1->gsfTrack()->hitPattern().numberOfValidPixelHits();
