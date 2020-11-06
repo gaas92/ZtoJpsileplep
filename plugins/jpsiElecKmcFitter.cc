@@ -670,7 +670,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             ZLe1Qid = convertBinaryToDecimal(ZLe1Qid_n);
             ZLe2Qid = convertBinaryToDecimal(ZLe2Qid_n);
             std::cout << "Binary is  : " << ZLe1Qid_n << std::endl;
-            std::cout << "Decimal is : " << ZLe1Qid   << std::endl; 
+            std::cout << "Decimal is : " << ZLe1Qid  << " or " << convertBinaryToDecimal(ZLe1Qid_n) << std::endl; 
             int ZLe1_TrackerLWM = lept1->gsfTrack()->hitPattern().trackerLayersWithMeasurement();
             int ZLe1_PixelLWM   = lept1->gsfTrack()->hitPattern().pixelLayersWithMeasurement();
             int ZLe1_ValPixHit  = lept1->gsfTrack()->hitPattern().numberOfValidPixelHits();
