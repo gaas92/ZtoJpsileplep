@@ -1202,7 +1202,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patL1.addUserFloat("E_sc"                 , lept1->superCluster()->energy());
             patL1.addUserFloat("rho"                  , *rhoH);
             patL1.addUserFloat("HoE"                  , lept1->hadronicOverEm()); // https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleHadronicOverEMEnergyScaledCut.cc#L58
-            patL1.addUserFloat("dRIsoEA_v2"           ,GsfEleRelPFIsoScaledCut(*lept1) );// https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleRelPFIsoScaledCut.cc#L57
+            patL1.addUserFloat("dRIsoEA_v2"           , GsfEleRelPFIsoScaledCut(*lept1)/lept1->pt());// https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleRelPFIsoScaledCut.cc#L57
             patL1.addUserFloat("ooEmooP"              , std::abs(1.0 - lept1->eSuperClusterOverP())*(1.0/lept1->ecalEnergy())); //https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleEInverseMinusPInverseCut.cc#L43-L45
             patL1.addUserFloat("trackMomentumAtVtx"   , sqrt(lept1->trackMomentumAtVtx().mag2()));
             patL1.addUserFloat("ecalEnergy"           , lept1->ecalEnergy());
@@ -1347,7 +1347,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patL2.addUserFloat("E_sc"                 , lept2->superCluster()->energy());
             patL2.addUserFloat("rho"                  , *rhoH);
             patL2.addUserFloat("HoE"                  , lept2->hadronicOverEm()); // https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleHadronicOverEMEnergyScaledCut.cc#L58
-            patL2.addUserFloat("dRIsoEA_v2"           , GsfEleRelPFIsoScaledCut(*lept2) );// https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleRelPFIsoScaledCut.cc#L57
+            patL2.addUserFloat("dRIsoEA_v2"           , GsfEleRelPFIsoScaledCut(*lept2)/lept2->pt());// https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleRelPFIsoScaledCut.cc#L57
             patL2.addUserFloat("ooEmooP"              , std::abs(1.0 - lept2->eSuperClusterOverP())*(1.0/lept2->ecalEnergy())); //https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleEInverseMinusPInverseCut.cc#L43-L45
             patL2.addUserFloat("trackMomentumAtVtx"   , sqrt(lept2->trackMomentumAtVtx().mag2()));
             patL2.addUserFloat("ecalEnergy"           , lept2->ecalEnergy());
