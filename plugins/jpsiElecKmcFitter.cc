@@ -1574,8 +1574,7 @@ Float_t jpsiElecKmcFitter::ElectronRelIso(const pat::Electron& el)
 Float_t jpsiElecKmcFitter::GsfEleRelPFIsoScaledCut(const pat::Electron& el){
 
   // Establish the cut value
-  reco::GsfElectronPtr ele(cand);
-  double absEta = std::abs(ele->superCluster()->eta());
+  double absEta = std::abs(el->superCluster()->eta());
   
   // Compute the combined isolation with effective area correction
   auto pfIso = el->pfIsolationVariables();
