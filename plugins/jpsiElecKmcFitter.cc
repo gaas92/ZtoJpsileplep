@@ -1178,6 +1178,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patL1.addUserFloat("dIP3D"	,tkPVdistel1.second.value());
             patL1.addUserFloat("dIP3DErr"	,tkPVdistel1.second.error());
                 
+
+            // WARNIG THIS IS NOT CORRECT     
             if (ElectronRelIso(*lept1) > (0.5 + 0.506/lept1->pt())) continue;
             if (ElectronRelIso(*lept2) > (0.5 + 0.506/lept2->pt())) continue;
 
@@ -1351,9 +1353,9 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patL2.addUserFloat("trackMomentumAtVtx"   , sqrt(lept2->trackMomentumAtVtx().mag2()));
             patL2.addUserFloat("ecalEnergy"           , lept2->ecalEnergy());
             patL2.addUserFloat("passConversionVeto"   , lept2->passConversionVeto());
- 
-            std::cout << "iso: " << GsfEleRelPFIsoScaledCut(*lept2)/lept2->pt() << std::endl;
-
+            
+            std::cout << "iso/pT 1: " << GsfEleRelPFIsoScaledCut(*lept1)/lept1->pt() << std::endl;
+            std::cout << "iso/pT 2: " << GsfEleRelPFIsoScaledCut(*lept2)/lept2->pt() << "\n" << std::endl;
             patL2.addUserFloat("dPhiInSeed" , lept2->deltaPhiSuperClusterTrackAtVtx());
             patL2.addUserFloat("dEtaInSeed" , getEtaInSeed( *lept2 )) ;
             patL2.addUserFloat("SigmaIEtaIEta" ,lept2->full5x5_sigmaIetaIeta());
