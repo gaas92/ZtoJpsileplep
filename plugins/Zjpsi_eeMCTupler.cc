@@ -574,7 +574,7 @@ Zjpsi_eeMCTupler::Zjpsi_eeMCTupler(const edm::ParameterSet & iConfig):
 
     Z_tree->Branch("ZLe1Qid",         &ZLe1Qid,  "ZLe1Qid/i");
     
-    Z_tree->Branch("ZLe1dRIsoEA",               &ZLe1dRIsoEA,              "ZLe1dRIsoEA/i");
+    Z_tree->Branch("ZLe1dRIsoEA",               &ZLe1dRIsoEA,              "ZLe1dRIsoEA/F");
     //Z_tree->Branch("ZLe1trackMomentumAtVtx",    &ZLe1trackMomentumAtVtx,   "ZLe1trackMomentumAtVtx/i");
     //Z_tree->Branch("ZLe1ecalEnergy",            &ZLe1ecalEnergy,           "ZLe1ecalEnergy/i");
     //Z_tree->Branch("ZLe1full5x5_sigmaIetaIeta", &ZLe1full5x5_sigmaIetaIeta,"ZLe1full5x5_sigmaIetaIeta/i");
@@ -584,18 +584,18 @@ Zjpsi_eeMCTupler::Zjpsi_eeMCTupler(const edm::ParameterSet & iConfig):
     //Z_tree->Branch("ZLe1ooEmooP",               &ZLe1ooEmooP,              "ZLe1ooEmooP/i");
     //Z_tree->Branch("ZLe1passConversionVeto",    &ZLe1passConversionVeto,   "ZLe1passConversionVeto/i");
 
-    Z_tree->Branch("ZLe1etaSC"                , &ZLe1etaSC                , "ZLe1etaSC/i"                );
-    Z_tree->Branch("ZLe1full5x5_sigmaIetaIeta", &ZLe1full5x5_sigmaIetaIeta, "ZLe1full5x5_sigmaIetaIeta/i");
-    Z_tree->Branch("ZLe1dEtaIn"               , &ZLe1dEtaIn               , "ZLe1dEtaIn/i"               );
-    Z_tree->Branch("ZLe1dPhiIn"               , &ZLe1dPhiIn               , "ZLe1dPhiIn/i"               );
-    Z_tree->Branch("ZLe1E_sc"                 , &ZLe1E_sc                 , "ZLe1E_sc/i"                 );
-    Z_tree->Branch("ZLe1rho"                  , &ZLe1rho                  , "ZLe1rho/i"                  );
-    Z_tree->Branch("ZLe1HoE"                  , &ZLe1HoE                  , "ZLe1HoE/i"                  );
-    Z_tree->Branch("ZLe1dRIsoEA_v2"           , &ZLe1dRIsoEA_v2           , "ZLe1dRIsoEA_v2/i"           );
-    Z_tree->Branch("ZLe1ooEmooP"              , &ZLe1ooEmooP              , "ZLe1ooEmooP/i"              );
-    Z_tree->Branch("ZLe1trackMomentumAtVtx"   , &ZLe1trackMomentumAtVtx   , "ZLe1trackMomentumAtVtx/i"   );
-    Z_tree->Branch("ZLe1ecalEnergy"           , &ZLe1ecalEnergy           , "ZLe1ecalEnergy/i"           );
-    Z_tree->Branch("ZLe1passConversionVeto"   , &ZLe1passConversionVeto   , "ZLe1passConversionVeto/i"   );
+    Z_tree->Branch("ZLe1etaSC"                , &ZLe1etaSC                , "ZLe1etaSC/F"                );
+    Z_tree->Branch("ZLe1full5x5_sigmaIetaIeta", &ZLe1full5x5_sigmaIetaIeta, "ZLe1full5x5_sigmaIetaIeta/F");
+    Z_tree->Branch("ZLe1dEtaIn"               , &ZLe1dEtaIn               , "ZLe1dEtaIn/F"               );
+    Z_tree->Branch("ZLe1dPhiIn"               , &ZLe1dPhiIn               , "ZLe1dPhiIn/F"               );
+    Z_tree->Branch("ZLe1E_sc"                 , &ZLe1E_sc                 , "ZLe1E_sc/F"                 );
+    Z_tree->Branch("ZLe1rho"                  , &ZLe1rho                  , "ZLe1rho/F"                  );
+    Z_tree->Branch("ZLe1HoE"                  , &ZLe1HoE                  , "ZLe1HoE/F"                  );
+    Z_tree->Branch("ZLe1dRIsoEA_v2"           , &ZLe1dRIsoEA_v2           , "ZLe1dRIsoEA_v2/F"           );
+    Z_tree->Branch("ZLe1ooEmooP"              , &ZLe1ooEmooP              , "ZLe1ooEmooP/F"              );
+    Z_tree->Branch("ZLe1trackMomentumAtVtx"   , &ZLe1trackMomentumAtVtx   , "ZLe1trackMomentumAtVtx/F"   );
+    Z_tree->Branch("ZLe1ecalEnergy"           , &ZLe1ecalEnergy           , "ZLe1ecalEnergy/F"           );
+    Z_tree->Branch("ZLe1passConversionVeto"   , &ZLe1passConversionVeto   , "ZLe1passConversionVeto/F"   );
 
 
     Z_tree->Branch("ZLe1_TrackerLWM",         &ZLe1_TrackerLWM,  "ZLe1_TrackerLWM/i");
@@ -608,7 +608,7 @@ Zjpsi_eeMCTupler::Zjpsi_eeMCTupler(const edm::ParameterSet & iConfig):
 
     Z_tree->Branch("ZLe2Qid",         &ZLe2Qid,  "ZLe2Qid/i");
 
-    Z_tree->Branch("ZLe2dRIsoEA",               &ZLe2dRIsoEA,              "ZLe2dRIsoEA/i");
+    Z_tree->Branch("ZLe2dRIsoEA",               &ZLe2dRIsoEA,              "ZLe2dRIsoEA/F");
     //Z_tree->Branch("ZLe2trackMomentumAtVtx",    &ZLe2trackMomentumAtVtx,   "ZLe2trackMomentumAtVtx/i");
     //Z_tree->Branch("ZLe2ecalEnergy",            &ZLe2ecalEnergy,           "ZLe2ecalEnergy/i");
     //Z_tree->Branch("ZLe2full5x5_sigmaIetaIeta", &ZLe2full5x5_sigmaIetaIeta,"ZLe2full5x5_sigmaIetaIeta/i");
@@ -618,18 +618,18 @@ Zjpsi_eeMCTupler::Zjpsi_eeMCTupler(const edm::ParameterSet & iConfig):
     //Z_tree->Branch("ZLe2ooEmooP",               &ZLe2ooEmooP,              "ZLe2ooEmooP/i");
     //Z_tree->Branch("ZLe2passConversionVeto",    &ZLe2passConversionVeto,   "ZLe2passConversionVeto/i");
     
-    Z_tree->Branch("ZLe2etaSC"                , &ZLe2etaSC                , "ZLe2etaSC/i"                );
-    Z_tree->Branch("ZLe2full5x5_sigmaIetaIeta", &ZLe2full5x5_sigmaIetaIeta, "ZLe2full5x5_sigmaIetaIeta/i");
-    Z_tree->Branch("ZLe2dEtaIn"               , &ZLe2dEtaIn               , "ZLe2dEtaIn/i"               );
-    Z_tree->Branch("ZLe2dPhiIn"               , &ZLe2dPhiIn               , "ZLe2dPhiIn/i"               );
-    Z_tree->Branch("ZLe2E_sc"                 , &ZLe2E_sc                 , "ZLe2E_sc/i"                 );
-    Z_tree->Branch("ZLe2rho"                  , &ZLe2rho                  , "ZLe2rho/i"                  );
-    Z_tree->Branch("ZLe2HoE"                  , &ZLe2HoE                  , "ZLe2HoE/i"                  );
-    Z_tree->Branch("ZLe2dRIsoEA_v2"           , &ZLe2dRIsoEA_v2           , "ZLe2dRIsoEA_v2/i"           );
-    Z_tree->Branch("ZLe2ooEmooP"              , &ZLe2ooEmooP              , "ZLe2ooEmooP/i"              );
-    Z_tree->Branch("ZLe2trackMomentumAtVtx"   , &ZLe2trackMomentumAtVtx   , "ZLe2trackMomentumAtVtx/i"   );
-    Z_tree->Branch("ZLe2ecalEnergy"           , &ZLe2ecalEnergy           , "ZLe2ecalEnergy/i"           );
-    Z_tree->Branch("ZLe2passConversionVeto"   , &ZLe2passConversionVeto   , "ZLe2passConversionVeto/i"   );
+    Z_tree->Branch("ZLe2etaSC"                , &ZLe2etaSC                , "ZLe2etaSC/F"                );
+    Z_tree->Branch("ZLe2full5x5_sigmaIetaIeta", &ZLe2full5x5_sigmaIetaIeta, "ZLe2full5x5_sigmaIetaIeta/F");
+    Z_tree->Branch("ZLe2dEtaIn"               , &ZLe2dEtaIn               , "ZLe2dEtaIn/F"               );
+    Z_tree->Branch("ZLe2dPhiIn"               , &ZLe2dPhiIn               , "ZLe2dPhiIn/F"               );
+    Z_tree->Branch("ZLe2E_sc"                 , &ZLe2E_sc                 , "ZLe2E_sc/F"                 );
+    Z_tree->Branch("ZLe2rho"                  , &ZLe2rho                  , "ZLe2rho/F"                  );
+    Z_tree->Branch("ZLe2HoE"                  , &ZLe2HoE                  , "ZLe2HoE/F"                  );
+    Z_tree->Branch("ZLe2dRIsoEA_v2"           , &ZLe2dRIsoEA_v2           , "ZLe2dRIsoEA_v2/F"           );
+    Z_tree->Branch("ZLe2ooEmooP"              , &ZLe2ooEmooP              , "ZLe2ooEmooP/F"              );
+    Z_tree->Branch("ZLe2trackMomentumAtVtx"   , &ZLe2trackMomentumAtVtx   , "ZLe2trackMomentumAtVtx/F"   );
+    Z_tree->Branch("ZLe2ecalEnergy"           , &ZLe2ecalEnergy           , "ZLe2ecalEnergy/F"           );
+    Z_tree->Branch("ZLe2passConversionVeto"   , &ZLe2passConversionVeto   , "ZLe2passConversionVeto/F"   );
 
 
 
@@ -664,20 +664,20 @@ Zjpsi_eeMCTupler::Zjpsi_eeMCTupler(const edm::ParameterSet & iConfig):
     Z_tree->Branch("l1_ecalTrkEnergyPreCorr",     &l1_ecalTrkEnergyPreCorr,     "l1_ecalTrkEnergyPreCorr/F"    );
     Z_tree->Branch("l1_ecalTrkEnergyErrPreCorr",  &l1_ecalTrkEnergyErrPreCorr,  "l1_ecalTrkEnergyErrPreCorr/F" );
     Z_tree->Branch("l1_ecalTrkEnergyPostCorr",    &l1_ecalTrkEnergyPostCorr,    "l1_ecalTrkEnergyPostCorr/F"   );
-    Z_tree->Branch("l1_ecalTrkEnergyErrPostCorr", &l1_ecalTrkEnergyErrPostCorr, "l1_ecalTrkEnergyErrPostCorr"  );
-    Z_tree->Branch("l1_energyScaleValue",         &l1_energyScaleValue,         "l1_energyScaleValue"          );
-    Z_tree->Branch("l1_energySigmaValue",         &l1_energySigmaValue,         "l1_energySigmaValue"          );
+    Z_tree->Branch("l1_ecalTrkEnergyErrPostCorr", &l1_ecalTrkEnergyErrPostCorr, "l1_ecalTrkEnergyErrPostCorr/F"  );
+    Z_tree->Branch("l1_energyScaleValue",         &l1_energyScaleValue,         "l1_energyScaleValue/F"          );
+    Z_tree->Branch("l1_energySigmaValue",         &l1_energySigmaValue,         "l1_energySigmaValue/F"          );
     
-    Z_tree->Branch("l2_ecalEnergyPreCorr",        &l2_ecalEnergyPreCorr,        "l2_ecalEnergyPreCorr"         );
-    Z_tree->Branch("l2_ecalEnergyErrPreCorr",     &l2_ecalEnergyErrPreCorr,     "l2_ecalEnergyErrPreCorr"      );
-    Z_tree->Branch("l2_ecalEnergyPostCorr",       &l2_ecalEnergyPostCorr,       "l2_ecalEnergyPostCorr"        );
-    Z_tree->Branch("l2_ecalEnergyErrPostCorr",    &l2_ecalEnergyErrPostCorr,    "l2_ecalEnergyErrPostCorr"     );
-    Z_tree->Branch("l2_ecalTrkEnergyPreCorr",     &l2_ecalTrkEnergyPreCorr,     "l2_ecalTrkEnergyPreCorr"      );
-    Z_tree->Branch("l2_ecalTrkEnergyErrPreCorr",  &l2_ecalTrkEnergyErrPreCorr,  "l2_ecalTrkEnergyErrPreCorr"   );
-    Z_tree->Branch("l2_ecalTrkEnergyPostCorr",    &l2_ecalTrkEnergyPostCorr,    "l2_ecalTrkEnergyPostCorr"     );
-    Z_tree->Branch("l2_ecalTrkEnergyErrPostCorr", &l2_ecalTrkEnergyErrPostCorr, "l2_ecalTrkEnergyErrPostCorr"  );
-    Z_tree->Branch("l2_energyScaleValue",         &l2_energyScaleValue,         "l2_energyScaleValue"          );
-    Z_tree->Branch("l2_energySigmaValue",         &l2_energySigmaValue,         "l2_energySigmaValue"          );
+    Z_tree->Branch("l2_ecalEnergyPreCorr",        &l2_ecalEnergyPreCorr,        "l2_ecalEnergyPreCorr/F"         );
+    Z_tree->Branch("l2_ecalEnergyErrPreCorr",     &l2_ecalEnergyErrPreCorr,     "l2_ecalEnergyErrPreCorr/F"      );
+    Z_tree->Branch("l2_ecalEnergyPostCorr",       &l2_ecalEnergyPostCorr,       "l2_ecalEnergyPostCorr/F"        );
+    Z_tree->Branch("l2_ecalEnergyErrPostCorr",    &l2_ecalEnergyErrPostCorr,    "l2_ecalEnergyErrPostCorr/F"     );
+    Z_tree->Branch("l2_ecalTrkEnergyPreCorr",     &l2_ecalTrkEnergyPreCorr,     "l2_ecalTrkEnergyPreCorr/F"      );
+    Z_tree->Branch("l2_ecalTrkEnergyErrPreCorr",  &l2_ecalTrkEnergyErrPreCorr,  "l2_ecalTrkEnergyErrPreCorr/F"   );
+    Z_tree->Branch("l2_ecalTrkEnergyPostCorr",    &l2_ecalTrkEnergyPostCorr,    "l2_ecalTrkEnergyPostCorr/F"     );
+    Z_tree->Branch("l2_ecalTrkEnergyErrPostCorr", &l2_ecalTrkEnergyErrPostCorr, "l2_ecalTrkEnergyErrPostCorr/F"  );
+    Z_tree->Branch("l2_energyScaleValue",         &l2_energyScaleValue,         "l2_energyScaleValue/F"          );
+    Z_tree->Branch("l2_energySigmaValue",         &l2_energySigmaValue,         "l2_energySigmaValue/F"          );
  
     
     
