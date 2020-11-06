@@ -1201,11 +1201,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patL1.addUserFloat("dPhiIn"               , lept1->deltaPhiSuperClusterTrackAtVtx()); //https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleDPhiInCut.cc#L41
             patL1.addUserFloat("E_sc"                 , lept1->superCluster()->energy());
             patL1.addUserFloat("rho"                  , *rhoH);
-            std::cout << " RHO " << (float)(*rhoH) << std::endl;
             patL1.addUserFloat("HoE"                  , lept1->hadronicOverEm()); // https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleHadronicOverEMEnergyScaledCut.cc#L58
-            
-            //new isoEA needed, work in progress https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleRelPFIsoScaledCut.cc#L57
-
+            patL1.addUserFloat("dRIsoEA_v2",GsfEleRelPFIsoScaledCut(*lept1) ) https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleRelPFIsoScaledCut.cc#L57
             patL1.addUserFloat("ooEmooP"              , std::abs(1.0 - lept1->eSuperClusterOverP())*(1.0/lept1->ecalEnergy())); //https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleEInverseMinusPInverseCut.cc#L43-L45
             patL1.addUserFloat("trackMomentumAtVtx"   , sqrt(lept1->trackMomentumAtVtx().mag2()));
             patL1.addUserFloat("ecalEnergy"           , lept1->ecalEnergy());
@@ -1350,9 +1347,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patL2.addUserFloat("E_sc"                 , lept2->superCluster()->energy());
             patL2.addUserFloat("rho"                  , *rhoH);
             patL2.addUserFloat("HoE"                  , lept2->hadronicOverEm()); // https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleHadronicOverEMEnergyScaledCut.cc#L58
-            
-            //new isoEA needed, work in progress https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleRelPFIsoScaledCut.cc#L57
-
+            patL1.addUserFloat("dRIsoEA_v2",GsfEleRelPFIsoScaledCut(*lept2) ) https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleRelPFIsoScaledCut.cc#L57
             patL2.addUserFloat("ooEmooP"              ,  std::abs(1.0 - lept2->eSuperClusterOverP())*(1.0/lept2->ecalEnergy())); //https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleEInverseMinusPInverseCut.cc#L43-L45
             patL2.addUserFloat("trackMomentumAtVtx"   , sqrt(lept2->trackMomentumAtVtx().mag2()));
             patL2.addUserFloat("ecalEnergy"           , lept2->ecalEnergy());
@@ -1573,6 +1568,28 @@ Float_t jpsiElecKmcFitter::ElectronRelIso(const pat::Electron& el)
 }
 Float_t jpsiElecKmcFitter::GsfEleRelPFIsoScaledCut(const pat::Electron& el){
 
+
+  // taken from https://github.com/cms-sw/cmssw/blob/CMSSW_9_4_X/RecoEgamma/ElectronIdentification/data/Fall17/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_92X.txt
+  // 92X version ....
+  /*
+  # This file contains Effective Area constants for 
+  # computing pile-up corrections for the neutral hadron and photon
+  # isolation for an electron object.
+  #   Documentation:
+  # 
+  #   https://indico.cern.ch/event/662749/contributions/2763091/attachments/1545124/2424854/talk_electron_ID_fall17.pdf
+  # 
+  #  The effective areas are based on 90% efficient contours
+  #
+  # |eta| min   |eta| max   effective area
+  0.0000         1.0000        0.1566
+  1.0000         1.4790        0.1626
+  1.4790         2.0000        0.1073
+  2.0000         2.2000        0.0854
+  2.2000         2.3000        0.1051
+  2.3000         2.4000        0.1204
+  2.4000         5.0000        0.1524
+  */
   // Establish the cut value
   double absEta = std::abs(el.superCluster()->eta());
   
@@ -1581,7 +1598,14 @@ Float_t jpsiElecKmcFitter::GsfEleRelPFIsoScaledCut(const pat::Electron& el){
   const float chad = pfIso.sumChargedHadronPt;
   const float nhad = pfIso.sumNeutralHadronEt;
   const float pho  = pfIso.sumPhotonEt;
-  const float  eA  = 1;//effectiveAreas_.getEffectiveArea(absEta);
+  const float  eA;//effectiveAreas_.getEffectiveArea(absEta);
+  if (absEta < 1) eA = 0.1566;
+  else if (absEta < 1.4790) eA = 0.1626;
+  else if (absEta < 2.0000) eA = 0.1073;
+  else if (absEta < 2.2000) eA = 0.0854;
+  else if (absEta < 2.3000) eA = 0.1051;
+  else if (absEta < 2.4000) eA = 0.1204;
+  else if (absEta < 5.0000) eA = 0.1524;
   const float rho  = rhoH.isValid() ? (float)(*rhoH) : 0; // std::max likes float arguments
   const float iso  = chad + std::max(0.0f, nhad + pho - rho*eA);
   return iso;
