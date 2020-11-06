@@ -792,7 +792,6 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             try{
                 LLTTks.push_back(theTTBuilder->build(&dilepTk[0]));
                 LLTTks.push_back(theTTBuilder->build(&dilepTk[1]));
-                std::cout << "ok" << std::endl;
             }
             catch (...){
                 std::cout<<"Bad electron, i.e. no track" << std::endl;
@@ -941,7 +940,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             float mu1Pz_fit;
           
             if (!child){
-                std::cout << "Mu1" << std::endl;
+                //std::cout << "Mu1" << std::endl;
                 mu1M_fit  = 0;
                 mu1Q_fit  = 0;
                 mu1Px_fit = 0;
@@ -1004,7 +1003,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             float mu2Pz_fit;
           
             if (!child){
-                std::cout << "Mu2" << std::endl;
+                //std::cout << "Mu2" << std::endl;
                 mu2M_fit  = 0;
                 mu2Q_fit  = 0;
                 mu2Px_fit = 0;
@@ -1377,7 +1376,6 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patL2.addUserFloat("lept2Ele25wpT_", lept2Ele25wpT);
             patL2.addUserFloat("lept2Ele23_12_", lept2Ele23_12);
             patL2.addUserFloat("lept2Mu8DiEle12_", lept2Mu8DiEle12);
-            std::cout << "works 1071" << std::endl;
             
             ///MONTECARLO
             reco::CompositeCandidate mc_Z(0, math::XYZTLorentzVector(gen_z_p4.Px(), gen_z_p4.Py(), gen_z_p4.Pz(),
@@ -1429,10 +1427,10 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             Event_Cand++;
                 
             ZCandColl->push_back(patZ);
-            std::cout<< "something has been pushed"	<< std::endl;
+            //std::cout<< "something has been pushed"	<< std::endl;
             
             ZCandColl->push_back(patZ);
-            std::cout << "Fill "<< std::endl;
+            //std::cout << "Fill "<< std::endl;
 			//} Z candidate is valid
 
 	    }
