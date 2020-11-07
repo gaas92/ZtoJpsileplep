@@ -399,40 +399,40 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
       // Muon 1 (from Jpsi)
       if ( muon1->isGlobalMuon()){
         ZMu1Qid = 1;
-        std::cout << "1L is Global" << std::endl;
+        //std::cout << "1L is Global" << std::endl;
       }
       if ( muon1->isLooseMuon()){
         ZMu1Qid += 10;
-        std::cout << "1L is Loose " << std::endl;
+        //std::cout << "1L is Loose " << std::endl;
       }
       if ( muon1->isMediumMuon()){
         ZMu1Qid += 100;
-        std::cout << "1L is Medium " << std::endl;
+        //std::cout << "1L is Medium " << std::endl;
       }
       if ( muon1->isTightMuon(*PV)){
         ZMu1Qid += 1000;
-        std::cout << "1L is Tight " << std::endl;
+        //std::cout << "1L is Tight " << std::endl;
       }
       if ( muon1->isSoftMuon(*PV)){
         ZMu1Qid += 10000;
-        std::cout << "1L is Soft " << std::endl;
+        //std::cout << "1L is Soft " << std::endl;
       }
       if ( muon1->isHighPtMuon(*PV)){
         ZMu1Qid += 100000;
-        std::cout << "1L is HighPt " << std::endl;
+        //std::cout << "1L is HighPt " << std::endl;
       }
       if ( muon1->isPFMuon()){
         ZMu1Qid += 1000000;
-        std::cout << "1L is ParticleFlow " << std::endl;
+        //std::cout << "1L is ParticleFlow " << std::endl;
       }
       if ( muon1->isTrackerMuon()){
         ZMu1Qid += 10000000;
-        std::cout << "1L is Tracker Muon " << std::endl;
+        //std::cout << "1L is Tracker Muon " << std::endl;
       }
-      if (ZMu1Qid > 0){
-        std::cout << "Binary is  : " << ZMu1Qid << "\n" << std::endl;
+      //if (ZMu1Qid > 0){
+      //  std::cout << "Binary is  : " << ZMu1Qid << "\n" << std::endl;
         //std::cout << "Decimal is : " << ZLe1Qid  << " or " << convertBinaryToDecimal(ZLe1Qid_n) << "\n" << std::endl;
-      }  
+      //}  
       // Muon 2 (from Jpsi)
       if ( muon2->isGlobalMuon()){
       ZMu2Qid = 1;
@@ -460,11 +460,11 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
       }
       if ( muon2->isPFMuon()){
       ZMu2Qid += 1000000;
-      //std::cout << "2L is Global " << std::endl;
+      //std::cout << "2L is PF  " << std::endl;
       }
       if ( muon2->isTrackerMuon()){
       ZMu2Qid += 10000000;
-      //  std::cout << "1L is HighPt " << std::endl;
+      //  std::cout << "1L is Tracker Muon " << std::endl;
       }
       int psiM1_TrackerLWM = muon1->muonBestTrack()->hitPattern().trackerLayersWithMeasurement();
       int psiM1_PixelLWM   = muon1->muonBestTrack()->hitPattern().pixelLayersWithMeasurement();
