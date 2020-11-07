@@ -427,7 +427,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
       }
       if ( muon1->isTrackerMuon()){
         ZMu1Qid += 10000000;
-        std::cout << "1L is HighPt " << std::endl;
+        std::cout << "1L is Tracker Muon " << std::endl;
       }
       if (ZMu1Qid > 0){
         std::cout << "Binary is  : " << ZMu1Qid << "\n" << std::endl;
