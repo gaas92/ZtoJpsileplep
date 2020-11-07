@@ -430,7 +430,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
         std::cout << "1L is HighPt " << std::endl;
       }
       if (ZMu1Qid > 0){
-        std::cout << "Binary is  : " << ZMu1Qid << std::endl;
+        std::cout << "Binary is  : " << ZMu1Qid << "\n" << std::endl;
         //std::cout << "Decimal is : " << ZLe1Qid  << " or " << convertBinaryToDecimal(ZLe1Qid_n) << "\n" << std::endl;
       }  
       // Muon 2 (from Jpsi)
