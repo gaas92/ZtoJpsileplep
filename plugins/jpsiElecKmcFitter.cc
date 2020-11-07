@@ -398,37 +398,41 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
       int ZMu2Qid = 0;
       // Muon 1 (from Jpsi)
       if ( muon1->isGlobalMuon()){
-          ZMu1Qid = 1;
-          //std::cout << "1L is Global" << std::endl;
+        ZMu1Qid = 1;
+        std::cout << "1L is Global" << std::endl;
       }
       if ( muon1->isLooseMuon()){
-      ZMu1Qid += 10;
-      // std::cout << "1L is Loose " << std::endl;
+        ZMu1Qid += 10;
+        std::cout << "1L is Loose " << std::endl;
       }
       if ( muon1->isMediumMuon()){
-      ZMu1Qid += 100;
-      //  std::cout << "1L is Medium " << std::endl;
+        ZMu1Qid += 100;
+        std::cout << "1L is Medium " << std::endl;
       }
       if ( muon1->isTightMuon(*PV)){
-      ZMu1Qid += 1000;
-      //  std::cout << "1L is Tight " << std::endl;
+        ZMu1Qid += 1000;
+        std::cout << "1L is Tight " << std::endl;
       }
       if ( muon1->isSoftMuon(*PV)){
-      ZMu1Qid += 10000;
-      //  std::cout << "1L is Soft " << std::endl;
+        ZMu1Qid += 10000;
+        std::cout << "1L is Soft " << std::endl;
       }
       if ( muon1->isHighPtMuon(*PV)){
-      ZMu1Qid += 100000;
-      //  std::cout << "1L is HighPt " << std::endl;
+        ZMu1Qid += 100000;
+        std::cout << "1L is HighPt " << std::endl;
       }
       if ( muon1->isPFMuon()){
-      ZMu1Qid += 1000000;
-      //    std::cout << "1L is ParticleFlow " << std::endl;
+        ZMu1Qid += 1000000;
+        std::cout << "1L is ParticleFlow " << std::endl;
       }
       if ( muon1->isTrackerMuon()){
-      ZMu1Qid += 10000000;
-      //  std::cout << "1L is HighPt " << std::endl;
+        ZMu1Qid += 10000000;
+        std::cout << "1L is HighPt " << std::endl;
       }
+      if (ZMu1Qid > 0){
+        std::cout << "Binary is  : " << ZMu1Qid << std::endl;
+        //std::cout << "Decimal is : " << ZLe1Qid  << " or " << convertBinaryToDecimal(ZLe1Qid_n) << "\n" << std::endl;
+      }  
       // Muon 2 (from Jpsi)
       if ( muon2->isGlobalMuon()){
       ZMu2Qid = 1;
@@ -572,49 +576,49 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
  	        // Lepton 1 (from Z) 2016 promt & legacy
  	        if ( lept1->electronID("cutBasedElectronID-Summer16-80X-V1-veto")==1 ){
                    ZLe1Qid_n += 1;
-                   std::cout << "1L is  80X veto Electron" << std::endl;
+                   //std::cout << "1L is  80X veto Electron" << std::endl;
                 }
 	        if ( lept1->electronID("cutBasedElectronID-Summer16-80X-V1-loose")==1 ){
                    ZLe1Qid_n += 10;
-                   std::cout << "1L is 80X loose " << std::endl;
+                   //std::cout << "1L is 80X loose " << std::endl;
                 }
             if ( lept1->electronID("cutBasedElectronID-Summer16-80X-V1-medium")==1 ){
                    ZLe1Qid_n += 100;
-                   std::cout << "1L is 80X Medium " << std::endl;
+                   //std::cout << "1L is 80X Medium " << std::endl;
                 }
 		    if ( lept1->electronID("cutBasedElectronID-Summer16-80X-V1-tight")==1 ){
                    ZLe1Qid_n += 1000;
-                   std::cout << "1L is 80X Tight " << std::endl;
+                   //std::cout << "1L is 80X Tight " << std::endl;
                 }
           
             if ( lept1->electronID("mvaEleID-Spring16-GeneralPurpose-V1-wp80")==1 ){
                    ZLe1Qid_n += 10000;
-                   std::cout << "1L is  80X V1 wp80" << std::endl;
+                   //std::cout << "1L is  80X V1 wp80" << std::endl;
                 }
             if ( lept1->electronID("mvaEleID-Spring16-GeneralPurpose-V1-wp90")==1 ){
                    ZLe1Qid_n += 100000;
-                   std::cout << "1L is 80X V1 wp90 " << std::endl;
+                   //std::cout << "1L is 80X V1 wp90 " << std::endl;
                 }
             // 2016 Legacy MiniAOD V2
             if ( lept1->electronID("cutBasedElectronID-Fall17-94X-V2-loose")==1 ){
                    ZLe1Qid_n += 1000000;
-                   std::cout << "1L is 94X loose " << std::endl;
+                   //std::cout << "1L is 94X loose " << std::endl;
                 }
             if ( lept1->electronID("cutBasedElectronID-Fall17-94X-V2-medium")==1 ){
                    ZLe1Qid_n += 10000000;
-                   std::cout << "1L is 94X medium " << std::endl;
+                   //std::cout << "1L is 94X medium " << std::endl;
                 }
             if ( lept1->electronID("cutBasedElectronID-Fall17-94X-V2-tight")==1 ){
                    ZLe1Qid_n += 100000000;
-                   std::cout << "1L is 94X tight " << std::endl;
+                   //std::cout << "1L is 94X tight " << std::endl;
                 }
             if ( lept1->electronID("mvaEleID-Fall17-iso-V2-wp80")==1 ){
                    ZLe1Qid_n += 1000000000;
-                   std::cout << "1L is 94X iso V2 wp80 " << std::endl;
+                   //std::cout << "1L is 94X iso V2 wp80 " << std::endl;
                 }
             if ( lept1->electronID("mvaEleID-Fall17-iso-V2-wp90")==1 ){
                    ZLe1Qid_n += 10000000000;
-                   std::cout << "1L is 94X iso V2 wp90 " << std::endl;
+                   //std::cout << "1L is 94X iso V2 wp90 " << std::endl;
                 }
 //////////////////////////////////////////////////////////////////////////////////////////
  	        // Lepton 2 (from Z)
@@ -669,10 +673,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
    
             ZLe1Qid = convertBinaryToDecimal(ZLe1Qid_n);
             ZLe2Qid = convertBinaryToDecimal(ZLe2Qid_n);
-            if (ZLe1Qid_n > 0){
-                std::cout << "Binary is  : " << ZLe1Qid_n << std::endl;
-                std::cout << "Decimal is : " << ZLe1Qid  << " or " << convertBinaryToDecimal(ZLe1Qid_n) << std::endl;
-            }  
+
             int ZLe1_TrackerLWM = lept1->gsfTrack()->hitPattern().trackerLayersWithMeasurement();
             int ZLe1_PixelLWM   = lept1->gsfTrack()->hitPattern().pixelLayersWithMeasurement();
             int ZLe1_ValPixHit  = lept1->gsfTrack()->hitPattern().numberOfValidPixelHits();
