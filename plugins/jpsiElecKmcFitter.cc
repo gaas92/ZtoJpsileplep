@@ -1184,9 +1184,9 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patL1.addUserFloat("dIP3DErr"	,tkPVdistel1.second.error());
                 
 
-            // WARNIG THIS IS NOT CORRECT     
-            if (ElectronRelIso(*lept1) > (0.5 + 0.506/lept1->pt())) continue;
-            if (ElectronRelIso(*lept2) > (0.5 + 0.506/lept2->pt())) continue;
+            // WARNIG HOPEFULLY THIS IS  CORRECT     
+            if (GsfEleRelPFIsoScaledCut(*lept1) > (1.0 + 1.0/lept1->pt())) continue;
+            if (GsfEleRelPFIsoScaledCut(*lept2) > (1.0 + 1.0/lept2->pt())) continue;
 
                 
             patL1.addUserFloat("dRIsoEA", ElectronRelIso(*lept1));
