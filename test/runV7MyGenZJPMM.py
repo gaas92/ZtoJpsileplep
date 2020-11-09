@@ -121,7 +121,23 @@ process.source = cms.Source("PoolSource",
 
 )
 
+process.TFileService = cms.Service("TFileService",
+        fileName = cms.string('Zjpsi_only_gen.root'),
+)
 
+
+
+process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True))
+
+
+process.Zfitter = cms.EDAnalyzer('Zjpsi_onlyMC_rec',
+                        GenParticles = cms.InputTag("prunedGenParticles"),
+                        packedGenParticles = cms.InputTag("packedGenParticles")
+           )
+
+process.p = cms.Path(process.Zfitter)
+
+"""
 process.TFileService = cms.Service("TFileService",
         fileName = cms.string('Zjpsi_mumu_v7.root'),
 )
@@ -192,3 +208,4 @@ process.oniaSequence = cms.Sequence(process.onia2MuMuPAT) ##No trigger matching 
 process.leptonSequence = cms.Sequence(process.Zfitter)
 
 process.p = cms.Path(process.muonFilter*process.oniaSequence*process.leptonSequence*process.oniarootupler)
+"""
