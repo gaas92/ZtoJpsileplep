@@ -79,10 +79,10 @@ def main():
         config.Data.inputDataset = None
 	config.Data.inputDBS = 'global'
    #     config.Data.splitting = 'Automatic'
-   #     config.Data.splitting = 'LumiBased'
-        config.Data.splitting = 'FileBased'
-   #     config.Data.unitsPerJob = 30
-        config.Data.unitsPerJob = 1
+        config.Data.splitting = 'LumiBased'
+   #     config.Data.splitting = 'FileBased'
+        config.Data.unitsPerJob = 30
+   #     config.Data.unitsPerJob = 1
    #     config.Data.totalUnits = 30
 	#config.Data.lumiMask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions18/13TeV/ReReco/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON_MuonPhys.txt' #has nosence in Mc
 	config.Data.publication = True
@@ -478,7 +478,8 @@ def main():
  
         for inDS in inputDatasets:
              # inDS is of the form /A/B/C. Since B is unique for each inDS, use this in the CRAB request name.
-            config.General.requestName = (inDS.split('/')[2]).split('-')[0]+(inDS.split('/')[2]).split('-')[-1]
+            #config.General.requestName = (inDS.split('/')[2]).split('-')[0]+(inDS.split('/')[2]).split('-')[-1]
+            config.General.requestName = 'job'+(inDS.split('/')[-1]).split('_')[.1].replace('.root', '')
             config.Data.inputDataset = inDS
             config.Data.outputDatasetTag = '%s_%s' % (config.General.workArea, config.General.requestName)
             # Submit.
