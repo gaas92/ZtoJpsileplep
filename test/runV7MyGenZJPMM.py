@@ -16,7 +16,7 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc')
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-        "root:://cmseos.fnal.gov//eos/uscms/store/user/gabaasz/Zpsi_mm_MINIAODSIM-BPH-FW/PrivateMC-2018-ZtoJpsiMuMu/crab_PrivateMC-2018-ZtoJpsiMuMu-2020-11-10-06-50/201110_055117/0000/step3-MINIAODSIM-ZtoJpsiMuMu_BPH-FW-result_100.root"
+        'root:://cmseos.fnal.gov//store/user/gabaasz/Zpsi_mm_MINIAODSIM-BPH-FW/PrivateMC-2018-ZtoJpsiMuMu/crab_PrivateMC-2018-ZtoJpsiMuMu-2020-11-10-06-50/201110_055117/0000/step3-MINIAODSIM-ZtoJpsiMuMu_BPH-FW-result_100.root'
         #"root:://cmseos.fnal.gov//eos/uscms/store/user/gabaasz/Zpsi_mm_MINIAODSIM-BPH-FW/PrivateMC-2018-ZtoJpsiMuMu/crab_PrivateMC-2018-ZtoJpsiMuMu-2020-11-10-06-50/201110_055117/0000/step3-MINIAODSIM-ZtoJpsiMuMu_BPH-FW-result_101.root",
         #"root:://cmseos.fnal.gov//eos/uscms/store/user/gabaasz/Zpsi_mm_MINIAODSIM-BPH-FW/PrivateMC-2018-ZtoJpsiMuMu/crab_PrivateMC-2018-ZtoJpsiMuMu-2020-11-10-06-50/201110_055117/0000/step3-MINIAODSIM-ZtoJpsiMuMu_BPH-FW-result_102.root",
         #"root:://cmseos.fnal.gov//eos/uscms/store/user/gabaasz/Zpsi_mm_MINIAODSIM-BPH-FW/PrivateMC-2018-ZtoJpsiMuMu/crab_PrivateMC-2018-ZtoJpsiMuMu-2020-11-10-06-50/201110_055117/0000/step3-MINIAODSIM-ZtoJpsiMuMu_BPH-FW-result_103.root",
