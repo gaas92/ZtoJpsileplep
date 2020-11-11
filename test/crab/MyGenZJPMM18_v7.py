@@ -69,21 +69,21 @@ def main():
         config.General.requestName = None
         #config.General.workArea = 'ZMuondecay'
         config.General.workArea = 'MyGenZJPMM_2018_v7'
-	    config.General.transferOutputs = True
-	    config.General.transferLogs = False
+	config.General.transferOutputs = True
+	config.General.transferLogs = False
 
         config.JobType.pluginName = 'Analysis'
-	    config.JobType.psetName = '/afs/cern.ch/work/g/gayalasa/public/Zll/z_sl7/ZtoJpsill/CMSSW_10_6_3/src/AnalizeZll/ZtoJpsileplep/test/runV7MyGenZJPMM.py' #2018 DT configfile
-	    config.JobType.allowUndistributedCMSSW = True
+	config.JobType.psetName = '/afs/cern.ch/work/g/gayalasa/public/Zll/z_sl7/ZtoJpsill/CMSSW_10_6_3/src/AnalizeZll/ZtoJpsileplep/test/runV7MyGenZJPMM.py' #2018 DT configfile
+	config.JobType.allowUndistributedCMSSW = True
 
         config.Data.inputDataset = None
-	    config.Data.inputDBS = 'global'
+	config.Data.inputDBS = 'global'
         config.Data.splitting = 'FileBased'
         config.Data.unitsPerJob = 40
-	    config.Data.publication = True
+	config.Data.publication = True
         config.Data.outputDatasetTag = None
-	    config.Data.outLFNDirBase = '/store/user/%s/config.General.requestName/' % ("gayalasa")
-	    config.Site.storageSite = 'T3_US_FNALLPC'
+	config.Data.outLFNDirBase = '/store/user/%s/config.General.requestName/' % ("gayalasa")
+	config.Site.storageSite = 'T3_US_FNALLPC'
         #config.Site.storageSite = None # Choose your site. 
         #--------------------------------------------------------
         
