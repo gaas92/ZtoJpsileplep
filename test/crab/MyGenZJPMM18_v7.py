@@ -91,7 +91,7 @@ def main():
         config.Data.userInputFiles = open('my_gen_zjpmm_files.txt').readlines()
         config.General.requestName = "MyGenZJPMM_2018_v7_reqname"
         config.Data.outputDatasetTag = '%s_%s' % (config.General.workArea, config.General.requestName)
-
+        config.Data.outputPrimaryDataset = 'crab_'+'config.General.requestName'
         # Submit.
         try:
             print "Submitting for input dataset " 
