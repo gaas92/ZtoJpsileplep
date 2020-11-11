@@ -13,11 +13,10 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condD
 from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc')
 
-print(open('my_gen_zjpmm_files.txt').readlines()[1])
-exit()
+
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring( open('my_gen_zjpmm_files.txt').readlines()
+    fileNames = cms.untracked.vstring( open('my_gen_zjpmm_files.txt').readlines()[1]
    )
 
 )
