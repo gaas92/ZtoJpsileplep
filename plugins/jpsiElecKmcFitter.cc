@@ -362,7 +362,10 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
     //Jpsi Muons
 	//const pat::Muon *muon1 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon1"));
     //const pat::Muon *muon2 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon2"));
-
+    
+    int muon1Mu8DiEle12 = 0;
+    int muon2Mu8DiEle12 = 0;
+    
     const pat::Muon *muon1_ = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon1"));
     const pat::Muon *muon2_ = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon2"));
             
