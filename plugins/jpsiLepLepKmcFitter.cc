@@ -541,9 +541,16 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
         //if (!tkPVdistel1.first|| !tkPVdistel2.first ) continue;
 
         for (pat::CompositeCandidateCollection::const_iterator dimuon = dimuons->begin(); dimuon != dimuons->end() /*test && breaker < 10*/; ++dimuon){
-            const pat::Muon* muon1 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon1"));
-            const pat::Muon* muon2 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon2"));
-            
+            const pat::Muon *muon1 = 0;
+            const pat::Muon *muon2 = 0;
+            if (dimuon.daughter("muon1")->charge() == -1 && dimuon.daughter("muon2")->charge() == 1) {
+                muon1 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon1"));
+                muon2 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon2"));
+            }
+            else if (dimuon.daughter("muon1")->charge() == 1 && dimuon.daughter("muon2")->charge() == -1){
+                muon1 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon2"));
+                muon2 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon1"));
+            }
             //check if the muons came from PV
             //int pass1 = 0;
             //int pass2 = 0;
@@ -930,6 +937,11 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 		   patM2.addUserFloat("Dz",mdz2);
            //New
            patM2.addUserFloat("dRIso"    ,getIso( *muon2 ) );
+
+           std::cout<< "dRiso M1: "<< getIso( *muon1 ) << std::endl;
+           std::cout<< "pT M1: "<< muon1->pt() << std::endl;
+           std::cout<< "dRiso M2: "<< getIso( *muon2 ) << std::endl;
+           std::cout<< "pT M2: "<< muon2->pt() << std::endl;
            //v7 new
            //patM2.addUserFloat("isolationR03_",          muon2->isolationR03());
            //patM2.addUserFloat("isolationR05_",          muon2->isolationR05());
