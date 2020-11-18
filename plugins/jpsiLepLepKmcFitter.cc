@@ -546,12 +546,12 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
             const pat::Muon *muon1;
             const pat::Muon *muon2; 
             if (dimuon->daughter("muon1")->charge() == -1 && dimuon->daughter("muon2")->charge() == 1) {
-                muon1 = *dynamic_cast<const pat::Muon*>(dimuon->daughter("muon1"));
-                muon2 = *dynamic_cast<const pat::Muon*>(dimuon->daughter("muon2"));
+                muon1 = *dynamic_cast<const pat::Muon*>(*dimuon->daughter("muon1"));
+                muon2 = *dynamic_cast<const pat::Muon*>(*dimuon->daughter("muon2"));
             }
             else if (dimuon->daughter("muon1")->charge() == 1 && dimuon->daughter("muon2")->charge() == -1){
-                muon1 = *dynamic_cast<const pat::Muon*>(dimuon->daughter("muon2"));
-                muon2 = *dynamic_cast<const pat::Muon*>(dimuon->daughter("muon1"));
+                muon1 = *dynamic_cast<const pat::Muon*>(*dimuon->daughter("muon2"));
+                muon2 = *dynamic_cast<const pat::Muon*>(*dimuon->daughter("muon1"));
             }
             else continue;
             
