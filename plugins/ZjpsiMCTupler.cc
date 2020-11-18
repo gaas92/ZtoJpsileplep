@@ -695,8 +695,10 @@ ZjpsiMCTupler::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
            std::cout<<"\n"<<std::endl;
            std::cout<<"rIsoOverPtm1: "<< rIsoOverPtm1 << std::endl;
            std::cout<<"rIsoOverPtm2: "<< rIsoOverPtm2 << std::endl;
-           std::cout<<"gud rIsoOverPtm1: "<< dRiso_m1/z_Cand.daughter("psi")->daughter("muon1")->p4() << std::endl;
-           std::cout<<"gud rIsoOverPtm2: "<< dRiso_m2/z_Cand.daughter("psi")->daughter("muon2")->p4() << std::endl;
+           reco::Candidate::LorentzVector _m1_ = z_Cand.daughter("psi")->daughter("muon1")->p4();
+           reco::Candidate::LorentzVector _m2_ = z_Cand.daughter("psi")->daughter("muon2")->p4();
+           std::cout<<"gud rIsoOverPtm1: "<< dRiso_m1/_m1_.Pt() << std::endl;
+           std::cout<<"gud rIsoOverPtm2: "<< dRiso_m2/_m2_.Pt() << std::endl;
 
            //new
            ipSm1 = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("psi")->daughter("muon1")))->userFloat("dIP3DSig");
