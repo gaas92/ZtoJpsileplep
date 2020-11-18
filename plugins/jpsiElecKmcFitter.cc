@@ -359,218 +359,228 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   int nPV    = primaryVertices_handle->size();
   
   for (pat::CompositeCandidateCollection::const_iterator dimuon = dimuons->begin(); dimuon != dimuons->end(); ++dimuon ) {
-        //Jpsi Muons
-	const pat::Muon* muon1 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon1"));
-	const pat::Muon* muon2 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon2"));
+    //Jpsi Muons
+	//const pat::Muon *muon1 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon1"));
+    //const pat::Muon *muon2 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon2"));
 
-        int muon1Mu8DiEle12 = 0;
-        int muon2Mu8DiEle12 = 0;
+    const pat::Muon *muon1_ = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon1"));
+    const pat::Muon *muon2_ = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon2"));
+            
+    const pat::Muon *muon1 = 0;
+    const pat::Muon *muon2 = 0; 
+    if (dimuon->daughter("muon1")->charge() == -1 && dimuon->daughter("muon2")->charge() == 1) {
+        muon1 = muon1_;
+        muon2 = muon2_;
+    }
+    else if (dimuon->daughter("muon1")->charge() == 1 && dimuon->daughter("muon2")->charge() == -1){
+        muon1 = muon2_;
+        muon2 = muon1_;
+    }
+    else continue;
         
-        //try {
-        //   const pat::TriggerObjectStandAloneCollection muon1HLT_Mu8DiEle12 = muon1->triggerObjectMatchesByFilter("HLTMu8DiEle12CaloIdLTrackIdLElectronlegSequence");
-        //   const pat::TriggerObjectStandAloneCollection muon2HLT_Mu8DiEle12 = muon2->triggerObjectMatchesByFilter("HLTMu8DiEle12CaloIdLTrackIdLElectronlegSequence");
-        //
-        //   //std::cout << "IT WORKS ... for now" << std::endl;
-        //   //std::cout << "Sise of muon1: " << muon1HLT_Mu8DiEle12.size()  << std::endl;
-        //   //std::cout << "Sise of muon2: " << muon2HLT_Mu8DiEle12.size()  << std::endl;
-        //
-        //   if (muon1HLT_Mu8DiEle12.size() > 0 ){
-        //       //std::cout << "muon1 IsoMu HLT matched" << std::endl;
-        //       muon1Mu8DiEle12 = 1;
-        //       }
-        //   if (muon2HLT_Mu8DiEle12.size() > 0 ){
-        //       //std::cout << "muon2 IsoMu HLT matched" << std::endl;
-        //       muon2Mu8DiEle12 = 1;
-        //      }
-        //}
-        //catch ( ... ){
-        //     std::cout << "Esta madre no jala" << std::endl;
-        //     }
-	  float jpsiVprob=0;
-	  float jpsiChi2=0;
-	  jpsiVprob = dimuon->userFloat("vProb");
-	  jpsiChi2  = dimuon->userFloat("vNChi2");
+    //try {
+    //   const pat::TriggerObjectStandAloneCollection muon1HLT_Mu8DiEle12 = muon1->triggerObjectMatchesByFilter("HLTMu8DiEle12CaloIdLTrackIdLElectronlegSequence");
+    //   const pat::TriggerObjectStandAloneCollection muon2HLT_Mu8DiEle12 = muon2->triggerObjectMatchesByFilter("HLTMu8DiEle12CaloIdLTrackIdLElectronlegSequence");
+    //
+    //   //std::cout << "IT WORKS ... for now" << std::endl;
+    //   //std::cout << "Sise of muon1: " << muon1HLT_Mu8DiEle12.size()  << std::endl;
+    //   //std::cout << "Sise of muon2: " << muon2HLT_Mu8DiEle12.size()  << std::endl;
+    //
+    //   if (muon1HLT_Mu8DiEle12.size() > 0 ){
+    //       //std::cout << "muon1 IsoMu HLT matched" << std::endl;
+    //       muon1Mu8DiEle12 = 1;
+    //       }
+    //   if (muon2HLT_Mu8DiEle12.size() > 0 ){
+    //       //std::cout << "muon2 IsoMu HLT matched" << std::endl;
+    //       muon2Mu8DiEle12 = 1;
+    //      }
+    //}
+    //catch ( ... ){
+    //     std::cout << "Esta madre no jala" << std::endl;
+    //     }
+	float jpsiVprob=0;
+	float jpsiChi2=0;
+	jpsiVprob = dimuon->userFloat("vProb");
+	jpsiChi2  = dimuon->userFloat("vNChi2");
       
-      
-      //////////// MY MUON ID ///////////////
-      ///////////////////////////////////////
-      int ZMu1Qid = 0;
-      int ZMu2Qid = 0;
-      // Muon 1 (from Jpsi)
-      if ( muon1->isGlobalMuon()){
-        ZMu1Qid = 1;
-        //std::cout << "1L is Global" << std::endl;
-      }
-      if ( muon1->isLooseMuon()){
-        ZMu1Qid += 10;
-        //std::cout << "1L is Loose " << std::endl;
-      }
-      if ( muon1->isMediumMuon()){
-        ZMu1Qid += 100;
-        //std::cout << "1L is Medium " << std::endl;
-      }
-      if ( muon1->isTightMuon(*PV)){
-        ZMu1Qid += 1000;
-        //std::cout << "1L is Tight " << std::endl;
-      }
-      if ( muon1->isSoftMuon(*PV)){
-        ZMu1Qid += 10000;
-        //std::cout << "1L is Soft " << std::endl;
-      }
-      if ( muon1->isHighPtMuon(*PV)){
-        ZMu1Qid += 100000;
-        //std::cout << "1L is HighPt " << std::endl;
-      }
-      if ( muon1->isPFMuon()){
-        ZMu1Qid += 1000000;
-        //std::cout << "1L is ParticleFlow " << std::endl;
-      }
-      if ( muon1->isTrackerMuon()){
-        ZMu1Qid += 10000000;
-        //std::cout << "1L is Tracker Muon " << std::endl;
-      }
-      //if (ZMu1Qid > 0){
-      //  std::cout << "Binary is  : " << ZMu1Qid << "\n" << std::endl;
-        //std::cout << "Decimal is : " << ZLe1Qid  << " or " << convertBinaryToDecimal(ZLe1Qid_n) << "\n" << std::endl;
-      //}  
-      // Muon 2 (from Jpsi)
-      if ( muon2->isGlobalMuon()){
-      ZMu2Qid = 1;
-      // std::cout << "2L is Global " << std::endl;
-      }
-      if ( muon2->isLooseMuon()){
-      ZMu2Qid += 10;
-      //std::cout << "2L is Loose " << std::endl;
-      }
-      if ( muon2->isMediumMuon()){
-      ZMu2Qid += 100;
-      //std::cout << "2L is Medium " << std::endl;
-      }
-      if ( muon2->isTightMuon(*PV)){
-      ZMu2Qid += 1000;
-      //std::cout << "2L is Tight " << std::endl;
-      }
-      if ( muon2->isSoftMuon(*PV)){
-      ZMu2Qid += 10000;
-      //std::cout << "2L is Soft " << std::endl;
-      }
-      if ( muon2->isHighPtMuon(*PV)){
-      ZMu2Qid += 100000;
-      //std::cout << "2L is HighPt " << std::endl;
-      }
-      if ( muon2->isPFMuon()){
-      ZMu2Qid += 1000000;
-      //std::cout << "2L is PF  " << std::endl;
-      }
-      if ( muon2->isTrackerMuon()){
-      ZMu2Qid += 10000000;
-      //  std::cout << "1L is Tracker Muon " << std::endl;
-      }
-      int psiM1_TrackerLWM = muon1->muonBestTrack()->hitPattern().trackerLayersWithMeasurement();
-      int psiM1_PixelLWM   = muon1->muonBestTrack()->hitPattern().pixelLayersWithMeasurement();
-      int psiM1_ValPixHit  = muon1->muonBestTrack()->hitPattern().numberOfValidPixelHits();
-      int psiM2_TrackerLWM = muon2->muonBestTrack()->hitPattern().trackerLayersWithMeasurement();
-      int psiM2_PixelLWM   = muon2->muonBestTrack()->hitPattern().pixelLayersWithMeasurement();
-      int psiM2_ValPixHit  = muon2->muonBestTrack()->hitPattern().numberOfValidPixelHits();
- 	  if (psiM1_TrackerLWM < tlwm_) continue;
-      if (psiM2_TrackerLWM < tlwm_) continue;
-      if (psiM1_PixelLWM < plwm_) continue;
-      if (psiM2_PixelLWM < plwm_) continue;
-      reco::TrackRef JpsiTk[2] = {muon1->innerTrack(), muon2->innerTrack()};
+    //////////// MY MUON ID ///////////////
+    ///////////////////////////////////////
+    int ZMu1Qid = 0;
+    int ZMu2Qid = 0;
+    // Muon 1 (from Jpsi)
+    if ( muon1->isGlobalMuon()){
+      ZMu1Qid = 1;
+      //std::cout << "1L is Global" << std::endl;
+    }
+    if ( muon1->isLooseMuon()){
+      ZMu1Qid += 10;
+      //std::cout << "1L is Loose " << std::endl;
+    }
+    if ( muon1->isMediumMuon()){
+      ZMu1Qid += 100;
+      //std::cout << "1L is Medium " << std::endl;
+    }
+    if ( muon1->isTightMuon(*PV)){
+      ZMu1Qid += 1000;
+      //std::cout << "1L is Tight " << std::endl;
+    }
+    if ( muon1->isSoftMuon(*PV)){
+      ZMu1Qid += 10000;
+      //std::cout << "1L is Soft " << std::endl;
+    }
+    if ( muon1->isHighPtMuon(*PV)){
+      ZMu1Qid += 100000;
+      //std::cout << "1L is HighPt " << std::endl;
+    }
+    if ( muon1->isPFMuon()){
+      ZMu1Qid += 1000000;
+      //std::cout << "1L is ParticleFlow " << std::endl;
+    }
+    if ( muon1->isTrackerMuon()){
+      ZMu1Qid += 10000000;
+      //std::cout << "1L is Tracker Muon " << std::endl;
+    }
+    //if (ZMu1Qid > 0){
+    //  std::cout << "Binary is  : " << ZMu1Qid << "\n" << std::endl;
+    //std::cout << "Decimal is : " << ZLe1Qid  << " or " << convertBinaryToDecimal(ZLe1Qid_n) << "\n" << std::endl;
+    //}  
+    // Muon 2 (from Jpsi)
+    if ( muon2->isGlobalMuon()){
+    ZMu2Qid = 1;
+    // std::cout << "2L is Global " << std::endl;
+    }
+    if ( muon2->isLooseMuon()){
+    ZMu2Qid += 10;
+    //std::cout << "2L is Loose " << std::endl;
+    }
+    if ( muon2->isMediumMuon()){
+    ZMu2Qid += 100;
+    //std::cout << "2L is Medium " << std::endl;
+    }
+    if ( muon2->isTightMuon(*PV)){
+    ZMu2Qid += 1000;
+    //std::cout << "2L is Tight " << std::endl;
+    }
+    if ( muon2->isSoftMuon(*PV)){
+    ZMu2Qid += 10000;
+    //std::cout << "2L is Soft " << std::endl;
+    }
+    if ( muon2->isHighPtMuon(*PV)){
+    ZMu2Qid += 100000;
+    //std::cout << "2L is HighPt " << std::endl;
+    }
+    if ( muon2->isPFMuon()){
+    ZMu2Qid += 1000000;
+    //std::cout << "2L is PF  " << std::endl;
+    }
+    if ( muon2->isTrackerMuon()){
+    ZMu2Qid += 10000000;
+    //  std::cout << "1L is Tracker Muon " << std::endl;
+    }
+    int psiM1_TrackerLWM = muon1->muonBestTrack()->hitPattern().trackerLayersWithMeasurement();
+    int psiM1_PixelLWM   = muon1->muonBestTrack()->hitPattern().pixelLayersWithMeasurement();
+    int psiM1_ValPixHit  = muon1->muonBestTrack()->hitPattern().numberOfValidPixelHits();
+    int psiM2_TrackerLWM = muon2->muonBestTrack()->hitPattern().trackerLayersWithMeasurement();
+    int psiM2_PixelLWM   = muon2->muonBestTrack()->hitPattern().pixelLayersWithMeasurement();
+    int psiM2_ValPixHit  = muon2->muonBestTrack()->hitPattern().numberOfValidPixelHits();
+ 	if (psiM1_TrackerLWM < tlwm_) continue;
+    if (psiM2_TrackerLWM < tlwm_) continue;
+    if (psiM1_PixelLWM < plwm_) continue;
+    if (psiM2_PixelLWM < plwm_) continue;
+    reco::TrackRef JpsiTk[2] = {muon1->innerTrack(), muon2->innerTrack()};
 	
-      std::vector<reco::TransientTrack> MuMuTTks;
-      MuMuTTks.push_back(theTTBuilder->build(&JpsiTk[0]));
-      MuMuTTks.push_back(theTTBuilder->build(&JpsiTk[1]));
+    std::vector<reco::TransientTrack> MuMuTTks;
+    MuMuTTks.push_back(theTTBuilder->build(&JpsiTk[0]));
+    MuMuTTks.push_back(theTTBuilder->build(&JpsiTk[1]));
        
-      std::pair<bool,Measurement1D> tkPVdist1 = IPTools::absoluteImpactParameter3D(MuMuTTks.at(0),*PV);
-      std::pair<bool,Measurement1D> tkPVdist2 = IPTools::absoluteImpactParameter3D(MuMuTTks.at(1),*PV);
+    std::pair<bool,Measurement1D> tkPVdist1 = IPTools::absoluteImpactParameter3D(MuMuTTks.at(0),*PV);
+    std::pair<bool,Measurement1D> tkPVdist2 = IPTools::absoluteImpactParameter3D(MuMuTTks.at(1),*PV);
       
-      if (!tkPVdist1.first|| !tkPVdist2.first ) continue;
-      if (fabs(tkPVdist1.second.significance()) > ImparSigm_) continue;
-      if (fabs(tkPVdist2.second.significance()) > ImparSigm_) continue;
+    if (!tkPVdist1.first|| !tkPVdist2.first ) continue;
+    if (fabs(tkPVdist1.second.significance()) > ImparSigm_) continue;
+    if (fabs(tkPVdist2.second.significance()) > ImparSigm_) continue;
       
-      //std::cout << "works for jpsimuons" << std::endl;
-	  for (View<pat::Electron>::const_iterator lepton1 = leptons->begin(); lepton1 != leptons->end(); ++lepton1 ) {
-            reco::TrackRef track_1 = lepton1->track();
-            //if (track_1.isNull()) continue;
-            //std::cout << "PASS MU 1, LOOPING OVER MU 2" << std::endl;
-            for (View<pat::Electron>::const_iterator lepton2 = leptons->begin() ; lepton2 !=  leptons->end(); ++lepton2 ) {
+    //std::cout << "works for jpsimuons" << std::endl;
+	for (View<pat::Electron>::const_iterator lepton1 = leptons->begin(); lepton1 != leptons->end(); ++lepton1 ) {
+        reco::TrackRef track_1 = lepton1->track();
+        //if (track_1.isNull()) continue;
+        //std::cout << "PASS MU 1, LOOPING OVER MU 2" << std::endl;
+        for (View<pat::Electron>::const_iterator lepton2 = leptons->begin() ; lepton2 !=  leptons->end(); ++lepton2 ) {
+            if((lepton1->charge() * lepton2->charge()) != -1) continue;
+            if(lepton1==lepton2) continue; //v7 add
 
-                if((lepton1->charge() * lepton2->charge()) != -1) continue;
-                if(lepton1==lepton2) continue; //v7 add
-
-                reco::TrackRef track_2 = lepton2->track();
-                //if (track_2.isNull()) continue;
-                int lept1Ele25wpT = 0;
-                int lept2Ele25wpT = 0;
+            reco::TrackRef track_2 = lepton2->track();
+            //if (track_2.isNull()) continue;
+            int lept1Ele25wpT = 0;
+            int lept2Ele25wpT = 0;
                      
-                int lept1Ele23_12 = 0;
-                int lept2Ele23_12 = 0;
+            int lept1Ele23_12 = 0;
+            int lept2Ele23_12 = 0;
                      
-                int lept1Mu8DiEle12 = 0;
-                int lept2Mu8DiEle12 = 0;
+            int lept1Mu8DiEle12 = 0;
+            int lept2Mu8DiEle12 = 0;
                 
-                //const pat::Electron* lept1 = dynamic_cast<const pat::Electron*>(dilepton->daughter("lepton1"));
-                //const pat::Electron* lept2 = dynamic_cast<const pat::Electron*>(dilepton->daughter("lepton2"));
-                const pat::Electron* lept1 = 0;
-                const pat::Electron* lept2 = 0;
-                if(lepton1->charge() == -1 && lepton2->charge() == 1){ lept1 = &(*lepton1); lept2 = &(*lepton2);}
-                else if (lepton1->charge() == 1 && lepton2->charge() == -1) {lept1 = &(*lepton2); lept2 = &(*lepton1);}
-                else continue;
+            //const pat::Electron* lept1 = dynamic_cast<const pat::Electron*>(dilepton->daughter("lepton1"));
+            //const pat::Electron* lept2 = dynamic_cast<const pat::Electron*>(dilepton->daughter("lepton2"));
+            const pat::Electron* lept1 = 0;
+            const pat::Electron* lept2 = 0;
+            if(lepton1->charge() == -1 && lepton2->charge() == 1){ lept1 = &(*lepton1); lept2 = &(*lepton2);}
+            else if (lepton1->charge() == 1 && lepton2->charge() == -1) {lept1 = &(*lepton2); lept2 = &(*lepton1);}
+            else continue;
           
-                //try {
-                //     const pat::TriggerObjectStandAloneCollection lept1HLT_Ele25wpT = lept1->triggerObjectMatchesByFilter("HLTEle25WPTightGsfSequence");
-                //     const pat::TriggerObjectStandAloneCollection lept2HLT_Ele25wpT = lept2->triggerObjectMatchesByFilter("HLTEle25WPTightGsfSequence");
-                //
-                //     const pat::TriggerObjectStandAloneCollection lept1HLT_Ele23_12 = lept1->triggerObjectMatchesByFilter("hltEle23Ele12CaloIdLTrackIdLIsoVLDZFilter");
-                //     const pat::TriggerObjectStandAloneCollection lept2HLT_Ele23_12 = lept2->triggerObjectMatchesByFilter("hltEle23Ele12CaloIdLTrackIdLIsoVLDZFilter");
-                //
-                //     const pat::TriggerObjectStandAloneCollection lept1HLT_Mu8DiEle12 = lept1->triggerObjectMatchesByFilter("HLTMu8DiEle12CaloIdLTrackIdLElectronlegSequence");
-                //     const pat::TriggerObjectStandAloneCollection lept2HLT_Mu8DiEle12 = lept2->triggerObjectMatchesByFilter("HLTMu8DiEle12CaloIdLTrackIdLElectronlegSequence");
-                //
-                //     //const pat::TriggerObjectStandAloneCollection muHLTMatches1_t2 = iMuon1->triggerObjectMatchesByFilter("hltJpsiTkVertexFilter");
-                //     //std::cout << "IT WORKS ... for now" << std::endl;
-                //     //std::cout << "Sise of lept1: " << lept1HLT_IsoMu24.size()  << std::endl;
-                //     //std::cout << "Sise of lept2: " << lept2HLT_IsoMu24.size()  << std::endl;
-                //     //
-                //    //
-                //     if (lept1HLT_Ele25wpT.size() > 0 ){
-                //         std::cout << "lept1 Ele25 HLT matched" << std::endl;
-                //         lept1Ele25wpT = 1;
-                //         }
-                //     if (lept2HLT_Ele25wpT.size() > 0 ){
-                //         std::cout << "lept2 Ele25 HLT matched" << std::endl;
-                //         lept2Ele25wpT = 1;
-                //         }
-                //     if (lept1HLT_Ele23_12.size() > 0 ){
-                //         std::cout << "lept1 Ele23_12 HLT matched" << std::endl;
-                //         lept1Ele23_12 = 1;
-                //         }
-                //     if (lept2HLT_Ele23_12.size() > 0 ){
-                //         std::cout << "lept2 Ele23_12 HLT matched" << std::endl;
-                //         lept2Ele23_12 = 1;
-                //         }
-                //     if (lept1HLT_Mu8DiEle12.size() > 0 ){
-                //         std::cout << "lept1 Mu8DiEle12 HLT matched" << std::endl;
-                //         lept1Mu8DiEle12 = 1;
-                //         }
-                //     if (lept2HLT_Mu8DiEle12.size() > 0 ) {
-                //         std::cout << "lept2 Mu8DiEle12 HLT matched" << std::endl;
-                //         lept2Mu8DiEle12 = 1 ;
-                //         }
-                //     }
-                //catch ( ... ){
-                //     std::cout << "Esta madre no jala" << std::endl;
-                //    }
+            //try {
+            //     const pat::TriggerObjectStandAloneCollection lept1HLT_Ele25wpT = lept1->triggerObjectMatchesByFilter("HLTEle25WPTightGsfSequence");
+            //     const pat::TriggerObjectStandAloneCollection lept2HLT_Ele25wpT = lept2->triggerObjectMatchesByFilter("HLTEle25WPTightGsfSequence");
+            //
+            //     const pat::TriggerObjectStandAloneCollection lept1HLT_Ele23_12 = lept1->triggerObjectMatchesByFilter("hltEle23Ele12CaloIdLTrackIdLIsoVLDZFilter");
+            //     const pat::TriggerObjectStandAloneCollection lept2HLT_Ele23_12 = lept2->triggerObjectMatchesByFilter("hltEle23Ele12CaloIdLTrackIdLIsoVLDZFilter");
+            //
+            //     const pat::TriggerObjectStandAloneCollection lept1HLT_Mu8DiEle12 = lept1->triggerObjectMatchesByFilter("HLTMu8DiEle12CaloIdLTrackIdLElectronlegSequence");
+            //     const pat::TriggerObjectStandAloneCollection lept2HLT_Mu8DiEle12 = lept2->triggerObjectMatchesByFilter("HLTMu8DiEle12CaloIdLTrackIdLElectronlegSequence");
+            //
+            //     //const pat::TriggerObjectStandAloneCollection muHLTMatches1_t2 = iMuon1->triggerObjectMatchesByFilter("hltJpsiTkVertexFilter");
+            //     //std::cout << "IT WORKS ... for now" << std::endl;
+            //     //std::cout << "Sise of lept1: " << lept1HLT_IsoMu24.size()  << std::endl;
+            //     //std::cout << "Sise of lept2: " << lept2HLT_IsoMu24.size()  << std::endl;
+            //     //
+            //    //
+            //     if (lept1HLT_Ele25wpT.size() > 0 ){
+            //         std::cout << "lept1 Ele25 HLT matched" << std::endl;
+            //         lept1Ele25wpT = 1;
+            //         }
+            //     if (lept2HLT_Ele25wpT.size() > 0 ){
+            //         std::cout << "lept2 Ele25 HLT matched" << std::endl;
+            //         lept2Ele25wpT = 1;
+            //         }
+            //     if (lept1HLT_Ele23_12.size() > 0 ){
+            //         std::cout << "lept1 Ele23_12 HLT matched" << std::endl;
+            //         lept1Ele23_12 = 1;
+            //         }
+            //     if (lept2HLT_Ele23_12.size() > 0 ){
+            //         std::cout << "lept2 Ele23_12 HLT matched" << std::endl;
+            //         lept2Ele23_12 = 1;
+            //         }
+            //     if (lept1HLT_Mu8DiEle12.size() > 0 ){
+            //         std::cout << "lept1 Mu8DiEle12 HLT matched" << std::endl;
+            //         lept1Mu8DiEle12 = 1;
+            //         }
+            //     if (lept2HLT_Mu8DiEle12.size() > 0 ) {
+            //         std::cout << "lept2 Mu8DiEle12 HLT matched" << std::endl;
+            //         lept2Mu8DiEle12 = 1 ;
+            //         }
+            //     }
+            //catch ( ... ){
+            //     std::cout << "Esta madre no jala" << std::endl;
+            //    }
           
 	        ///////////////////////////////////////
-                //////////// MY ELECTRON ID ///////////////
+            //////////// MY ELECTRON ID ///////////
 	        ///////////////////////////////////////
 
-                int ZLe1Qid = 0;
-                int ZLe2Qid = 0;
-                unsigned long long ZLe1Qid_n = 0;
-                unsigned long long ZLe2Qid_n = 0;
+            int ZLe1Qid = 0;
+            int ZLe2Qid = 0;
+            unsigned long long ZLe1Qid_n = 0;
+            unsigned long long ZLe2Qid_n = 0;
 
         
  	        // Lepton 1 (from Z) 2016 promt & legacy
@@ -620,56 +630,55 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                    ZLe1Qid_n += 10000000000;
                    //std::cout << "1L is 94X iso V2 wp90 " << std::endl;
                 }
-//////////////////////////////////////////////////////////////////////////////////////////
+            /////////////////////
  	        // Lepton 2 (from Z)
-//////////////////////////////////////////////////////////////////////////////////////////
+            /////////////////////
             // Lepton 2 (from Z) 2016 promt & legacy
             if ( lept2->electronID("cutBasedElectronID-Summer16-80X-V1-veto")==1 ){
-                    ZLe2Qid_n += 1;
-                    //std::cout << "2L is  80X veto Electron" << std::endl;
-                }
+                ZLe2Qid_n += 1;
+                //std::cout << "2L is  80X veto Electron" << std::endl;
+            }
             if ( lept2->electronID("cutBasedElectronID-Summer16-80X-V1-loose")==1 ){
-                    ZLe2Qid_n += 10;
-                    //std::cout << "2L is 80X loose " << std::endl;
-                }
+                ZLe2Qid_n += 10;
+                //std::cout << "2L is 80X loose " << std::endl;
+            }
             if ( lept2->electronID("cutBasedElectronID-Summer16-80X-V1-medium")==1 ){
-                    ZLe2Qid_n += 100;
-                    //std::cout << "2L is 80X Medium " << std::endl;
-                }
+                ZLe2Qid_n += 100;
+                //std::cout << "2L is 80X Medium " << std::endl;
+            }
             if ( lept2->electronID("cutBasedElectronID-Summer16-80X-V1-tight")==1 ){
-                    ZLe2Qid_n += 1000;
-                    //std::cout << "2L is 80X Tight " << std::endl;
-                }
-            
+                ZLe2Qid_n += 1000;
+                //std::cout << "2L is 80X Tight " << std::endl;
+            }
             if ( lept2->electronID("mvaEleID-Spring16-GeneralPurpose-V1-wp80")==1 ){
-                    ZLe2Qid_n += 10000;
-                    //std::cout << "2L is  80X V1 wp80" << std::endl;
-                }
+                ZLe2Qid_n += 10000;
+                //std::cout << "2L is  80X V1 wp80" << std::endl;
+            }
             if ( lept2->electronID("mvaEleID-Spring16-GeneralPurpose-V1-wp90")==1 ){
-                    ZLe2Qid_n += 100000;
-                    //std::cout << "2L is 80X V1 wp90 " << std::endl;
-                }
+                ZLe2Qid_n += 100000;
+                //std::cout << "2L is 80X V1 wp90 " << std::endl;
+            }
             // 2016 Legacy MiniAOD V2
             if ( lept2->electronID("cutBasedElectronID-Fall17-94X-V2-loose")==1 ){
-                    ZLe2Qid_n += 1000000;
-                   //std::cout << "2L is 94X loose " << std::endl;
-                }
+                ZLe2Qid_n += 1000000;
+               //std::cout << "2L is 94X loose " << std::endl;
+            }
             if ( lept2->electronID("cutBasedElectronID-Fall17-94X-V2-medium")==1 ){
-                    ZLe2Qid_n += 10000000;
-                    //std::cout << "2L is 94X medium " << std::endl;
-                }
+                ZLe2Qid_n += 10000000;
+                //std::cout << "2L is 94X medium " << std::endl;
+            }
             if ( lept2->electronID("cutBasedElectronID-Fall17-94X-V2-tight")==1 ){
-                    ZLe2Qid_n += 100000000;
-                    //std::cout << "2L is 94X tight " << std::endl;
-                }
+                ZLe2Qid_n += 100000000;
+                //std::cout << "2L is 94X tight " << std::endl;
+            }
             if ( lept2->electronID("mvaEleID-Fall17-iso-V2-wp80")==1 ){
-                    ZLe2Qid_n += 1000000000;
-                    //std::cout << "2L is 94X iso V2 wp80 " << std::endl;
-                }
+                ZLe2Qid_n += 1000000000;
+                //std::cout << "2L is 94X iso V2 wp80 " << std::endl;
+            }
             if ( lept2->electronID("mvaEleID-Fall17-iso-V2-wp90")==1 ){
-                    ZLe2Qid_n += 10000000000;
-                    //std::cout << "2L is 94X iso V2 wp90 " << std::endl;
-                }
+                ZLe2Qid_n += 10000000000;
+                //std::cout << "2L is 94X iso V2 wp90 " << std::endl;
+            }
    
             ZLe1Qid = convertBinaryToDecimal(ZLe1Qid_n);
             ZLe2Qid = convertBinaryToDecimal(ZLe2Qid_n);
@@ -740,11 +749,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                     dRm2l2 = deltaR(*(lept1->gsfTrack()), *(muon1->innerTrack()));
                 }
             }
-                
-                
-                
-                
-                
+  
 		    //////////////////////////////////////////////////////
 		    //  I m p a c t   P a ra m e t e r s                //
 		    //////////////////////////////////////////////////////

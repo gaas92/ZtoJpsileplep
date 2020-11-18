@@ -946,12 +946,12 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
            //New
            patM2.addUserFloat("dRIso"    ,getIso( *muon2 ) );
 
-           std::cout<< "\ndRiso M1: "<< getIso( *muon1 ) << std::endl;
-           std::cout<< "pT M1: "<< muon1->pt() << std::endl;
-           std::cout<< "dRisoOverpT M1: "<< getIso( *muon1 )/ muon1->pt() << std::endl;
-           std::cout<< "dRiso M2: "<< getIso( *muon2 ) << std::endl;
-           std::cout<< "pT M2: "<< muon2->pt() << std::endl;
-           std::cout<< "dRisoOverpT M2: "<< getIso( *muon2 )/ muon2->pt() << std::endl;
+           //std::cout<< "\ndRiso M1: "<< getIso( *muon1 ) << std::endl;
+           //std::cout<< "pT M1: "<< muon1->pt() << std::endl;
+           //std::cout<< "dRisoOverpT M1: "<< getIso( *muon1 )/ muon1->pt() << std::endl;
+           //std::cout<< "dRiso M2: "<< getIso( *muon2 ) << std::endl;
+           //std::cout<< "pT M2: "<< muon2->pt() << std::endl;
+           //std::cout<< "dRisoOverpT M2: "<< getIso( *muon2 )/ muon2->pt() << std::endl;
            //v7 new
            //patM2.addUserFloat("isolationR03_",          muon2->isolationR03());
            //patM2.addUserFloat("isolationR05_",          muon2->isolationR05());
