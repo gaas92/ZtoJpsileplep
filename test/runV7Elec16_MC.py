@@ -67,7 +67,7 @@ process.electonFilter = cms.EDFilter('PATElectronSelector',
 )
 ###jspsi sequence
 process.load("HeavyFlavorAnalysis.Onia2MuMu.onia2MuMuPAT_cfi")
-process.onia2MuMuPAT.muons=cms.InputTag('slimmedMuons')
+process.onia2MuMuPAT.muons=cms.InputTag('muonFilter')
 process.onia2MuMuPAT.primaryVertexTag=cms.InputTag('offlineSlimmedPrimaryVertices')
 process.onia2MuMuPAT.beamSpotTag=cms.InputTag('offlineBeamSpot')
 process.onia2MuMuPAT.higherPuritySelection=cms.string("isGlobalMuon")

@@ -486,7 +486,7 @@ ZjpsiMCTupler::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     //End of jhovannys (for all triggers in string)
     //if ( ! OnlyGen_ ) { // we will look for dimuons, then for muons
        if (ZCands.isValid() && !ZCands->empty()) {
-         std::cout<<"TUPLER"<<std::endl;
+         std::cout<<"XXXXXXXXXXXXXXXX-------TUPLER-------XXXXXXXXXXXXXXXX"<<std::endl;
          unsigned int csize = ZCands->size();
          //if (bestCandidateOnly_) csize = 1; //not implemented here
          for ( unsigned int i = 0; i < csize; i++ ) {
@@ -695,6 +695,9 @@ ZjpsiMCTupler::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
            std::cout<<"\n"<<std::endl;
            std::cout<<"rIsoOverPtm1: "<< rIsoOverPtm1 << std::endl;
            std::cout<<"rIsoOverPtm2: "<< rIsoOverPtm2 << std::endl;
+           std::cout<<"gud rIsoOverPtm1: "<< dRiso_m1/z_Cand.daughter("psi")->daughter("muon1")->p4() << std::endl;
+           std::cout<<"gud rIsoOverPtm2: "<< dRiso_m2/z_Cand.daughter("psi")->daughter("muon2")->p4() << std::endl;
+
            //new
            ipSm1 = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("psi")->daughter("muon1")))->userFloat("dIP3DSig");
            ipSm2 = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("psi")->daughter("muon2")))->userFloat("dIP3DSig");
