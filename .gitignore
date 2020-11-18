@@ -3,3 +3,4 @@
 test/crab/*/*
 *.pyc
 *.idea/workspace.xml
+*.vscode/*
