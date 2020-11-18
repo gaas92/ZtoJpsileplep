@@ -541,8 +541,8 @@ jpsiLepLepKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
         //if (!tkPVdistel1.first|| !tkPVdistel2.first ) continue;
 
         for (pat::CompositeCandidateCollection::const_iterator dimuon = dimuons->begin(); dimuon != dimuons->end() /*test && breaker < 10*/; ++dimuon){
-            const pat::Muon *muon1 = 0;
-            const pat::Muon *muon2 = 0;
+            const pat::Muon *muon1;
+            const pat::Muon *muon2;
             if (dimuon->daughter("muon1")->charge() == -1 && dimuon->daughter("muon2")->charge() == 1) {
                 muon1 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon1"));
                 muon2 = dynamic_cast<const pat::Muon*>(dimuon->daughter("muon2"));
