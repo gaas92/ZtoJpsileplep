@@ -691,6 +691,9 @@ ZjpsiMCTupler::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
            rIsoOverPtl2 = dRiso_l2/lepton2_p4.Pt();
            rIsoOverPtm1 = dRiso_m1/muonN_p4.Pt();
            rIsoOverPtm2 = dRiso_m2/muonP_p4.Pt();
+           std::cout<<"\nTUPLER"<<std::endl;
+           std::cout<<"rIsoOverPtm1: "<< rIsoOverPtm1 << std::endl;
+           std::cout<<"rIsoOverPtm2: "<< rIsoOverPtm2 << std::endl;
            //new
            ipSm1 = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("psi")->daughter("muon1")))->userFloat("dIP3DSig");
            ipSm2 = (dynamic_cast<const pat::CompositeCandidate*>(z_Cand.daughter("psi")->daughter("muon2")))->userFloat("dIP3DSig");
