@@ -693,12 +693,8 @@ ZjpsiMCTupler::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
            rIsoOverPtm1 = dRiso_m1/muonN_p4.Pt();
            rIsoOverPtm2 = dRiso_m2/muonP_p4.Pt();
            std::cout<<"\n"<<std::endl;
-           std::cout<<"rIsoOverPtm1: "<< rIsoOverPtm1 << std::endl;
-           std::cout<<"rIsoOverPtm2: "<< rIsoOverPtm2 << std::endl;
            reco::Candidate::LorentzVector _m1_ = z_Cand.daughter("psi")->daughter("muon1")->p4();
            reco::Candidate::LorentzVector _m2_ = z_Cand.daughter("psi")->daughter("muon2")->p4();
-           std::cout<<"gud rIsoOverPtm1: "<< dRiso_m1/_m1_.Pt() << std::endl;
-           std::cout<<"gud rIsoOverPtm2: "<< dRiso_m2/_m2_.Pt() << std::endl;
            
            std::cout<< "\ndRiso M1: "<< dRiso_m1 << std::endl;
            std::cout<< "pT M1: "<< _m1_.Pt() << std::endl;
