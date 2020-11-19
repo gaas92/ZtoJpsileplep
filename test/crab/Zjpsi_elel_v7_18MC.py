@@ -68,7 +68,7 @@ def main():
 
         config.General.requestName = None
         #config.General.workArea = 'ZMuondecay'
-        config.General.workArea = '2018MC_psi_ee_v7_2'
+        config.General.workArea = '2018MC_psi_ee_v7_3'
 	config.General.transferOutputs = True
 	config.General.transferLogs = False
 
@@ -87,7 +87,7 @@ def main():
 	#config.Data.lumiMask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions18/13TeV/ReReco/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt'
 	config.Data.publication = True
         config.Data.outputDatasetTag = None
-	config.Data.outLFNDirBase = '/store/user/%s/Zpsi_ee18mc_v7_2/' % ("gayalasa")
+	config.Data.outLFNDirBase = '/store/user/%s/Zpsi_ee18mc_v7_3/' % ("gayalasa")
 	config.Site.storageSite = 'T3_US_FNALLPC'
         #config.Site.storageSite = None # Choose your site. 
         #--------------------------------------------------------
