@@ -583,8 +583,8 @@ ZjpsiMCTupler::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 
            gen_z_p4.SetPtEtaPhiM(z_Cand.daughter("mcZ")->pt(), z_Cand.daughter("mcZ")->eta(), z_Cand.daughter("mcZ")->phi(), z_Cand.daughter("mcZ")->mass());
-           gen_muonP_p4.SetPtEtaPhiM(z_Cand.daughter("mcM1")->pt(), z_Cand.daughter("mcM1")->eta(), z_Cand.daughter("mcM1")->phi(), z_Cand.daughter("mcM1")->mass());
-           gen_muonN_p4.SetPtEtaPhiM(z_Cand.daughter("mcM2")->pt(), z_Cand.daughter("mcM2")->eta(), z_Cand.daughter("mcM2")->phi(), z_Cand.daughter("mcM2")->mass());
+           gen_muonP_p4.SetPtEtaPhiM(z_Cand.daughter("mcM2")->pt(), z_Cand.daughter("mcM2")->eta(), z_Cand.daughter("mcM2")->phi(), z_Cand.daughter("mcM2")->mass());
+           gen_muonN_p4.SetPtEtaPhiM(z_Cand.daughter("mcM1")->pt(), z_Cand.daughter("mcM1")->eta(), z_Cand.daughter("mcM1")->phi(), z_Cand.daughter("mcM1")->mass());
                 //std::cout<< "MK1 = "<<z_Cand.daughter("mcK1")->pt()<<" "<<z_Cand.daughter("mcK1")->eta()<<" "<<z_Cand.daughter("mcK1")->phi()<<" "<< z_Cand.daughter("mcK1")->mass() << std::endl;
            gen_dimuon_p4.SetPtEtaPhiM(z_Cand.daughter("mcPsi")->pt(), z_Cand.daughter("mcPsi")->eta(),
                                             z_Cand.daughter("mcPsi")->phi(), z_Cand.daughter("mcPsi")->mass());

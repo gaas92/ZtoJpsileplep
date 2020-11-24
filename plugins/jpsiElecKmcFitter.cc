@@ -338,13 +338,13 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
         
                   }//end found psi
                   if (gdau->pdgId()==11 ) {// pdgid for electron=11
-                     foundit++;
-                 gen_lepton1_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
+                        foundit++;
+                        gen_lepton1_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
         
                  }
                   if (gdau->pdgId()==-11 ) {// pdgid for muon+=13
-                     foundit++;
-                     gen_lepton2_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
+                        foundit++;
+                        gen_lepton2_p4.SetPtEtaPhiM(gdau->pt(),gdau->eta(),gdau->phi(),gdau->mass());
                  }
                 }// end number of daughters
              } //endif found Z
