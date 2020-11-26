@@ -16,7 +16,7 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc')
 
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring( open('my_gen-NF_zjpee_17.txt').readlines()
+    fileNames = cms.untracked.vstring( open('my_gen-NF_zjpee_18.txt').readlines()
    )
 
 )
