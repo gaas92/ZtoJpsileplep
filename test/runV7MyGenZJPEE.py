@@ -16,7 +16,7 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc')
 
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring( open('my_gen-NF_zjpmm_17.txt').readlines()
+    fileNames = cms.untracked.vstring( open('my_gen-NF_zjpee_17.txt').readlines()
    )
 
 )
@@ -29,7 +29,7 @@ process.TFileService = cms.Service("TFileService",
 
 process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True))
 
-
+"""
 process.Zfitter = cms.EDAnalyzer('Zjpsi_onlyMC_ee_rec',
                         GenParticles = cms.InputTag("prunedGenParticles"),
                         packedGenParticles = cms.InputTag("packedGenParticles")
@@ -116,4 +116,3 @@ process.oniaSequence = cms.Sequence(process.onia2MuMuPAT) ##No trigger matching 
 process.leptonSequence = cms.Sequence(process.Zfitter)
 
 process.p = cms.Path(process.egammaPostRecoSeq*process.muonFilter*process.electonFilter*process.oniaSequence*process.leptonSequence*process.oniarootupler)
-"""
