@@ -26,7 +26,7 @@ process.TFileService = cms.Service("TFileService",
 )
 
 
-"""
+
 process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True))
 
 
@@ -108,3 +108,4 @@ process.oniaSequence = cms.Sequence(process.onia2MuMuPAT) ##No trigger matching 
 process.leptonSequence = cms.Sequence(process.Zfitter)
 
 process.p = cms.Path(process.muonFilter*process.oniaSequence*process.leptonSequence*process.oniarootupler)
+"""
