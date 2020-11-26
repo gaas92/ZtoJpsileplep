@@ -30,7 +30,7 @@ process.TFileService = cms.Service("TFileService",
 process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True))
 
 
-process.Zfitter = cms.EDAnalyzer('Zjpsi_onlyMC_rec',
+process.Zfitter = cms.EDAnalyzer('Zjpsi_onlyMC_ee_rec',
                         GenParticles = cms.InputTag("prunedGenParticles"),
                         packedGenParticles = cms.InputTag("packedGenParticles")
            )
