@@ -29,8 +29,8 @@ process.TFileService = cms.Service("TFileService",
 
 process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True))
 
-"""
-process.Zfitter = cms.EDAnalyzer('Zjpsi_onlyMC_ee_rec',
+
+process.Zfitter = cms.EDAnalyzer('ZJpsi_onlyMC_ee_rec',
                         GenParticles = cms.InputTag("prunedGenParticles"),
                         packedGenParticles = cms.InputTag("packedGenParticles")
            )
@@ -116,3 +116,4 @@ process.oniaSequence = cms.Sequence(process.onia2MuMuPAT) ##No trigger matching 
 process.leptonSequence = cms.Sequence(process.Zfitter)
 
 process.p = cms.Path(process.egammaPostRecoSeq*process.muonFilter*process.electonFilter*process.oniaSequence*process.leptonSequence*process.oniarootupler)
+"""
