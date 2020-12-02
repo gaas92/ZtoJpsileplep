@@ -787,8 +787,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
        
   		    //if ( dR1<0.02 || dR2<0.02 || dR3<0.02 ||dR4<0.02 ) continue; // agregar corte en R5 y R6
 		    
-            //test 2
-            if ( dRel1mu1 <0.01 || dRel1mu2<0.01 || dRel2mu1 <0.01 || dRel2mu2<0.01 ) continue;
+            //test 4
+            //if ( dRel1mu1 <0.01 || dRel1mu2<0.01 || dRel2mu1 <0.01 || dRel2mu2<0.01 ) continue;
 
             /////////////////////////////////////////////////////
 		    //    T r a n s i e n t   T r a c k s  b u i l d e r //
@@ -1229,9 +1229,9 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 
             // WARNIG HOPEFULLY THIS IS  CORRECT     
             
-            //test 2
-            if (GsfEleRelPFIsoScaledCut(*lept1) > (1.0 + 1.0/lept1->pt())) continue;
-            if (GsfEleRelPFIsoScaledCut(*lept2) > (1.0 + 1.0/lept2->pt())) continue;
+            //test 4
+            //if (GsfEleRelPFIsoScaledCut(*lept1) > (1.0 + 1.0/lept1->pt())) continue;
+            //if (GsfEleRelPFIsoScaledCut(*lept2) > (1.0 + 1.0/lept2->pt())) continue;
 
                 
             patL1.addUserFloat("dRIsoEA", ElectronRelIso(*lept1));
