@@ -487,10 +487,10 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
     int psiM2_PixelLWM   = muon2->muonBestTrack()->hitPattern().pixelLayersWithMeasurement();
     int psiM2_ValPixHit  = muon2->muonBestTrack()->hitPattern().numberOfValidPixelHits();
  	//test 2
-    //if (psiM1_TrackerLWM < tlwm_) continue;
-    //if (psiM2_TrackerLWM < tlwm_) continue;
-    //if (psiM1_PixelLWM < plwm_) continue;
-    //if (psiM2_PixelLWM < plwm_) continue;
+    if (psiM1_TrackerLWM < tlwm_) continue;
+    if (psiM2_TrackerLWM < tlwm_) continue;
+    if (psiM1_PixelLWM < plwm_) continue;
+    if (psiM2_PixelLWM < plwm_) continue;
     reco::TrackRef JpsiTk[2] = {muon1->innerTrack(), muon2->innerTrack()};
 	
     std::vector<reco::TransientTrack> MuMuTTks;
@@ -696,10 +696,10 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             int ZLe2_PixelLWM   = lept2->gsfTrack()->hitPattern().pixelLayersWithMeasurement();
             int ZLe2_ValPixHit  = lept2->gsfTrack()->hitPattern().numberOfValidPixelHits();
             //test 2
-            //if (ZLe1_TrackerLWM < tlwm_) continue;
-            //if (ZLe2_TrackerLWM < tlwm_) continue;
-            //if (ZLe1_PixelLWM < plwm_) continue;
-            //if (ZLe2_PixelLWM < plwm_) continue;
+            if (ZLe1_TrackerLWM < tlwm_) continue;
+            if (ZLe2_TrackerLWM < tlwm_) continue;
+            if (ZLe1_PixelLWM < plwm_) continue;
+            if (ZLe2_PixelLWM < plwm_) continue;
 
             //int ZLe1_ElecMissHits = 0;
             //int ZLe2_ElecMissHits = 0;
@@ -773,14 +773,14 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
            	float ldz2 = lept2->gsfTrack()->dz(PV->position());
 		    
             //test 2
-            //if (abs(ldxy1) > dxyl_) continue;
-            //if (abs(ldxy2) > dxyl_) continue;
-            //if (abs(ldz1)  > dzl_ ) continue;
-            //if (abs(ldz2)  > dzl_ ) continue;
-            //if (abs(mdxy1) > dxym_ ) continue;
-            //if (abs(mdxy2) > dxym_) continue;
-            //if (abs(mdz1)  > dzm_ ) continue;
-            //if (abs(mdz2)  > dzm_ ) continue;
+            if (abs(ldxy1) > dxyl_) continue;
+            if (abs(ldxy2) > dxyl_) continue;
+            if (abs(ldz1)  > dzl_ ) continue;
+            if (abs(ldz2)  > dzl_ ) continue;
+            if (abs(mdxy1) > dxym_ ) continue;
+            if (abs(mdxy2) > dxym_) continue;
+            if (abs(mdz1)  > dzm_ ) continue;
+            if (abs(mdz2)  > dzm_ ) continue;
             //std::cout<< "enters cycle for non resonant electrons" << std::endl;
        
   		    //if ( dR1<0.02 || dR2<0.02 || dR3<0.02 ||dR4<0.02 ) continue; // agregar corte en R5 y R6
@@ -854,7 +854,14 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             //std::cout << "is ZTree empty? " << ZTree->isEmpty() << std::endl;
             //test for fit
 			//if (ZTree->isEmpty())continue;
-			ZTree->movePointerToTheTop();
+            int ZTreeEmpty = 0;
+            try{
+			    ZTree->movePointerToTheTop();
+            }
+            catch( ... ){
+                ZTreeEmpty = ZTreeEmpty + 1;
+                //None
+            }
             RefCountedKinematicParticle fitZ = ZTree->currentParticle();
 			RefCountedKinematicVertex ZDecayVertex = ZTree->currentDecayVertex();
             
@@ -1207,8 +1214,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             // WARNIG HOPEFULLY THIS IS  CORRECT     
             
             //test 2
-            //if (GsfEleRelPFIsoScaledCut(*lept1) > (1.0 + 1.0/lept1->pt())) continue;
-            //if (GsfEleRelPFIsoScaledCut(*lept2) > (1.0 + 1.0/lept2->pt())) continue;
+            if (GsfEleRelPFIsoScaledCut(*lept1) > (1.0 + 1.0/lept1->pt())) continue;
+            if (GsfEleRelPFIsoScaledCut(*lept2) > (1.0 + 1.0/lept2->pt())) continue;
 
                 
             patL1.addUserFloat("dRIsoEA", ElectronRelIso(*lept1));
