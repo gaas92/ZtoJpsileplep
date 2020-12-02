@@ -486,10 +486,11 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
     int psiM2_TrackerLWM = muon2->muonBestTrack()->hitPattern().trackerLayersWithMeasurement();
     int psiM2_PixelLWM   = muon2->muonBestTrack()->hitPattern().pixelLayersWithMeasurement();
     int psiM2_ValPixHit  = muon2->muonBestTrack()->hitPattern().numberOfValidPixelHits();
- 	if (psiM1_TrackerLWM < tlwm_) continue;
-    if (psiM2_TrackerLWM < tlwm_) continue;
-    if (psiM1_PixelLWM < plwm_) continue;
-    if (psiM2_PixelLWM < plwm_) continue;
+ 	//test 2
+    //if (psiM1_TrackerLWM < tlwm_) continue;
+    //if (psiM2_TrackerLWM < tlwm_) continue;
+    //if (psiM1_PixelLWM < plwm_) continue;
+    //if (psiM2_PixelLWM < plwm_) continue;
     reco::TrackRef JpsiTk[2] = {muon1->innerTrack(), muon2->innerTrack()};
 	
     std::vector<reco::TransientTrack> MuMuTTks;
@@ -499,9 +500,10 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
     std::pair<bool,Measurement1D> tkPVdist1 = IPTools::absoluteImpactParameter3D(MuMuTTks.at(0),*PV);
     std::pair<bool,Measurement1D> tkPVdist2 = IPTools::absoluteImpactParameter3D(MuMuTTks.at(1),*PV);
       
-    if (!tkPVdist1.first|| !tkPVdist2.first ) continue;
-    if (fabs(tkPVdist1.second.significance()) > ImparSigm_) continue;
-    if (fabs(tkPVdist2.second.significance()) > ImparSigm_) continue;
+    //test 2
+    //if (!tkPVdist1.first|| !tkPVdist2.first ) continue;
+    //if (fabs(tkPVdist1.second.significance()) > ImparSigm_) continue;
+    //if (fabs(tkPVdist2.second.significance()) > ImparSigm_) continue;
       
     //std::cout << "works for jpsimuons" << std::endl;
 	for (View<pat::Electron>::const_iterator lepton1 = leptons->begin(); lepton1 != leptons->end(); ++lepton1 ) {
@@ -693,10 +695,12 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             int ZLe2_TrackerLWM = lept2->gsfTrack()->hitPattern().trackerLayersWithMeasurement();
             int ZLe2_PixelLWM   = lept2->gsfTrack()->hitPattern().pixelLayersWithMeasurement();
             int ZLe2_ValPixHit  = lept2->gsfTrack()->hitPattern().numberOfValidPixelHits();
-            if (ZLe1_TrackerLWM < tlwm_) continue;
-            if (ZLe2_TrackerLWM < tlwm_) continue;
-            if (ZLe1_PixelLWM < plwm_) continue;
-            if (ZLe2_PixelLWM < plwm_) continue;
+            //test 2
+            //if (ZLe1_TrackerLWM < tlwm_) continue;
+            //if (ZLe2_TrackerLWM < tlwm_) continue;
+            //if (ZLe1_PixelLWM < plwm_) continue;
+            //if (ZLe2_PixelLWM < plwm_) continue;
+
             //int ZLe1_ElecMissHits = 0;
             //int ZLe2_ElecMissHits = 0;
             int ZLe1_ElecMissHits = lept1->gsfTrack()->hitPattern().numberOfAllHits(reco::HitPattern::MISSING_INNER_HITS);
@@ -767,18 +771,23 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 		
  		    float ldxy2 = lept2->gsfTrack()->dxy(PV->position());
            	float ldz2 = lept2->gsfTrack()->dz(PV->position());
-		    if (abs(ldxy1) > dxyl_) continue;
-            if (abs(ldxy2) > dxyl_) continue;
-            if (abs(ldz1)  > dzl_ ) continue;
-            if (abs(ldz2)  > dzl_ ) continue;
-            if (abs(mdxy1) > dxym_ ) continue;
-            if (abs(mdxy2) > dxym_) continue;
-            if (abs(mdz1)  > dzm_ ) continue;
-            if (abs(mdz2)  > dzm_ ) continue;
+		    
+            //test 2
+            //if (abs(ldxy1) > dxyl_) continue;
+            //if (abs(ldxy2) > dxyl_) continue;
+            //if (abs(ldz1)  > dzl_ ) continue;
+            //if (abs(ldz2)  > dzl_ ) continue;
+            //if (abs(mdxy1) > dxym_ ) continue;
+            //if (abs(mdxy2) > dxym_) continue;
+            //if (abs(mdz1)  > dzm_ ) continue;
+            //if (abs(mdz2)  > dzm_ ) continue;
             //std::cout<< "enters cycle for non resonant electrons" << std::endl;
        
   		    //if ( dR1<0.02 || dR2<0.02 || dR3<0.02 ||dR4<0.02 ) continue; // agregar corte en R5 y R6
-		    if ( dRel1mu1 <0.01 || dRel1mu2<0.01 || dRel2mu1 <0.01 || dRel2mu2<0.01 ) continue;
+		    
+            //test 2
+            //if ( dRel1mu1 <0.01 || dRel1mu2<0.01 || dRel2mu1 <0.01 || dRel2mu2<0.01 ) continue;
+
             /////////////////////////////////////////////////////
 		    //    T r a n s i e n t   T r a c k s  b u i l d e r //
 		    //////////////////////////////////////////////////////
@@ -814,9 +823,10 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             std::pair<bool,Measurement1D> tkPVdistel1 = IPTools::absoluteImpactParameter3D(LLTTks.at(0),*PV);
             std::pair<bool,Measurement1D> tkPVdistel2 = IPTools::absoluteImpactParameter3D(LLTTks.at(1),*PV);
           
-            if (!tkPVdistel1.first || !tkPVdistel2.first) continue;
-            if (fabs(tkPVdistel1.second.significance()) > ImparSigl_) continue;
-            if (fabs(tkPVdistel2.second.significance()) > ImparSigl_) continue; 
+            //test 2
+            //if (!tkPVdistel1.first || !tkPVdistel2.first) continue;
+            //if (fabs(tkPVdistel1.second.significance()) > ImparSigl_) continue;
+            //if (fabs(tkPVdistel2.second.significance()) > ImparSigl_) continue; 
             //std::cout << "pass Track builder " << std::endl;
 		        
             /////////////////////////////////////////////////////
@@ -1195,8 +1205,10 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
                 
 
             // WARNIG HOPEFULLY THIS IS  CORRECT     
-            if (GsfEleRelPFIsoScaledCut(*lept1) > (1.0 + 1.0/lept1->pt())) continue;
-            if (GsfEleRelPFIsoScaledCut(*lept2) > (1.0 + 1.0/lept2->pt())) continue;
+            
+            //test 2
+            //if (GsfEleRelPFIsoScaledCut(*lept1) > (1.0 + 1.0/lept1->pt())) continue;
+            //if (GsfEleRelPFIsoScaledCut(*lept2) > (1.0 + 1.0/lept2->pt())) continue;
 
                 
             patL1.addUserFloat("dRIsoEA", ElectronRelIso(*lept1));
