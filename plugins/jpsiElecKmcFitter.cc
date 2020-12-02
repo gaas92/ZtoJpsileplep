@@ -501,7 +501,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
     std::pair<bool,Measurement1D> tkPVdist2 = IPTools::absoluteImpactParameter3D(MuMuTTks.at(1),*PV);
       
     //test 2
-    //if (!tkPVdist1.first|| !tkPVdist2.first ) continue;
+    if (!tkPVdist1.first|| !tkPVdist2.first ) continue;
     //if (fabs(tkPVdist1.second.significance()) > ImparSigm_) continue;
     //if (fabs(tkPVdist2.second.significance()) > ImparSigm_) continue;
       
@@ -824,7 +824,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             std::pair<bool,Measurement1D> tkPVdistel2 = IPTools::absoluteImpactParameter3D(LLTTks.at(1),*PV);
           
             //test 2
-            //if (!tkPVdistel1.first || !tkPVdistel2.first) continue;
+            if (!tkPVdistel1.first || !tkPVdistel2.first) continue;
             //if (fabs(tkPVdistel1.second.significance()) > ImparSigl_) continue;
             //if (fabs(tkPVdistel2.second.significance()) > ImparSigl_) continue; 
             //std::cout << "pass Track builder " << std::endl;
