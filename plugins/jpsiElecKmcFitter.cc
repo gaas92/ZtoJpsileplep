@@ -808,7 +808,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             }
             catch (...){
                 std::cout<<"Bad electron, i.e. no track" << std::endl;
-                continue;
+                //test for fit
+                //continue;
             }
             std::pair<bool,Measurement1D> tkPVdistel1 = IPTools::absoluteImpactParameter3D(LLTTks.at(0),*PV);
             std::pair<bool,Measurement1D> tkPVdistel2 = IPTools::absoluteImpactParameter3D(LLTTks.at(1),*PV);
@@ -841,7 +842,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 			RefCountedKinematicTree ZTree = ZVertexFitter.fit(ZDaughters);
 					
             //std::cout << "is ZTree empty? " << ZTree->isEmpty() << std::endl;
-			if (ZTree->isEmpty())continue;
+            //test for fit
+			//if (ZTree->isEmpty())continue;
 			ZTree->movePointerToTheTop();
             RefCountedKinematicParticle fitZ = ZTree->currentParticle();
 			RefCountedKinematicVertex ZDecayVertex = ZTree->currentDecayVertex();

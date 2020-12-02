@@ -16,16 +16,16 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc')
 
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
 process.source = cms.Source("PoolSource",
-    #fileNames = cms.untracked.vstring( open('my_gen-NF_zjpee_18.txt').readlines()
-    fileNames = cms.untracked.vstring(
-            '/store/mc/RunIISummer16MiniAODv3/ZToJPsiEE_TuneCUEP8M1_13TeV-pythia8/MINIAODSIM/PUMoriond17_94X_mcRun2_asymptotic_v3-v2/40000/542780DC-860A-EA11-9709-0CC47AFF04A4.root',
-            '/store/mc/RunIISummer16MiniAODv3/ZToJPsiEE_TuneCUEP8M1_13TeV-pythia8/MINIAODSIM/PUMoriond17_94X_mcRun2_asymptotic_v3-v2/40000/88138499-A50A-EA11-8459-0CC47AFF24BA.root',
-            '/store/mc/RunIISummer16MiniAODv3/ZToJPsiEE_TuneCUEP8M1_13TeV-pythia8/MINIAODSIM/PUMoriond17_94X_mcRun2_asymptotic_v3-v2/40000/8C2C4791-780A-EA11-93D3-0CC47AF9B1D6.root'
-    
+    fileNames = cms.untracked.vstring( open('my_gen-NF_zjpee_18.txt').readlines()
+    #fileNames = cms.untracked.vstring(
+    #        '/store/mc/RunIISummer16MiniAODv3/ZToJPsiEE_TuneCUEP8M1_13TeV-pythia8/MINIAODSIM/PUMoriond17_94X_mcRun2_asymptotic_v3-v2/40000/542780DC-860A-EA11-9709-0CC47AFF04A4.root',
+    #        '/store/mc/RunIISummer16MiniAODv3/ZToJPsiEE_TuneCUEP8M1_13TeV-pythia8/MINIAODSIM/PUMoriond17_94X_mcRun2_asymptotic_v3-v2/40000/88138499-A50A-EA11-8459-0CC47AFF24BA.root',
+    #        '/store/mc/RunIISummer16MiniAODv3/ZToJPsiEE_TuneCUEP8M1_13TeV-pythia8/MINIAODSIM/PUMoriond17_94X_mcRun2_asymptotic_v3-v2/40000/8C2C4791-780A-EA11-93D3-0CC47AF9B1D6.root'
+    #
    )
 
 )
-
+"""
 process.TFileService = cms.Service("TFileService",
         fileName = cms.string('Zjpsi_only_gen.root'),
 )
@@ -44,7 +44,7 @@ process.p = cms.Path(process.Zfitter)
 
 """
 process.TFileService = cms.Service("TFileService",
-        fileName = cms.string('Zjpsi_mumu_v7.root'),
+        fileName = cms.string('Zjpsi_elel_test_v7.root'),
 )
 
 
@@ -121,4 +121,3 @@ process.oniaSequence = cms.Sequence(process.onia2MuMuPAT) ##No trigger matching 
 process.leptonSequence = cms.Sequence(process.Zfitter)
 
 process.p = cms.Path(process.egammaPostRecoSeq*process.muonFilter*process.electonFilter*process.oniaSequence*process.leptonSequence*process.oniarootupler)
-"""
