@@ -774,9 +774,9 @@ void ZjpsiMCTupler::CheckHLTTriggers(const std::vector<std::string>& TrigList){
     string tmptrig;
 
     int ntrigs=TrigList.size();
-    if (ntrigs==0)
-        //std::cout << "No trigger name given in TriggerResults of the input " << endl;
-
+    if (ntrigs==0){
+        std::cout << "No trigger name given in TriggerResults of the input " << endl;
+    }
     for (int itrig=0; itrig< ntrigs; itrig++) {
          //TString trigName = triggerNames_.triggerName(itrig);
          string trigName = TrigList.at(itrig);
