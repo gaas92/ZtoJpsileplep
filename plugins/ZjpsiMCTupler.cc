@@ -465,7 +465,7 @@ ZjpsiMCTupler::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    try {
      std::string const &trig = std::string("TriggerResults::HLT");//+hlTriggerResults_;
      iEvent.getByLabel(edm::InputTag(trig),hltresults1);
-     std::cout << "Handle on HLT ok " << std::endl;
+     //std::cout << "Handle on HLT ok " << std::endl;
    }
    catch ( ... )
     {
@@ -780,7 +780,7 @@ void ZjpsiMCTupler::CheckHLTTriggers(const std::vector<std::string>& TrigList){
     for (int itrig=0; itrig< ntrigs; itrig++) {
          //TString trigName = triggerNames_.triggerName(itrig);
          string trigName = TrigList.at(itrig);
-         //std::cout << "saving ..." << trigName << std::endl;
+         std::cout << "saving ..." << trigName << std::endl;
          tmptrig = (string) trigName; tmptrig +=" ";
          AllTrg += tmptrig;
     }
