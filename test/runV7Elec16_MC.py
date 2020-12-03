@@ -48,7 +48,7 @@ setupEgammaPostRecoSeq(process, runVID=True, runEnergyCorrections=False, #no poi
 process.muonFilter = cms.EDFilter('PATMuonSelector',
    src = cms.InputTag('slimmedMuons'),
    cut = cms.string(
-                    '(pfIsolationR03().sumChargedHadronPt + max(0., pfIsolationR03().sumNeutralHadronEt + pfIsolationR03().sumPhotonEt-0.5*pfIsolationR03().sumPUPt))/pt() < 0.6'
+                    '(pfIsolationR03().sumChargedHadronPt + max(0., pfIsolationR03().sumNeutralHadronEt + pfIsolationR03().sumPhotonEt-0.5*pfIsolationR03().sumPUPt))/pt() < 1.6'
                     #' && innerTrack.hitPattern.trackerLayersWithMeasurement > 4'
                     #' && innerTrack.hitPattern.pixelLayersWithMeasurement > 0'
                     #' && innerTrack.quality(\"highPurity\") '
@@ -85,12 +85,12 @@ process.Zfitter    = cms.EDProducer("jpsiElecKmcFitter",
                           GenParticles   = cms.InputTag("prunedGenParticles"),
                           packedGenParticles = cms.InputTag("packedGenParticles"),
                           isMC4l              = cms.bool(False),
-                          ImparSigm           = cms.double(4.5),
-                          ImparSigl           = cms.double(4.5),
-                          dxym                = cms.double(0.5),
-                          dxyl                = cms.double(0.5),
-                          dzm                 = cms.double(1.0),
-                          dzl                 = cms.double(1.0),
+                          ImparSigm           = cms.double(8.5),
+                          ImparSigl           = cms.double(8.5),
+                          dxym                = cms.double(1.5),
+                          dxyl                = cms.double(1.5),
+                          dzm                 = cms.double(2.0),
+                          dzl                 = cms.double(2.0),
                           trackerLayersWithMeasurement = cms.double(4),
                           pixelLayersWithMeasurement   = cms.double(1)
 #                          fixedGridRhoFastjetAll = cms.InputTag("fixedGridRhoFastjetAll")

@@ -788,7 +788,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   		    //if ( dR1<0.02 || dR2<0.02 || dR3<0.02 ||dR4<0.02 ) continue; // agregar corte en R5 y R6
 		    
             //test 4
-            //if ( dRel1mu1 <0.01 || dRel1mu2<0.01 || dRel2mu1 <0.01 || dRel2mu2<0.01 ) continue;
+            if ( dRel1mu1 <0.01 || dRel1mu2<0.01 || dRel2mu1 <0.01 || dRel2mu2<0.01 ) continue;
 
             /////////////////////////////////////////////////////
 		    //    T r a n s i e n t   T r a c k s  b u i l d e r //
@@ -851,24 +851,24 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             ZDaughters.push_back(pFactory.particle (LLTTks[1] , elMass, float(0), float(0), elSigma));
 
             //test 3
-			//KinematicParticleVertexFitter ZVertexFitter;
-			//RefCountedKinematicTree ZTree = ZVertexFitter.fit(ZDaughters);
+			KinematicParticleVertexFitter ZVertexFitter;
+			RefCountedKinematicTree ZTree = ZVertexFitter.fit(ZDaughters);
 					
             //std::cout << "is ZTree empty? " << ZTree->isEmpty() << std::endl;
             //test for fit
 			//if (ZTree->isEmpty())continue;
             
             //test 3
-            //int ZTreeEmpty = 0;
-            //try{
-			//    ZTree->movePointerToTheTop();
-            //}
-            //catch( ... ){
-            //    ZTreeEmpty = ZTreeEmpty + 1;
-            //    //None
-            //}
-            //RefCountedKinematicParticle fitZ = ZTree->currentParticle();
-			//RefCountedKinematicVertex ZDecayVertex = ZTree->currentDecayVertex();
+            int ZTreeEmpty = 0;
+            try{
+			    ZTree->movePointerToTheTop();
+            }
+            catch( ... ){
+                ZTreeEmpty = ZTreeEmpty + 1;
+                //None
+            }
+            RefCountedKinematicParticle fitZ = ZTree->currentParticle();
+			RefCountedKinematicVertex ZDecayVertex = ZTree->currentDecayVertex();
             
             //std::cout << "is FitZ Valid ??" << fitZ->currentState().isValid() << std::endl;
         
@@ -883,30 +883,30 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             float ZVtxZ_fit = 0;
             float ZVtxP_fit = 0;
             //test 3
-			//if (fitZ->currentState().isValid()) {
-            //    //if (ZDecayVertex->chiSquared() < 0) continue;
-            //    ZM_fit  = fitZ->currentState().mass();
-            //    ZPx_fit = fitZ->currentState().kinematicParameters().momentum().x();
-            //    ZPy_fit = fitZ->currentState().kinematicParameters().momentum().y();
-            //    ZPz_fit = fitZ->currentState().kinematicParameters().momentum().z();
-            //    ZVtxX_fit = ZDecayVertex->position().x();
-            //    ZVtxY_fit = ZDecayVertex->position().y();
-            //    ZVtxZ_fit = ZDecayVertex->position().z();
-            //    ZVtxP_fit = ChiSquaredProbability((double)(ZDecayVertex->chiSquared()), (double)(ZDecayVertex->degreesOfFreedom()));
-            //    if (ZVtxP_fit <= 0.0) continue;
-            //    passFit = 1;
-            //}
-            //else{
-            //    ZM_fit    = 0;
-            //    ZPx_fit   = 0;
-            //    ZPy_fit   = 0;
-            //    ZPz_fit   = 0;
-            //    ZVtxX_fit = 0;
-            //    ZVtxY_fit = 0;
-            //    ZVtxZ_fit = 0;
-            //    //test 3
-            //    //ZVtxP_fit = ChiSquaredProbability((double)(ZDecayVertex->chiSquared()), (double)(ZDecayVertex->degreesOfFreedom()));
-            //}
+			if (fitZ->currentState().isValid()) {
+                //if (ZDecayVertex->chiSquared() < 0) continue;
+                ZM_fit  = fitZ->currentState().mass();
+                ZPx_fit = fitZ->currentState().kinematicParameters().momentum().x();
+                ZPy_fit = fitZ->currentState().kinematicParameters().momentum().y();
+                ZPz_fit = fitZ->currentState().kinematicParameters().momentum().z();
+                ZVtxX_fit = ZDecayVertex->position().x();
+                ZVtxY_fit = ZDecayVertex->position().y();
+                ZVtxZ_fit = ZDecayVertex->position().z();
+                ZVtxP_fit = ChiSquaredProbability((double)(ZDecayVertex->chiSquared()), (double)(ZDecayVertex->degreesOfFreedom()));
+                if (ZVtxP_fit <= 0.0) continue;
+                passFit = 1;
+            }
+            else{
+                ZM_fit    = 0;
+                ZPx_fit   = 0;
+                ZPy_fit   = 0;
+                ZPz_fit   = 0;
+                ZVtxX_fit = 0;
+                ZVtxY_fit = 0;
+                ZVtxZ_fit = 0;
+                //test 3
+                //ZVtxP_fit = ChiSquaredProbability((double)(ZDecayVertex->chiSquared()), (double)(ZDecayVertex->degreesOfFreedom()));
+            }
             float Z_px = muon1->px()+muon2->px()+lept1->px()+lept2->px();
             float Z_py = muon1->py()+muon2->py()+lept1->py()+lept2->py();
             float Z_pz = muon1->pz()+muon2->pz()+lept1->pz()+lept2->pz();
@@ -947,7 +947,7 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patZ.addUserFloat("pvChi2_", pvChi2);
             patZ.addUserInt("pvIndex", vertexRef_i);
             //test 3
-            //patZ.addUserFloat("vChi2",ZDecayVertex->chiSquared());
+            patZ.addUserFloat("vChi2",ZDecayVertex->chiSquared());
             patZ.addUserFloat("vChi2", 0);
             patZ.addUserFloat("ZvtxX",ZVtxX_fit);
             patZ.addUserFloat("ZvtxY",ZVtxY_fit);
@@ -972,9 +972,9 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             ////////////////////////////////
 
             //test 3	
-            //bool child = ZTree->movePointerToTheFirstChild();
+            bool child = ZTree->movePointerToTheFirstChild();
             //get first muon
-            //RefCountedKinematicParticle fitMu1 = ZTree->currentParticle();
+            RefCountedKinematicParticle fitMu1 = ZTree->currentParticle();
             float mu1M_fit = 0;
             float mu1Q_fit = 0;
             float mu1Px_fit= 0;
@@ -982,21 +982,21 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             float mu1Pz_fit= 0;
 
             //test 3
-            //if (!child){
-            //    //std::cout << "Mu1" << std::endl;
-            //    mu1M_fit  = 0;
-            //    mu1Q_fit  = 0;
-            //    mu1Px_fit = 0;
-            //    mu1Py_fit = 0;
-            //    mu1Pz_fit = 0;
-            //}
-            //else{
-            //    mu1M_fit  = fitMu1->currentState().mass();
-            //    mu1Q_fit  = fitMu1->currentState().particleCharge();
-            //    mu1Px_fit = fitMu1->currentState().kinematicParameters().momentum().x();
-            //    mu1Py_fit = fitMu1->currentState().kinematicParameters().momentum().y();
-            //    mu1Pz_fit = fitMu1->currentState().kinematicParameters().momentum().z();
-            //}
+            if (!child){
+                //std::cout << "Mu1" << std::endl;
+                mu1M_fit  = 0;
+                mu1Q_fit  = 0;
+                mu1Px_fit = 0;
+                mu1Py_fit = 0;
+                mu1Pz_fit = 0;
+            }
+            else{
+                mu1M_fit  = fitMu1->currentState().mass();
+                mu1Q_fit  = fitMu1->currentState().particleCharge();
+                mu1Px_fit = fitMu1->currentState().kinematicParameters().momentum().x();
+                mu1Py_fit = fitMu1->currentState().kinematicParameters().momentum().y();
+                mu1Pz_fit = fitMu1->currentState().kinematicParameters().momentum().z();
+            }
             
             //int muId ;
             //if (mu1Q_fit > 0 ) muId = 13;
@@ -1039,8 +1039,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             //get second muon
             
             //test 3
-            //child = ZTree->movePointerToTheNextChild();
-            //RefCountedKinematicParticle fitMu2 = ZTree->currentParticle();
+            child = ZTree->movePointerToTheNextChild();
+            RefCountedKinematicParticle fitMu2 = ZTree->currentParticle();
             float mu2M_fit = 0;
             float mu2Q_fit = 0;
             float mu2Px_fit= 0;
@@ -1048,21 +1048,21 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             float mu2Pz_fit= 0;
           
             //test 3
-            //if (!child){
-            //    //std::cout << "Mu2" << std::endl;
-            //    mu2M_fit  = 0;
-            //    mu2Q_fit  = 0;
-            //    mu2Px_fit = 0;
-            //    mu2Py_fit = 0;
-            //    mu2Pz_fit = 0;
-            //}
-            //else{
-            //    mu2M_fit  = fitMu2->currentState().mass();
-            //    mu2Q_fit  = fitMu2->currentState().particleCharge();
-            //    mu2Px_fit =    fitMu2->currentState().kinematicParameters().momentum().x();
-            //    mu2Py_fit =    fitMu2->currentState().kinematicParameters().momentum().y();
-            //    mu2Pz_fit =    fitMu2->currentState().kinematicParameters().momentum().z();
-            //}
+            if (!child){
+                //std::cout << "Mu2" << std::endl;
+                mu2M_fit  = 0;
+                mu2Q_fit  = 0;
+                mu2Px_fit = 0;
+                mu2Py_fit = 0;
+                mu2Pz_fit = 0;
+            }
+            else{
+                mu2M_fit  = fitMu2->currentState().mass();
+                mu2Q_fit  = fitMu2->currentState().particleCharge();
+                mu2Px_fit =    fitMu2->currentState().kinematicParameters().momentum().x();
+                mu2Py_fit =    fitMu2->currentState().kinematicParameters().momentum().y();
+                mu2Pz_fit =    fitMu2->currentState().kinematicParameters().momentum().z();
+            }
             reco::CompositeCandidate recoMu2(mu2Q_fit, math::XYZTLorentzVector(mu2Px_fit, mu2Py_fit, mu2Pz_fit,
                                                 sqrt(mu2M_fit*mu2M_fit + mu2Px_fit*mu2Px_fit + mu2Py_fit*mu2Py_fit +
                                                 mu2Pz_fit*mu2Pz_fit)), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));
@@ -1112,8 +1112,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             
             //get Lepton
             //test 3
-            //child = ZTree->movePointerToTheNextChild();
-            //RefCountedKinematicParticle fitL1 = ZTree->currentParticle();
+            child = ZTree->movePointerToTheNextChild();
+            RefCountedKinematicParticle fitL1 = ZTree->currentParticle();
             float L1M_fit  = 0;
             float L1Q_fit  = 0;
             float L1Px_fit = 0;
@@ -1121,20 +1121,20 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             float L1Pz_fit = 0;
           
             //test 3
-            //if (!child){
-            //    L1M_fit = 0;
-            //    L1Q_fit = 0;
-            //    L1Px_fit = 0;
-            //    L1Py_fit = 0;
-            //    L1Pz_fit = 0;
-            //}
-            //else{
-            //        L1M_fit  = fitL1->currentState().mass();
-            //        L1Q_fit  = fitL1->currentState().particleCharge();
-            //        L1Px_fit =     fitL1->currentState().kinematicParameters().momentum().x();
-            //        L1Py_fit =     fitL1->currentState().kinematicParameters().momentum().y();
-            //        L1Pz_fit =     fitL1->currentState().kinematicParameters().momentum().z();
-            //}
+            if (!child){
+                L1M_fit = 0;
+                L1Q_fit = 0;
+                L1Px_fit = 0;
+                L1Py_fit = 0;
+                L1Pz_fit = 0;
+            }
+            else{
+                    L1M_fit  = fitL1->currentState().mass();
+                    L1Q_fit  = fitL1->currentState().particleCharge();
+                    L1Px_fit =     fitL1->currentState().kinematicParameters().momentum().x();
+                    L1Py_fit =     fitL1->currentState().kinematicParameters().momentum().y();
+                    L1Pz_fit =     fitL1->currentState().kinematicParameters().momentum().z();
+            }
             
             reco::CompositeCandidate recoL1(L1Q_fit, math::XYZTLorentzVector(L1Px_fit, L1Py_fit, L1Pz_fit,
                                             sqrt(L1M_fit*L1M_fit + L1Px_fit*L1Px_fit + L1Py_fit*L1Py_fit +
@@ -1284,8 +1284,8 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             patL1.addUserFloat("lept1Mu8DiEle12_", lept1Mu8DiEle12);
             //get Lepton
             //test 3
-            //child = ZTree->movePointerToTheNextChild();
-            //RefCountedKinematicParticle fitL2 = ZTree->currentParticle();
+            child = ZTree->movePointerToTheNextChild();
+            RefCountedKinematicParticle fitL2 = ZTree->currentParticle();
             float L2M_fit  = 0;
             float L2Q_fit  = 0;
             float L2Px_fit = 0;
@@ -1293,20 +1293,20 @@ void jpsiElecKmcFitter::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             float L2Pz_fit = 0;
 
             //test 3
-            //if (!child){
-            //    L2M_fit  = 0;
-            //    L2Q_fit  = 0;
-            //    L2Px_fit = 0;
-            //    L2Py_fit = 0;
-            //    L2Pz_fit = 0;
-            //}
-            //else {
-            //    L2M_fit  = fitL2->currentState().mass();
-            //    L2Q_fit  = fitL2->currentState().particleCharge();
-            //    L2Px_fit =    fitL2->currentState().kinematicParameters().momentum().x();
-            //    L2Py_fit =    fitL2->currentState().kinematicParameters().momentum().y();
-            //    L2Pz_fit =    fitL2->currentState().kinematicParameters().momentum().z();
-            //}
+            if (!child){
+                L2M_fit  = 0;
+                L2Q_fit  = 0;
+                L2Px_fit = 0;
+                L2Py_fit = 0;
+                L2Pz_fit = 0;
+            }
+            else {
+                L2M_fit  = fitL2->currentState().mass();
+                L2Q_fit  = fitL2->currentState().particleCharge();
+                L2Px_fit =    fitL2->currentState().kinematicParameters().momentum().x();
+                L2Py_fit =    fitL2->currentState().kinematicParameters().momentum().y();
+                L2Pz_fit =    fitL2->currentState().kinematicParameters().momentum().z();
+            }
             reco::CompositeCandidate recoL2(L2Q_fit, math::XYZTLorentzVector(L2Px_fit, L2Py_fit, L2Pz_fit,
                                             sqrt(L2M_fit*L2M_fit + L2Px_fit*L2Px_fit + L2Py_fit*L2Py_fit +
                                             L2Pz_fit*L2Pz_fit)), math::XYZPoint(ZVtxX_fit, ZVtxY_fit, ZVtxZ_fit));

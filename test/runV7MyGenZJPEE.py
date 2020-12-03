@@ -105,7 +105,7 @@ process.Zfitter    = cms.EDProducer("jpsiElecKmcFitter",
                           dxyl                = cms.double(1.5),
                           dzm                 = cms.double(2.0),
                           dzl                 = cms.double(2.0),
-                          trackerLayersWithMeasurement = cms.double(1),
+                          trackerLayersWithMeasurement = cms.double(4),
                           pixelLayersWithMeasurement   = cms.double(1)
 #                          fixedGridRhoFastjetAll = cms.InputTag("fixedGridRhoFastjetAll")
 )
