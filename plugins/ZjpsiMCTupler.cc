@@ -469,7 +469,7 @@ ZjpsiMCTupler::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    }
    catch ( ... )
     {
-      //std::cout << "Couldn't get handle on HLT Trigger!" << std::endl;
+      std::cout << "Couldn't get handle on HLT Trigger!" << std::endl;
     }
 
     std::vector<std::string> TrigTable; TrigTable.clear();
