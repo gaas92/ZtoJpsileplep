@@ -43,7 +43,7 @@ process.muonFilter = cms.EDFilter('PATMuonSelector',
    src = cms.InputTag('slimmedMuons'),
    cut = cms.string(
                     #for test comment
-                    '(pfIsolationR03().sumChargedHadronPt + max(0., pfIsolationR03().sumNeutralHadronEt + pfIsolationR03().sumPhotonEt-0.5*pfIsolationR03().sumPUPt))/pt() < 1.6'
+                    '(pfIsolationR03().sumChargedHadronPt + max(0., pfIsolationR03().sumNeutralHadronEt + pfIsolationR03().sumPhotonEt-0.5*pfIsolationR03().sumPUPt))/pt() < 1.2'
                     #' && innerTrack.hitPattern.trackerLayersWithMeasurement > 4'
                     #' && innerTrack.hitPattern.pixelLayersWithMeasurement > 0'
                     #' && innerTrack.quality(\"highPurity\") '
