@@ -787,7 +787,7 @@ void ZjpsiMCTupler::CheckHLTTriggers(const std::vector<std::string>& TrigList){
 
     //int n = sprintf(triggersL,"%s","");
    int n = sprintf(triggersL,"%s",AllTrg.c_str());
-   std::cout<<" INFO: Triggers in event:  "<<triggersL<<std::endl;
+   //std::cout<<" INFO: Triggers in event:  "<<triggersL<<std::endl;
    nTrgL = AllTrg.size();
 
    return;
