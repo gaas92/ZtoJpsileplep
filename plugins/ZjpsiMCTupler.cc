@@ -775,19 +775,19 @@ void ZjpsiMCTupler::CheckHLTTriggers(const std::vector<std::string>& TrigList){
 
     int ntrigs=TrigList.size();
     if (ntrigs==0)
-        std::cout << "No trigger name given in TriggerResults of the input " << endl;
+        //std::cout << "No trigger name given in TriggerResults of the input " << endl;
 
     for (int itrig=0; itrig< ntrigs; itrig++) {
          //TString trigName = triggerNames_.triggerName(itrig);
          string trigName = TrigList.at(itrig);
-         std::cout << "saving ..." << trigName << std::endl;
+         //std::cout << "saving ..." << trigName << std::endl;
          tmptrig = (string) trigName; tmptrig +=" ";
          AllTrg += tmptrig;
     }
 
     //int n = sprintf(triggersL,"%s","");
    int n = sprintf(triggersL,"%s",AllTrg.c_str());
-   std::cout<<" INFO: Triggers :  "<<triggersL<<std::endl;
+   std::cout<<" INFO: Triggers in event:  "<<triggersL<<std::endl;
    nTrgL = AllTrg.size();
 
    return;
