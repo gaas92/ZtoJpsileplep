@@ -87,8 +87,10 @@ def main():
 	config.Data.lumiMask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/Legacy_2016/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON_MuonPhys.txt' #has nosence in Mc
 	config.Data.publication = True
         config.Data.outputDatasetTag = None
-	config.Data.outLFNDirBase = '/store/user/%s/Zpsi_mm16_v7_4/' % ("gayalasa")
-	config.Site.storageSite = 'T3_US_FNALLPC'
+	#config.Data.outLFNDirBase = '/store/user/%s/Zpsi_mm16_v7_4/' % ("gayalasa")
+	#config.Site.storageSite = 'T3_US_FNALLPC'
+    config.Site.storageSite = 'T2_CH_CERNBOX'
+
         #config.Site.storageSite = None # Choose your site. 
         #--------------------------------------------------------
 
