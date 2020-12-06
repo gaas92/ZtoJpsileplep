@@ -68,7 +68,7 @@ def main():
 
         config.General.requestName = None
         #config.General.workArea = 'ZMuondecay'
-        config.General.workArea = '2016DT_psi_mm_v7_4'
+        config.General.workArea = '2016DT_psi_mm_v7_4CB'
 	config.General.transferOutputs = True
 	config.General.transferLogs = False
 
@@ -89,8 +89,8 @@ def main():
         config.Data.outputDatasetTag = None
 	#config.Data.outLFNDirBase = '/store/user/%s/Zpsi_mm16_v7_4/' % ("gayalasa")
 	#config.Site.storageSite = 'T3_US_FNALLPC'
-    config.Site.storageSite = 'T2_CH_CERNBOX'
-
+    config.Site.storageSite = 'T3_CH_CERNBOX'
+	config.Data.outLFNDirBase = 'gsiftp://eosuserftp.cern.ch/eos/user/g/%s/Zpsi_mm16_v7_4' %("gayalasa")
         #config.Site.storageSite = None # Choose your site. 
         #--------------------------------------------------------
 
