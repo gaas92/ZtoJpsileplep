@@ -90,7 +90,7 @@ def main():
 	#config.Data.outLFNDirBase = '/store/user/%s/Zpsi_mm18_v7_4/' % ("gayalasa")
 	#config.Site.storageSite = 'T3_US_FNALLPC'
     config.Site.storageSite = 'T3_CH_CERNBOX'
-	config.Data.outLFNDirBase = 'gsiftp://eosuserftp.cern.ch/eos/user/g/%s/Zpsi_mm18_v7_4' %("gayalasa")
+	config.Data.outLFNDirBase = 'gsiftp://eosuserftp.cern.ch/eos/user/g/%s/Zpsi_mm18_v7_4' % ("gayalasa")
         #config.Site.storageSite = None # Choose your site. 
         #--------------------------------------------------------
 

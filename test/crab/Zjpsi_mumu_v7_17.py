@@ -90,7 +90,7 @@ def main():
 	#config.Data.outLFNDirBase = '/store/user/%s/Zpsi_mm17_v7_4/' % ("gayalasa")
 	#config.Site.storageSite = 'T3_US_FNALLPC'
     config.Site.storageSite = 'T3_CH_CERNBOX'
-	config.Data.outLFNDirBase = 'gsiftp://eosuserftp.cern.ch/eos/user/g/%s/Zpsi_mm17_v7_4' %("gayalasa")
+	#config.Data.outLFNDirBase = 'gsiftp://eosuserftp.cern.ch/eos/user/g/%s/Zpsi_mm17_v7_4' %("gayalasa")
         #config.Site.storageSite = None # Choose your site. 
         #--------------------------------------------------------
 
@@ -98,38 +98,39 @@ def main():
         inputDatasets = [ 
                            '/DoubleEG/Run2017B-31Mar2018-v1/MINIAOD',       # DoubleEG
                            '/DoubleEG/Run2017C-31Mar2018-v1/MINIAOD',
-                           '/DoubleEG/Run2017D-31Mar2018-v1/MINIAOD',
-                           '/DoubleEG/Run2017E-31Mar2018-v1/MINIAOD',
-                           '/DoubleEG/Run2017F-31Mar2018-v1/MINIAOD',
+                          # '/DoubleEG/Run2017D-31Mar2018-v1/MINIAOD',
+                          # '/DoubleEG/Run2017E-31Mar2018-v1/MINIAOD',
+                          # '/DoubleEG/Run2017F-31Mar2018-v1/MINIAOD',
 
-                           '/MuonEG/Run2017B-31Mar2018-v1/MINIAOD',         # MuonEG
-                           '/MuonEG/Run2017C-31Mar2018-v1/MINIAOD',
-                           '/MuonEG/Run2017D-31Mar2018-v1/MINIAOD',
-                           '/MuonEG/Run2017E-31Mar2018-v1/MINIAOD',
-                           '/MuonEG/Run2017F-31Mar2018-v1/MINIAOD',
+                          # '/MuonEG/Run2017B-31Mar2018-v1/MINIAOD',         # MuonEG
+                          # '/MuonEG/Run2017C-31Mar2018-v1/MINIAOD',
+                          # '/MuonEG/Run2017D-31Mar2018-v1/MINIAOD',
+                          # '/MuonEG/Run2017E-31Mar2018-v1/MINIAOD',
+                          # '/MuonEG/Run2017F-31Mar2018-v1/MINIAOD',
 
-                           '/SingleElectron/Run2017B-31Mar2018-v1/MINIAOD', # SingleElectron
-                           '/SingleElectron/Run2017C-31Mar2018-v1/MINIAOD',
-                           '/SingleElectron/Run2017D-31Mar2018-v1/MINIAOD',
-                           '/SingleElectron/Run2017E-31Mar2018-v1/MINIAOD',
-                           '/SingleElectron/Run2017F-31Mar2018-v1/MINIAOD',
+                          # '/SingleElectron/Run2017B-31Mar2018-v1/MINIAOD', # SingleElectron
+                          # '/SingleElectron/Run2017C-31Mar2018-v1/MINIAOD',
+                          # '/SingleElectron/Run2017D-31Mar2018-v1/MINIAOD',
+                          # '/SingleElectron/Run2017E-31Mar2018-v1/MINIAOD',
+                          # '/SingleElectron/Run2017F-31Mar2018-v1/MINIAOD',
 
-                           '/SingleMuon/Run2017B-31Mar2018-v1/MINIAOD',     # SingleMuon
-                           '/SingleMuon/Run2017C-31Mar2018-v1/MINIAOD',
-                           '/SingleMuon/Run2017D-31Mar2018-v1/MINIAOD',
-                           '/SingleMuon/Run2017E-31Mar2018-v1/MINIAOD',
-                           '/SingleMuon/Run2017F-31Mar2018-v1/MINIAOD',
+                          # '/SingleMuon/Run2017B-31Mar2018-v1/MINIAOD',     # SingleMuon
+                          # '/SingleMuon/Run2017C-31Mar2018-v1/MINIAOD',
+                          # '/SingleMuon/Run2017D-31Mar2018-v1/MINIAOD',
+                          # '/SingleMuon/Run2017E-31Mar2018-v1/MINIAOD',
+                          # '/SingleMuon/Run2017F-31Mar2018-v1/MINIAOD',
 
-                           '/DoubleMuon/Run2017B-31Mar2018-v1/MINIAOD',     # DoubleMuon
-                           '/DoubleMuon/Run2017C-31Mar2018-v1/MINIAOD',
-                           '/DoubleMuon/Run2017D-31Mar2018-v1/MINIAOD',
-                           '/DoubleMuon/Run2017E-31Mar2018-v1/MINIAOD',
-                           '/DoubleMuon/Run2017F-31Mar2018-v1/MINIAOD'
+                          # '/DoubleMuon/Run2017B-31Mar2018-v1/MINIAOD',     # DoubleMuon
+                          # '/DoubleMuon/Run2017C-31Mar2018-v1/MINIAOD',
+                          # '/DoubleMuon/Run2017D-31Mar2018-v1/MINIAOD',
+                          # '/DoubleMuon/Run2017E-31Mar2018-v1/MINIAOD',
+                          # '/DoubleMuon/Run2017F-31Mar2018-v1/MINIAOD'
                  	]
  
         for inDS in inputDatasets:
              # inDS is of the form /A/B/C. Since B is unique for each inDS, use this in the CRAB request name.
-            config.General.requestName = inDS.split('/')[1]+inDS.split('/')[2]
+            #config.General.requestName = inDS.split('/')[1]+inDS.split('/')[2]
+            config.General.requestName = 'mumu17Test'
             config.Data.inputDataset = inDS
             config.Data.outputDatasetTag = '%s_%s' % (config.General.workArea, config.General.requestName)
             # Submit.
